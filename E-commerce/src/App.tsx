@@ -1,12 +1,12 @@
 
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-import Navbar from './Components/Navbar'
-import Home from './Pages/Home'
-import About from './Pages/About'
-import ContactUs from './Pages/ContactUs'
-import Register from './Pages/Register'
-import Login from './Pages/Login'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import About from './pages/About'
+import ContactUs from './pages/ContactUs'
+import Register from './pages/Register'
+import Login from './pages/Login'
 
 function App() {
 
@@ -20,6 +20,7 @@ function App() {
           <Route path='/contact-us' element={<ContactUs />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
+          <Route path='*' element={<Home />}/>
         </Routes>
       </div>
     </>
