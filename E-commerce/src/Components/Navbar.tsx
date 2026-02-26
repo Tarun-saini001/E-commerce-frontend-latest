@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 const Navbar = () => {
     const navigate = useNavigate();
     return (
-        <div className=' bg-white h-[8%] rounded p-2 text-black flex my-2 mx-4 shadow justify-between'>
+        <div className=' bg-white h-[8%] rounded p-2  hover:h-[12%] transition-all duration-300 text-black flex my-3 mx-5 shadow justify-between'>
             <p onClick={()=>{navigate("/")}}
                 className='text-sm pl-10 flex justify-center  font-bold shadow-2xl items-center cursor-pointer'
             >

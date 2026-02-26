@@ -31,7 +31,7 @@ const Register = () => {
                     <label>Email <span className="text-red-500">*</span></label>
                     <input
                         type="text"
-                        name="name"
+                        name="email"
                         placeholder="Enter email"
                         className={`bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2`}
                     />
@@ -43,7 +43,7 @@ const Register = () => {
                     <label>Name <span className="text-red-500">*</span></label>
                     <input
                         type="text"
-                        name="name"
+                        name="password"
                         placeholder="Enter password"
                         className={`bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2`}
                     />
@@ -55,7 +55,7 @@ const Register = () => {
                     <label>Name <span className="text-red-500">*</span></label>
                     <input
                         type="text"
-                        name="name"
+                        name="confirPassword"
                         placeholder="confirm password"
                         className={`bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2`}
                     />
