@@ -1,0 +1,61 @@
+entity-relationship-diagram
+
+user [icon: user, color: blue] {
+    _id object id
+    name string
+    img string
+    email string
+    password string
+    isBlocked boolen
+    isDeleted boolen
+    isEmailVarified boolean
+}
+
+category [icon: tag, color: yellow] {
+    _id object id
+    name string
+    parentCategoryId object id
+    img string
+}
+
+brands [icon: tag , color: yellow]{
+    categoryId objectid
+    name string
+    img string
+}
+
+product [icon: shopping-bag, color: green] {
+    _id object id
+    brandId object id
+    categoryId object id
+    title string
+    sellerName string
+    description string
+    price number
+    stock number
+    images array
+    status string
+}
+
+cart [icon: shopping-cart, color: green] {
+    _id sobject idtring
+    userId object id
+    items array
+    subTotal number
+}
+
+review [icon: star, color: blue] {
+    _id string
+    userId string
+    productId string
+    rating number
+    comment string
+}
+
+
+
+product.categoryId > category._id
+product.brandId > brands._id
+cart.userId > user._id
+review.userId > user._id
+review.productId > product._id
