@@ -14,7 +14,7 @@ const Navbar = () => {
                 TS Mart
             </p>
 
-            <nav className='flex items-center pr-10 w-[60%]'>
+            <nav className='flex  justify-center items-center pr-10 w-[60%]'>
                 <ul className='flex font-bold space-x-8'>
                     <li onClick={() => navigate("/")} className='cursor-pointer'>Home</li>
                     <li onClick={() => navigate("/about")} className='cursor-pointer'>About Us</li>

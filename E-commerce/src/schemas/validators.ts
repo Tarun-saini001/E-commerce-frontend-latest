@@ -49,7 +49,7 @@ export const registerSchema = z
             .nonempty("Email is required")
             .regex(
                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,3}$/,
-                "Invalid email address"
+                "Invalid email format"
             ),
 
         password: z
@@ -75,13 +75,10 @@ export const registerSchema = z
 
 // login schema 
 export const loginSchema = z.object({
-    email: z
-        .string()
-        .email("Invalid email format")
-        .toLowerCase()
-        .trim(),
-
-    password: z
-        .string()
-        .min(8, "Password must be at least 8 characters"),
+  email: z
+    .string()
+    .trim()
+    .nonempty("Email is required")
+    .email("Invalid email format"), // only validate format
+  password: z.string().nonempty("Password is required"), // only required
 });
