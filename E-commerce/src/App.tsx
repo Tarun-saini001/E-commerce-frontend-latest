@@ -7,6 +7,7 @@ import About from './pages/About'
 import ContactUs from './pages/ContactUs'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import VerifyOtp from './pages/VerifyOtp'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<Home />}/>
+          <Route path='/verify-otp' element={<VerifyOtp />}/>
         </Routes>
       </div>
     </>

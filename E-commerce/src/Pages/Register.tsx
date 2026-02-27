@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import type { RegisterInput } from "../types/authTypes";
 import { registerSchema } from "../schemas/validators";
 import toast from "react-hot-toast";
 
 const Register = () => {
+    const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL;
     const [loading, setLoading] = useState(false);
 
@@ -33,29 +34,45 @@ const Register = () => {
         }));
     };
 
+    //on change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        const updatedData = {
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             [name]: value,
-        };
+        }));
 
-        setFormData(updatedData);
+        // validate ONLY this field
+        validateField(name as keyof RegisterInput, value);
 
-        const result = registerSchema.safeParse(updatedData);
+        
+        if (name === "confirmPassword") {
+            if (value !== formData.password) {
+                setErrors((prev) => ({
+                    ...prev,
+                    confirmPassword: "Passwords do not match",
+                }));
+            } else {
+                setErrors((prev) => ({
+                    ...prev,
+                    confirmPassword: "",
+                }));
+            }
+        }
 
-        if (!result.success) {
-            const fieldErrors: Partial<Record<keyof RegisterInput, string>> = {};
-
-            result.error.issues.forEach((err) => {
-                const field = err.path[0] as keyof RegisterInput;
-                fieldErrors[field] = err.message;
-            });
-
-            setErrors(fieldErrors);
-        } else {
-            setErrors({});
+        if (name === "password" && formData.confirmPassword) {
+            if (formData.confirmPassword !== value) {
+                setErrors((prev) => ({
+                    ...prev,
+                    confirmPassword: "Passwords do not match",
+                }));
+            } else {
+                setErrors((prev) => ({
+                    ...prev,
+                    confirmPassword: "",
+                }));
+            }
         }
     };
 
@@ -100,6 +117,14 @@ const Register = () => {
             console.log("Validated Data:", data);
             if (response.ok) {
                 toast.success("OTP sent successfully!");
+                navigate("/verify-otp", {
+                    state: {
+                        email: formData.email,
+                        name: formData.name,
+                        password: formData.password,
+                        expiresIn: 300
+                    }
+                })
             } else {
                 toast.error(data.message || "Something went wrong");
             }

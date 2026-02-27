@@ -37,8 +37,10 @@ export const registerSchema = z
             .string()
             .trim()
             .nonempty("Name is required")
-            .regex(/^[A-Z][a-zA-Z\s]+$/,
-                "Name must start with a capital letter"
+            .min(2, "Name must be at least 2 characters")
+            .regex(
+                /^[A-Z][a-zA-Z\s]*$/,
+                "Name must start with a capital letter and contain only letters"
             ),
 
         email: z
