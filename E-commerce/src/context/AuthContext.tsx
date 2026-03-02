@@ -1,8 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
+interface User {
+    name: string;
+    email: string;
+}
+
 interface AuthContextType {
     token: string | null;
-    login: (token: string) => void;
+    login: (token: string, userData:User) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -11,7 +16,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
+
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+    const [user, setUser] = useState<User | null>(null);
 
     // auto login on refresh
     useEffect(() => {
@@ -22,16 +30,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
-    const login = (newToken: string) => {
+    const login = (newToken: string, userData: User) => {
         localStorage.setItem("token", newToken);
-        setToken(newToken);
-        setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(userData));
+        setToken(token);
+        setUser(userData);
+
     };
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setToken(null);
-         setIsAuthenticated(false);
+        setUser(null);
     };
 
     return (

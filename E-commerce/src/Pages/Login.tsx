@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-    const {login}=useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL;
 
@@ -79,11 +79,14 @@ const Login = () => {
             console.log("Login response:", data);
 
             if (response.ok) {
-                login(data?.token)
+                login(data.data?.token, {
+                    name:data.data?.fullName,
+                    email: data.data?.email
+                })
                 toast.success("login successfully!");
                 navigate("/");
             } else {
-                setErrors({password: "Invalid password" });
+                setErrors({ password: "Invalid password" });
                 toast.error(data.message || "Something went wrong");
             }
         } catch (err) {
@@ -98,7 +101,7 @@ const Login = () => {
             <div className="w-full max-w-md text-black shadow-2xl rounded-3xl py-8 flex flex-col items-center gap-5">
                 <p className="text-4xl">Login</p>
 
-                {/* Email */}
+                {/* email */}
                 <div className="w-[80%] flex flex-col space-y-1">
                     <label className="text-sm font-medium text-left">
                         Email <span className="text-red-500">*</span>
@@ -115,7 +118,7 @@ const Login = () => {
                     {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
                 </div>
 
-                {/* Password */}
+                {/* password */}
                 <div className="w-[80%] flex flex-col space-y-1">
                     <label className="text-sm font-medium text-left">
                         Password <span className="text-red-500">*</span>
@@ -139,6 +142,13 @@ const Login = () => {
                 >
                     {loading ? "Sending OTP..." : "Login"}
                 </button>
+                
+                <p
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-blue-600 font-medium cursor-pointer text-sm"
+                >
+                    Forgot Password?
+                </p>
 
                 <div className="w-[80%] text-center text-sm">
                     <span className="text-gray-600">Don't have an account? </span>

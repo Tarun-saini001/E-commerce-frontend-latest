@@ -75,10 +75,41 @@ export const registerSchema = z
 
 // login schema 
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .nonempty("Email is required")
-    .email("Invalid email format"), // only validate format
-  password: z.string().nonempty("Password is required"), // only required
+    email: z
+        .string()
+        .trim()
+        .nonempty("Email is required")
+        .email("Invalid email format"), // only validate format
+    password: z.string().nonempty("Password is required"), // only required
 });
+
+// forgot password schema
+export const forgotPasswordSchema = z.object({
+    email: z
+        .string()
+        .trim()
+        .nonempty("Email is required")
+        .email("Invalid email format"),
+});
+
+// reset password schema
+export const resetPasswordSchema = z
+    .object({
+        password: z
+            .string()
+            .trim()
+            .nonempty("Password is required")
+            .min(6, "Password must be at least 6 characters")
+            .regex(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/,
+                "Password must contain uppercase, lowercase, number & special character"
+            ),
+        confirmPassword: z
+            .string()
+            .trim()
+            .nonempty("Confirm password is required"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });

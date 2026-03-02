@@ -1,37 +1,63 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 const VerifyOtp = () => {
     const { login } = useAuth();
-    const location = useLocation();
     const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL;
 
-    const { email, name, password, expiresIn } = location.state || {};
+    const storedSession = localStorage.getItem("otpSession");
+
+    const { email, name, password, otpType, expiresAt } =
+        storedSession ? JSON.parse(storedSession) : {};
+    useEffect(() => {
+        if (!storedSession) {
+            navigate("/forgot-password", { replace: true });
+        }
+    }, []);
 
     const [otp, setOtp] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [timeLeft, setTimeLeft] = useState<number>(expiresIn || 0);
+    const [timeLeft, setTimeLeft] = useState<number>(expiresAt || 0);
 
     // Countdown
     useEffect(() => {
-        if (!timeLeft) return;
+        if (!expiresAt) return;
 
-        const interval = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(interval);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+        const updateTimer = () => {
+            const remaining = Math.max(
+                0,
+                Math.floor((expiresAt - Date.now()) / 1000)
+            );
+            setTimeLeft(remaining);
+        };
+
+        updateTimer();
+
+        const interval = setInterval(updateTimer, 1000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [expiresAt]);
+
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    };
+
+
+    useEffect(() => {
+        if (timeLeft === 0 && expiresAt) {
+            localStorage.removeItem("otpSession");
+            toast.error("OTP expired");
+            navigate("/forgot-password");
+        }
+    }, [timeLeft]);
+
 
     // OTP change handler
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,24 +92,46 @@ const VerifyOtp = () => {
         try {
             setLoading(true);
 
+            console.log('otpType: ', otpType);
             const response = await fetch(`${API}/onboarding/user/verify-otp`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     app: "anstmasr2588",
                 },
-                body: JSON.stringify({ email, otp, otpType: 1, fullName: name, password }),
+                body: JSON.stringify({
+                    email,
+                    otp,
+                    otpType,
+                    fullName: otpType == 1 ? name : undefined,
+                    password: otpType == 1 ? password : undefined
+                }),
             });
 
             const data = await response.json();
             console.log('data: verify-otp', data);
 
             if (response.ok) {
-                login(data?.token);
-                toast.success("Account verified successfully!");
-                navigate("/");
+                if (otpType === 1) {
+                    // register
+                    localStorage.removeItem("otpSession");
+                    login(data?.token);
+                    toast.success("Account verified successfully!");
+                    navigate("/");
+                }
+
+                else if (otpType === 3) {
+                    localStorage.removeItem("otpSession");
+                    console.log('data?.token: ', data.data?.token);
+                    // forgot password
+                    localStorage.setItem("resetToken", data.data?.token)
+                    toast.success("OTP verified successfully!");
+                    navigate("/reset-password", {
+                        state: { email },
+                    });
+                }
             } else {
-                 setError(data.message || "Invalid OTP");
+                setError(data.message || "Invalid OTP");
                 toast.error(data.message || "Invalid OTP");
             }
         } catch {
@@ -122,7 +170,9 @@ const VerifyOtp = () => {
                 </div>
 
                 <p className="text-sm text-gray-500">
-                    {timeLeft > 0 ? `Expires in ${timeLeft}s` : "OTP expired"}
+                    {timeLeft > 0
+                        ? `Expires in ${formatTime(timeLeft)}`
+                        : "OTP expired"}
                 </p>
 
                 <button

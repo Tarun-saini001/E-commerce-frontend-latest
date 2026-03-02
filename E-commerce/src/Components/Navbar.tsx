@@ -27,7 +27,7 @@ const Navbar = () => {
                     <>
                         <button
                             className='bg-white text-black w-20 shadow rounded-md'
-                            onClick={logout}
+                            onClick={()=>{logout() , navigate("/")}}
                         >
                             Logout
                         </button>

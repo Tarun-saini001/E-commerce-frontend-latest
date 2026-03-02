@@ -8,6 +8,8 @@ import ContactUs from './pages/ContactUs'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import VerifyOtp from './pages/VerifyOtp'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
 
@@ -23,6 +25,8 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<Home />}/>
           <Route path='/verify-otp' element={<VerifyOtp />}/>
+          <Route path='/forgot-password' element={<ForgotPassword />}/>
+          <Route path='/reset-password' element={<ResetPassword />}/>
         </Routes>
       </div>
     </>

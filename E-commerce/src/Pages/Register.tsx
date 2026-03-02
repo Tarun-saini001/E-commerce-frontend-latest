@@ -46,7 +46,7 @@ const Register = () => {
         // validate ONLY this field
         validateField(name as keyof RegisterInput, value);
 
-        
+
         if (name === "confirmPassword") {
             if (value !== formData.password) {
                 setErrors((prev) => ({
@@ -114,17 +114,20 @@ const Register = () => {
                 }),
             });
             const data = await response.json();
-            console.log("Validated Data:", data);
+            console.log("register Data:", data);
             if (response.ok) {
                 toast.success("OTP sent successfully!");
-                navigate("/verify-otp", {
-                    state: {
-                        email: formData.email,
-                        name: formData.name,
-                        password: formData.password,
-                        expiresIn: 300
-                    }
-                })
+                const otpSession = {
+                    email: formData.email,
+                    name: formData.name,
+                    password: formData.password,
+                    otpType: 1,
+                    expiresAt: Date.now() + 300 * 1000,
+                };
+
+                localStorage.setItem("otpSession", JSON.stringify(otpSession));
+
+                navigate("/verify-otp");
             } else {
                 toast.error(data.message || "Something went wrong");
             }
