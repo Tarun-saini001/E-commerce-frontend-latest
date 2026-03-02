@@ -7,7 +7,8 @@ interface User {
 
 interface AuthContextType {
     token: string | null;
-    login: (token: string, userData:User) => void;
+    user: User | null;
+    login: (token: string, userData: User) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -17,23 +18,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
 
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    // const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     const [user, setUser] = useState<User | null>(null);
 
     // auto login on refresh
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
+
         if (storedToken) {
             setToken(storedToken);
-            setIsAuthenticated(true);
+        }
+
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
         }
     }, []);
 
     const login = (newToken: string, userData: User) => {
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(userData));
-        setToken(token);
+        setToken(newToken);
         setUser(userData);
 
     };
@@ -44,11 +50,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(null);
         setUser(null);
     };
-
+    const isAuthenticated = Boolean(token);
     return (
         <AuthContext.Provider
             value={{
                 token,
+                user,
                 login,
                 logout,
                 isAuthenticated
