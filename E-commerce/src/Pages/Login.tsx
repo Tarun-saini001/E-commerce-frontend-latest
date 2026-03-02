@@ -80,11 +80,16 @@ const Login = () => {
 
             if (response.ok) {
                 login(data.data?.token, {
-                    name:data.data?.fullName,
-                    email: data.data?.email
+                    name: data.data?.fullName,
+                    email: data.data?.email,
+                    role: data.data?.role,
                 })
                 toast.success("login successfully!");
-                navigate("/");
+                if (data.data?.role === 1) {
+                    navigate("/dashboard"); 
+                } else {
+                    navigate("/"); 
+                }
             } else {
                 setErrors({ password: "Invalid password" });
                 toast.error(data.message || "Something went wrong");
@@ -142,7 +147,7 @@ const Login = () => {
                 >
                     {loading ? "Sending OTP..." : "Login"}
                 </button>
-                
+
                 <p
                     onClick={() => navigate("/forgot-password")}
                     className="text-blue-600 font-medium cursor-pointer text-sm"

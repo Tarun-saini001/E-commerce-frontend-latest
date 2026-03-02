@@ -2,14 +2,22 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { JSX } from "react";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated } = useAuth();
+interface ProtectedRouteProps {
+    children: JSX.Element;
+    adminOnly?: boolean;
+}
+const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
+    const { isAuthenticated, user } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
-  return children;
+    if (adminOnly && user?.role !== 1) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
 };
 
 export default ProtectedRoute;
