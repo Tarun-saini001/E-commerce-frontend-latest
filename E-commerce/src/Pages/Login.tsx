@@ -4,12 +4,14 @@ import { loginSchema } from "../schemas/validators";
 import type { LoginInput } from "../types/authTypes";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL;
-
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<LoginInput>({
         email: "",
         password: "",
@@ -63,32 +65,28 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API}/onboarding/user/login`, {
+            const response = await fetch(`${API}/service/user/login`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    app: "anstmasr2588",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     email: formData.email,
                     password: formData.password,
                 }),
+                credentials: "include"
             });
 
             const data = await response.json();
             console.log("Login response:", data);
 
             if (response.ok) {
-                login(data.data?.token, {
-                    name: data.data?.fullName,
-                    email: data.data?.email,
-                    role: data.data?.role,
-                })
+                login();
                 toast.success("login successfully!");
                 if (data.data?.role === 1) {
-                    navigate("/dashboard"); 
+                    navigate("/dashboard");
                 } else {
-                    navigate("/"); 
+                    navigate("/");
                 }
             } else {
                 setErrors({ password: "Invalid password" });
@@ -108,36 +106,52 @@ const Login = () => {
 
                 {/* email */}
                 <div className="w-[80%] flex flex-col space-y-1">
-                    <label className="text-sm font-medium text-left">
-                        Email <span className="text-red-500">*</span>
-                    </label>
+                    <label>Email <span className="text-red-500">*</span></label>
                     <input
                         type="email"
                         name="email"
+                        placeholder="Enter email"
                         value={formData.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="Enter Email"
-                        className="bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2"
+                        className={`bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2 ${errors.email
+                            ? "border-red-500 focus:ring-red-200"
+                            : "border-gray-500 focus:ring-blue-500"
+                            }`}
                     />
                     {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
                 </div>
 
                 {/* password */}
                 <div className="w-[80%] flex flex-col space-y-1">
-                    <label className="text-sm font-medium text-left">
-                        Password <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder="Enter password"
-                        className="bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2"
-                    />
-                    {errors.password && <span className="text-red-500 text-xs">{errors.password}</span>}
+                    <label>Password <span className="text-red-500">*</span></label>
+
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Enter password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={`bg-white px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.password
+                                ? "border-red-500 focus:ring-red-200"
+                                : "border-gray-500 focus:ring-blue-500"
+                                }`}
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                        >
+                            {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                        </button>
+                    </div>
+
+                    {errors.password && (
+                        <span className="text-red-500 text-xs">{errors.password}</span>
+                    )}
                 </div>
 
                 <button

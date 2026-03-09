@@ -10,11 +10,18 @@ const VerifyOtp = () => {
 
     const storedSession = localStorage.getItem("otpSession");
 
-    const { email, name, password, otpType, expiresAt } =
-        storedSession ? JSON.parse(storedSession) : {};
+    const {
+        email,
+        name,
+        password,
+        confirmPassword,
+        otpType,
+        expiresAt,
+    } = storedSession ? JSON.parse(storedSession) : {};
+
     useEffect(() => {
         if (!storedSession) {
-            navigate("/forgot-password", { replace: true });
+            navigate("/login", { replace: true });
         }
     }, []);
 
@@ -23,7 +30,7 @@ const VerifyOtp = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [timeLeft, setTimeLeft] = useState<number>(expiresAt || 0);
 
-    // Countdown
+    // countdown
     useEffect(() => {
         if (!expiresAt) return;
 
@@ -93,18 +100,18 @@ const VerifyOtp = () => {
             setLoading(true);
 
             console.log('otpType: ', otpType);
-            const response = await fetch(`${API}/onboarding/user/verify-otp`, {
+            const response = await fetch(`${API}/service/user/verifyOtp`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    app: "anstmasr2588",
                 },
                 body: JSON.stringify({
                     email,
                     otp,
                     otpType,
-                    fullName: otpType == 1 ? name : undefined,
-                    password: otpType == 1 ? password : undefined
+                    name: otpType == 1 ? name : undefined,
+                    password: otpType == 1 ? password : undefined,
+                    confirmPassword: otpType == 1 ? confirmPassword : undefined
                 }),
             });
 
@@ -115,16 +122,16 @@ const VerifyOtp = () => {
                 if (otpType === 1) {
                     // register
                     localStorage.removeItem("otpSession");
-                    login(data?.token);
+                    login();
                     toast.success("Account verified successfully!");
                     navigate("/");
                 }
 
                 else if (otpType === 3) {
                     localStorage.removeItem("otpSession");
-                    console.log('data?.token: ', data.data?.token);
+                    console.log('data?.tempToken: ', data?.tempToken);
                     // forgot password
-                    localStorage.setItem("resetToken", data.data?.token)
+                    localStorage.setItem("tempToken", data?.tempToken)
                     toast.success("OTP verified successfully!");
                     navigate("/reset-password", {
                         state: { email },

@@ -16,7 +16,7 @@ const Navbar = () => {
                 className="text-sm pl-10 text-blue-500 font-bold gap-4 flex justify-center items-center cursor-pointer"
             >
                 TS Mart
-                <p><FaCartShopping /></p>
+                <FaCartShopping />
             </p>
 
             <nav className="flex justify-center items-center pr-10 w-[60%]">
@@ -24,7 +24,7 @@ const Navbar = () => {
                     {isAuthenticated && user?.role === 1 && (
                         <li
                             className="cursor-pointer text-black font-bold"
-                            onClick={() => navigate("/dashboard")}
+                            onClick={() => navigate("/admin")}
                         >
                             Dashboard
                         </li>

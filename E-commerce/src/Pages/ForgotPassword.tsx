@@ -28,11 +28,10 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API}/onboarding/user/send-otp`, {
+      const response = await fetch(`${API}/service/user/send-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          app: "anstmasr2588",
         },
         body: JSON.stringify({
           email,
@@ -48,7 +47,7 @@ const ForgotPassword = () => {
         const otpSession = {
           email,
           otpType: 3,
-          expiresAt: Date.now() + 300 * 1000,
+          expiresAt: Date.now() + 1 * 60 * 1000,
         };
 
         localStorage.setItem("otpSession", JSON.stringify(otpSession));
