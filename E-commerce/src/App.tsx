@@ -22,6 +22,7 @@ import ListProducts from './pages/admin/ListProducts'
 import UsersList from './pages/admin/UsersList'
 import { useAuth } from './context/AuthContext'
 import ProductDetails from './pages/ProductDetails'
+import Cart from './pages/Cart'
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/reset-password' element={<ResetPassword />} />
           <Route path='/product/:productId' element={<ProductDetails />} />
+          <Route path='/cart' element={<Cart />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>} /> */}
           <Route path="/admin" element={<AdminLayout />}>
