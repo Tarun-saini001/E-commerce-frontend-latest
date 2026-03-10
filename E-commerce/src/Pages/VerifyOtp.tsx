@@ -124,7 +124,7 @@ const VerifyOtp = () => {
                     localStorage.removeItem("otpSession");
                     login();
                     toast.success("Account verified successfully!");
-                    navigate("/");
+                    navigate("/login");
                 }
 
                 else if (otpType === 3) {

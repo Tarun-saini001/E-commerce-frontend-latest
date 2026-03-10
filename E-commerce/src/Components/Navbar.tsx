@@ -32,16 +32,20 @@ const Navbar = () => {
                     <li onClick={() => navigate("/")} className="cursor-pointer text-blue-500">
                         Home
                     </li>
-                    <li onClick={() => navigate("/about")} className="cursor-pointer text-blue-500">
-                        About Us
-                    </li>
-                    <li onClick={() => navigate("/contact-us")} className="cursor-pointer text-blue-500">
-                        Contact Us
-                    </li>
+
                 </ul>
             </nav>
 
             <span className="flex space-x-4 pr-2 relative">
+
+                {isAuthenticated && (
+                    <div
+                        onClick={() => navigate("/cart")}
+                        className="cursor-pointer  text-xl flex items-center"
+                    >
+                        <FaCartShopping />
+                    </div>
+                )}
                 {isAuthenticated ? (
                     <div
                         onClick={() => navigate("/profile")}
