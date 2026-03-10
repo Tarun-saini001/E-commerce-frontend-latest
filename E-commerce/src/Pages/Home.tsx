@@ -19,8 +19,10 @@ const Home = () => {
   };
 
 
-  if (loading) return <div className="flex justify-center items-center text-2xl font-bold">Loading products...</div>;
-  if (error) return <div className="flex justify-center items-center text-2xl font-bold">{error}</div>;
+  if (loading) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">Loading products...</div>;
+  if (error) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">{error}</div>;
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
@@ -49,7 +51,7 @@ const Home = () => {
           Featured Products
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-4 gap-6">
           {products.map((product) => (
             <div
               key={product.id}
