@@ -13,8 +13,8 @@ const ProductDetails = () => {
 
     const navigate = useNavigate();
 
-    const handleAddToCart = () => {
-        dispatch(addToCart(product!));
+    const handleAddToCart = (product:Product) => {
+        dispatch(addToCart(product));
     };
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const ProductDetails = () => {
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">
-            {/* Back Button */}
+            {/* back button */}
             <button
                 onClick={() => navigate(-1)}
                 className="mb-6 px-3 py-1 rounded  border  border-black  hover:bg-gray-300 transition"
@@ -54,7 +54,7 @@ const ProductDetails = () => {
                     <p className="text-gray-700 mb-4">{product.description}</p>
                     <p className="text-sm text-green-600 mb-6">{product.stock > 0 ? "In Stock" : "Out of Stock"}</p>
                     <button 
-                    onClick={handleAddToCart}
+                    onClick={()=>handleAddToCart(product)}
                     className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
                         Add to Cart
                     </button>

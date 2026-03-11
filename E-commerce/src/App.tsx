@@ -23,19 +23,30 @@ import UsersList from './pages/admin/UsersList'
 import { useAuth } from './context/AuthContext'
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
-
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from './redux/store'
+import { useEffect } from 'react'
+import { fetchCart } from './redux/slices/cartSlice'
 
 function App() {
 
   const { loading } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        );
-    }
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+
+
   return (
     <>
       <div>
@@ -43,7 +54,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
-          <Route path='/contact-us' element={<ContactUs />}   />
+          <Route path='/contact-us' element={<ContactUs />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<Home />} />
