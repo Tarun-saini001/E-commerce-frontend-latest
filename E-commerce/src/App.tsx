@@ -28,6 +28,7 @@ import type { AppDispatch } from './redux/store'
 import { useEffect } from 'react'
 import { fetchCart } from './redux/slices/cartSlice'
 import AllProducts from './pages/AllProducts'
+import Footer from './components/Footer'
 
 function App() {
 
@@ -77,6 +78,7 @@ function App() {
             <Route path="users" element={<UsersList />} />
           </Route>
         </Routes>
+        <Footer/>
       </div>
     </>
   )

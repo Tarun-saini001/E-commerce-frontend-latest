@@ -45,12 +45,17 @@ const AllProducts = () => {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-    if (loading) return <div className="text-center text-blue-500 text-2xl mt-10">Loading products...</div>;
+    if (loading) return <div className="text-center text-blue-300 text-2xl mt-10">Loading products...</div>;
     if (error) return <div className="text-center text-red-500 text-2xl mt-10">{error}</div>;
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">
-            <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">All Products</h2>
+            <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold text-blue-400">TS Mart Products</h2>
+                <p className="text-gray-500 mt-2 text-sm">
+                    Shop the latest and trending products from TS Mart at unbeatable prices.
+                </p>
+            </div>
 
             {/* products  */}
             <div className="grid grid-cols-3 gap-6">
@@ -89,10 +94,10 @@ const AllProducts = () => {
                         </div>
 
                         <div className="mt-auto flex items-center justify-between pt-3">
-                            <span className="text-blue-600 font-bold">${product.price.toFixed(2)}</span>
+                            <span className="text-blue-00 font-bold">${product.price.toFixed(2)}</span>
                             <button
                                 onClick={() => handleAddToCart(product)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                             >
                                 Add to Cart
                             </button>
@@ -107,7 +112,7 @@ const AllProducts = () => {
                     <button
                         key={page}
                         onClick={() => paginate(page)}
-                        className={`px-4 py-2 rounded border ${currentPage === page ? "bg-blue-500 text-white" : "bg-white text-blue-500 border-blue-500"
+                        className={`px-4 py-2 rounded border ${currentPage === page ? "bg-blue-300 text-white" : "bg-white text-blue-500 border-blue-500"
                             }`}
                     >
                         {page}

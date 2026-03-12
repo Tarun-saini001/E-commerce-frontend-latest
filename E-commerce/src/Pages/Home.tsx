@@ -62,7 +62,9 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Bundle Package</p>
             <h3 className="text-xl font-bold mt-1">Save 30%</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+              onClick={() => navigate("/products")}
+            >
               Shop Now
             </button>
           </div>
@@ -79,7 +81,9 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Valentine Offer</p>
             <h3 className="text-xl font-bold mt-1">30% Sale</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+              onClick={() => navigate("/products")}
+            >
               Buy Now
             </button>
           </div>
@@ -96,7 +100,9 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Relax Chair</p>
             <h3 className="text-xl font-bold mt-1">New Arrival</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+              onClick={() => navigate("/products")}
+            >
               Buy Now
             </button>
           </div>
@@ -142,10 +148,10 @@ const Home = () => {
 
 
               <div className="mt-auto flex items-center justify-between pt-3">
-                <span className="text-blue-600 font-bold">${product.price.toFixed(2)}</span>
+                <span className="text-blue-400 font-bold">${product.price.toFixed(2)}</span>
                 <button
                   onClick={() => navigate(`/product/${product.id}`)}
-                  className="bg-blue-600 cursor-pointer text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition"
+                  className="bg-blue-400 cursor-pointer text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
                 >
                   Buy
                 </button>
@@ -153,14 +159,14 @@ const Home = () => {
             </div>
           ))}
         </div>
-        {/* PAGINATION */}
-        <div className="flex justify-center mt-10 space-x-2">
+        {/* pages */}
+        <div className="flex justify-center my-10 space-x-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => paginate(page)}
               className={`px-4 py-2 rounded border ${currentPage === page
-                ? "bg-blue-500 text-white"
+                ? "bg-blue-300 text-white"
                 : "bg-white text-blue-500 border-blue-500"
                 }`}
             >

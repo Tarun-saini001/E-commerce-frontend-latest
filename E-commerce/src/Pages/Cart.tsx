@@ -4,6 +4,7 @@ import { removeItem, clearCart, updateCartQuantity } from "../redux/slices/cartS
 import { IoIosRemoveCircle, IoIosAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { RxCross1 } from "react-icons/rx";
 
 const Cart = () => {
     const { items, total } = useSelector((state: RootState) => state.cart);
@@ -28,70 +29,139 @@ const Cart = () => {
 
     const handleRemove = (productId: number) => {
         dispatch(removeItem(productId))
-        .unwrap()
-        .then(()=>toast.success("Item removed from cart"))
-        .catch(()=>toast.error("Failed to remove item"))
+            .unwrap()
+            .then(() => toast.success("Item removed from cart"))
+            .catch(() => toast.error("Failed to remove item"))
     };
 
     const handleClearCart = () => {
         dispatch(clearCart())
-        .unwrap()
-        .then(()=>toast.success("Cart cleared"))
-        .catch(()=>toast.error("Failed to clear cart"))
+            .unwrap()
+            .then(() => toast.success("Cart cleared"))
+            .catch(() => toast.error("Failed to clear cart"))
     };
 
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-12">
-            <h2 className="text-3xl font-bold mb-6">Shopping Cart</h2>
-            <div className="grid grid-cols-1 gap-6">
-                {items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
-                        <img src={item.thumbnail} alt={item.title} className="h-24 object-contain" />
-                        <div className="flex-1   px-4">
-                            <h3 className="font-bold">{item.title}</h3>
-                            <p className="text-gray-500">{item.brand} . {item.category}</p>
-                            <p className="text-blue-500 font-bold">${item.price}</p>
-                            <div className="flex items-center space-x-2 mt-2">
-                                <button onClick={() => handleDecrease(item.id, item.quantity)}>
-                                    <IoIosRemoveCircle size={24} />
+        <div className="max-w-7xl mx-auto px-6 py-12">
+
+            <h2 className="text-3xl font-bold mb-8">Your Cart</h2>
+
+            <div className="grid grid-cols-3 gap-8">
+
+                {/* LEFT SIDE - CART ITEMS */}
+                <div className="col-span-2 space-y-4">
+
+                    {items.map((item) => (
+                        <div
+                            key={item.id}
+                            className="flex items-center justify-between bg-white border rounded-lg p-4 shadow-sm"
+                        >
+
+                            {/* Product Image */}
+                            <div className="bg-gray-100 p-3 rounded-lg">
+                                <img
+                                    src={item.thumbnail}
+                                    alt={item.title}
+                                    className="h-16 w-16 object-contain"
+                                />
+                            </div>
+
+                            {/* Product Info */}
+                            <div className="flex-1 px-4">
+                                <h3 className="font-semibold">{item.title}</h3>
+                                <p className="text-sm text-gray-500">
+                                    {item.brand} • {item.category}
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                    Price: ${item.price}
+                                </p>
+                            </div>
+
+                            {/* quantity */}
+                            <div className="flex items-center space-x-2">
+                                <button
+                                    onClick={() => handleDecrease(item.id, item.quantity)}
+                                    className="text-gray-500 hover:text-black"
+                                >
+                                    <IoIosRemoveCircle size={22} />
                                 </button>
-                                <span>{item.quantity}</span>
-                                <button onClick={() => handleIncrease(item.id, item.quantity)}>
-                                    <IoIosAddCircle size={24} />
+
+                                <span className="px-2">{item.quantity}</span>
+
+                                <button
+                                    onClick={() => handleIncrease(item.id, item.quantity)}
+                                    className="text-gray-500 hover:text-black"
+                                >
+                                    <IoIosAddCircle size={22} />
+                                </button>
+                            </div>
+
+                            {/* price */}
+                            <div className="w-24 ml-2  flex justify-between text-blue-600 font-bold">
+                                ${(item.price * item.quantity).toFixed(2)}
+
+
+                                {/* remove */}
+                                <button
+                                    onClick={() => handleRemove(item.id)}
+                                    className="text-black hover:text-red-500 text-xl"
+                                >
+                                    <RxCross1 />
                                 </button>
                             </div>
                         </div>
-                        <div className="flex flex-col items-end space-y-2">
-                            <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
-                            <button
-                                onClick={() => handleRemove(item.id)}
-                                className="text-red-500 hover:underline"
-                            >
-                                Remove
-                            </button>
+                    ))}
+
+                    <button
+                        onClick={handleClearCart}
+                        className="text-sm text-red-500 hover:underline"
+                    >
+                        Remove all from cart
+                    </button>
+
+                </div>
+
+                {/* rite side - order summary */}
+                <div className="bg-white border rounded-lg p-6 shadow-sm h-fit">
+
+                    <h3 className="font-semibold mb-4">Order Summary</h3>
+
+                    <div className="space-y-2 text-sm">
+
+                        <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>${total.toFixed(2)}</span>
                         </div>
+
+                        <div className="flex justify-between">
+                            <span>Delivery</span>
+                            <span>$25.00</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Tax</span>
+                            <span>$14.00</span>
+                        </div>
+
+                        <div className="border-t pt-3 flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span>${(total + 25 + 14).toFixed(2)}</span>
+                        </div>
+
                     </div>
-                ))}
+
+                    <button
+                        onClick={() => navigate("/checkout")}
+                        className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+                    >
+                        Checkout 
+                    </button>
+
+                </div>
+
             </div>
 
-            <div className="mt-6 flex justify-between items-center">
-                <button
-                    onClick={handleClearCart}
-                    className="px-6 py-3 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                >
-                    Clear Cart
-                </button>
-                <div className="text-xl font-bold">
-                    Total: ${total.toFixed(2)}
-                </div>
-                <button
-                    onClick={() => navigate("/checkout")}
-                    className="px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600 transition"
-                >
-                    Checkout
-                </button>
-            </div>
         </div>
     );
 };
