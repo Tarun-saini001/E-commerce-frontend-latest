@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from './redux/store'
 import { useEffect } from 'react'
 import { fetchCart } from './redux/slices/cartSlice'
+import AllProducts from './pages/AllProducts'
 
 function App() {
 
@@ -63,6 +64,7 @@ function App() {
           <Route path='/reset-password' element={<ResetPassword />} />
           <Route path='/product/:productId' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path="/products" element={<AllProducts />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>} /> */}
           <Route path="/admin" element={<AdminLayout />}>

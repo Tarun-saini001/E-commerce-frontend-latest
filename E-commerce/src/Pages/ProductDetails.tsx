@@ -5,6 +5,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
 import type { AppDispatch } from "../redux/store";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 const ProductDetails = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -12,9 +14,19 @@ const ProductDetails = () => {
     const [product, setProduct] = useState<Product>();
 
     const navigate = useNavigate();
+    const {isAuthenticated} = useAuth();
 
-    const handleAddToCart = (product:Product) => {
-        dispatch(addToCart(product));
+    const handleAddToCart = (product: Product) => {
+        if (!isAuthenticated) {
+            toast.error("Please login to add to cart!");
+            navigate("/login");
+            return;
+        }
+        dispatch(addToCart(product))
+            .unwrap()
+            .then(() => toast.success("Product added to cart!"))
+            .catch(() => toast.error("Failed to add product to cart"));
+
     };
 
     useEffect(() => {
@@ -53,9 +65,9 @@ const ProductDetails = () => {
                     <p className="text-2xl font-bold text-blue-600 mb-4">${product.price}</p>
                     <p className="text-gray-700 mb-4">{product.description}</p>
                     <p className="text-sm text-green-600 mb-6">{product.stock > 0 ? "In Stock" : "Out of Stock"}</p>
-                    <button 
-                    onClick={()=>handleAddToCart(product)}
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
+                    <button
+                        onClick={() => handleAddToCart(product)}
+                        className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
                         Add to Cart
                     </button>
                 </div>

@@ -7,12 +7,14 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from './context/AuthContext.tsx'
  import { Provider } from 'react-redux'
 import { store } from './redux/store.ts'
+import CartLoader from './components/CartLoader.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <>
     <BrowserRouter>
       <AuthProvider>
         <Provider store={store}>
+           <CartLoader />
               <App />
         </Provider>
         </AuthProvider>

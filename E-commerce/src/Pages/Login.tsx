@@ -159,7 +159,7 @@ const Login = () => {
                     disabled={loading}
                     className="mt-4 rounded p-2 w-[60%] bg-black text-white cursor-pointer disabled:opacity-50"
                 >
-                    {loading ? "Sending OTP..." : "Login"}
+                    {loading ? "Logging in..." : "Login"}
                 </button>
 
                 <p

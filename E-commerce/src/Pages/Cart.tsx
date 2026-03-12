@@ -3,6 +3,7 @@ import type { RootState, AppDispatch } from "../redux/store";
 import { removeItem, clearCart, updateCartQuantity } from "../redux/slices/cartSlice";
 import { IoIosRemoveCircle, IoIosAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Cart = () => {
     const { items, total } = useSelector((state: RootState) => state.cart);
@@ -26,11 +27,17 @@ const Cart = () => {
     };
 
     const handleRemove = (productId: number) => {
-        dispatch(removeItem(productId));
+        dispatch(removeItem(productId))
+        .unwrap()
+        .then(()=>toast.success("Item removed from cart"))
+        .catch(()=>toast.error("Failed to remove item"))
     };
 
     const handleClearCart = () => {
-        dispatch(clearCart());
+        dispatch(clearCart())
+        .unwrap()
+        .then(()=>toast.success("Cart cleared"))
+        .catch(()=>toast.error("Failed to clear cart"))
     };
 
 

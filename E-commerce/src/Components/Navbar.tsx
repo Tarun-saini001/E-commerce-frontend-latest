@@ -10,7 +10,7 @@ const Navbar = () => {
 
 
     const { items } = useSelector((state: RootState) => state.cart);
-    
+
 
     return (
         <div className="bg-white h-[8%] rounded p-2 transition hover:shadow-xl text-black flex my-3 mx-5 shadow justify-between">
@@ -34,6 +34,9 @@ const Navbar = () => {
                     )}
                     <li onClick={() => navigate("/")} className="cursor-pointer text-blue-500">
                         Home
+                    </li>
+                    <li onClick={() => navigate("/products")} className="cursor-pointer text-blue-500">
+                        All Products
                     </li>
 
                 </ul>

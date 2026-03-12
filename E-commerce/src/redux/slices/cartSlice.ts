@@ -20,16 +20,19 @@ const initialState: CartState = {
     error: null
 };
 
-
+interface CartResponse {
+  items: CartItem[];
+  subtotal: number;
+}
 
 const API = import.meta.env.VITE_API_URL;
 
 //fetch cart data
 export const fetchCart = createAsyncThunk("cart/fetch", async () => {
-    const res = await fetch(`${API}service/cart/`, { credentials: "include" })
+    const res = await fetch(`${API}/service/cart/`, { credentials: "include",method:"GET" })
     const data = await res.json();
     console.log(' data.data.items: ',  data.data.items);
-    return data.data.items as CartItem[];
+    return data.data as CartResponse;
 })
 
 //add to cart
@@ -46,7 +49,7 @@ export const addToCart = createAsyncThunk(
         });
         const data = await res.json();
         console.log('add to cart res: ', data);
-        return data.data.items as CartItem[];
+        return data.data as CartResponse;
     }
 );
 
@@ -60,8 +63,9 @@ export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async 
         body: JSON.stringify({ quantity })
     });
     const data = await res.json();
+    console.log('data: update quantity', data);
     console.log('update quantity res: ', data);
-    return data.data.items as CartItem[];
+    return data.data as CartResponse;
 })
 
 
@@ -76,7 +80,7 @@ export const removeItem = createAsyncThunk(
         });
         const data = await res.json();
         console.log('remove cart item res: ', data);
-        return data.data.items as CartItem[];
+        return data.data as CartResponse;
     }
 );
 
@@ -88,7 +92,7 @@ export const clearCart = createAsyncThunk("cart/clear", async () => {
     });
     const data = await res.json();
     console.log('clear cart res:', data);
-    return data.data.items as CartItem[];
+    return data.data as  CartResponse;
 });
 
 
@@ -136,7 +140,7 @@ const cartSlice = createSlice({
             .addCase(fetchCart.fulfilled, (state, action) => {
                 console.log('state.items: ', state.items);
                 state.loading = false,
-                    state.items = action.payload,
+                    state.items = action.payload.items,
                     state.total = state.items.reduce(
                         (acc, item) => acc + item.price * item.quantity,
                         0
@@ -147,7 +151,7 @@ const cartSlice = createSlice({
             })
 
             .addCase(addToCart.fulfilled, (state, action) => {
-                state.items = action.payload;
+                state.items = action.payload.items;
                 state.total = state.items.reduce(
                     (acc, item) => acc + item.price * item.quantity,
                     0
@@ -155,7 +159,7 @@ const cartSlice = createSlice({
             })
 
             .addCase(updateCartQuantity.fulfilled, (state, action) => {
-                state.items = action.payload;
+                state.items = action.payload.items;
                 state.total = state.items.reduce(
                     (acc, item) => acc + item.price * item.quantity,
                     0
@@ -163,7 +167,7 @@ const cartSlice = createSlice({
             })
 
             .addCase(removeItem.fulfilled, (state, action) => {
-                state.items = action.payload;
+                state.items = action.payload.items;
                 state.total = state.items.reduce(
                     (acc, item) => acc + item.price * item.quantity,
                     0
@@ -171,7 +175,7 @@ const cartSlice = createSlice({
             })
 
             .addCase(clearCart.fulfilled, (state, action) => {
-                state.items = action.payload;
+                state.items = action.payload.items;
                 state.total = 0
             })
     }
