@@ -13,10 +13,10 @@ const Navbar = () => {
 
 
     return (
-        <div className="bg-white h-[8%] rounded p-2 transition hover:shadow-xl text-black flex my-3 mx-5 shadow justify-between">
+        <div className="bg-blue-400 h-[8%] rounded p-2 transition hover:shadow-xl text-white flex my-3 mx-5 shadow justify-between">
             <p
                 onClick={() => navigate("/")}
-                className="text-sm pl-10 text-blue-500 font-bold gap-4 flex justify-center items-center cursor-pointer"
+                className="text-sm pl-10 text-white font-bold gap-4 flex justify-center items-center cursor-pointer"
             >
                 TS Mart
                 <FaCartShopping />
@@ -32,10 +32,10 @@ const Navbar = () => {
                             Dashboard
                         </li>
                     )}
-                    <li onClick={() => navigate("/")} className="cursor-pointer text-blue-500">
+                    <li onClick={() => navigate("/")} className="cursor-pointer text-white">
                         Home
                     </li>
-                    <li onClick={() => navigate("/products")} className="cursor-pointer text-blue-500">
+                    <li onClick={() => navigate("/products")} className="cursor-pointer text-white">
                         All Products
                     </li>
 
@@ -57,20 +57,20 @@ const Navbar = () => {
                 {isAuthenticated ? (
                     <div
                         onClick={() => navigate("/profile")}
-                        className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center cursor-pointer"
+                        className="w-10 h-10 rounded-full bg-gray-300 text-black flex items-center justify-center cursor-pointer"
                     >
                         {user?.name?.charAt(0).toUpperCase()}
                     </div>
                 ) : (
                     <>
                         <button
-                            className="bg-white text-black w-20 shadow rounded-md"
+                            className="bg-blue-500 text-white w-20 shadow rounded-md"
                             onClick={() => navigate("/register")}
                         >
                             Register
                         </button>
                         <button
-                            className="bg-white text-black w-20 shadow rounded-md"
+                            className="bg-blue-500 text-white w-20 shadow rounded-md"
                             onClick={() => navigate("/login")}
                         >
                             Login

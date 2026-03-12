@@ -2,21 +2,28 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../redux/slices/productSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { AiTwotoneLike } from "react-icons/ai";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { products, loading, error } = useSelector((state: RootState) => state.products)
+  // pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const productsPerPage = 9;
 
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  const handleBuyNow = (productId: number) => {
-    // navigate to product details page
-    navigate(`/product/${productId}`);
-  };
+  // pagination calculations
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
   if (loading) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">Loading products...</div>;
@@ -24,10 +31,10 @@ const Home = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white px-2">
       <div className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
         <img
-          src="/e-commerce.avif"
+          src="/e-commerce-image.jpg"
           alt="TS Mart Banner"
           className="w-full h-full object-cover"
         />
@@ -39,59 +46,74 @@ const Home = () => {
             Find the best products at amazing prices
           </p>
           <button
-            className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg transition"
+            onClick={() => navigate("/products")}
+            className="mt-6 px-6 py-3 bg-gray-300 font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
           >
             Shop Now
           </button>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">
-          Featured Products
-        </h2>
+      <div className="max-w-7xl mx-auto px-6 mt-14">
+        <h2 className="text-3xl font-extrabold mb-6 text-gray-900">Featured Items</h2>
 
-        <div className="grid grid-cols-4 gap-6">
-          {products.map((product) => (
+        <div className="grid  grid-cols-3  gap-6">
+          {currentProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center transition hover:shadow-xl"
+              className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
             >
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="h-40 object-contain mb-4"
-              />
+              <div className="relative bg-gray-100 p-4 rounded-lg">
+                <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                  -30%
+                </span>
+                <img
+                  src={product.thumbnail}
+                  alt={product.title}
+                  className="h-40 w-full object-contain"
+                />
+              </div>
 
-              <h3 className="font-semibold text-center mb-1">
-                {product.title.length > 30
-                  ? product.title.substring(0, 27) + "..."
-                  : product.title}
+              <h3 className="font-semibold mt-3 text-sm truncate" title={product.title}>
+                {product.title}
               </h3>
 
-              <p className="text-sm text-gray-500 mb-1">
-                {product.brand} • {product.category}
-              </p>
+              <p className="text-gray-500 text-xs mt-1">{product.brand}</p>
+              <div className="flex  items-center gap-2 ">
+                <span><AiTwotoneLike /></span>
+                <p className="text-yellow-500 text-xs mt-1">{product.rating}</p>
+              </div>
 
-              <p className="text-yellow-500 text-sm mb-1">
-                ratings {product.rating}
-              </p>
 
-              <p className="text-blue-500 font-bold mb-3">
-                ${product.price}
-              </p>
-
-              <button
-                onClick={() => handleBuyNow(product.id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-              >
-                Buy Now
-              </button>
+              <div className="mt-auto flex items-center justify-between pt-3">
+                <span className="text-blue-600 font-bold">${product.price.toFixed(2)}</span>
+                <button
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  className="bg-blue-600 cursor-pointer text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition"
+                >
+                  Buy
+                </button>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+        {/* PAGINATION */}
+        <div className="flex justify-center mt-10 space-x-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => paginate(page)}
+              className={`px-4 py-2 rounded border ${currentPage === page
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500 border-blue-500"
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
 
+      </div>
 
     </div>
   );

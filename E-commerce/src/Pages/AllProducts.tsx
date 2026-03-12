@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../redux/store";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { AiTwotoneLike } from "react-icons/ai";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,7 +18,7 @@ const AllProducts = () => {
 
     // pagination 
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 8; 
+    const productsPerPage = 9;
 
     useEffect(() => {
         dispatch(fetchProducts());
@@ -52,20 +53,50 @@ const AllProducts = () => {
             <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">All Products</h2>
 
             {/* products  */}
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 gap-6">
                 {currentProducts.map((product) => (
-                    <div key={product.id} className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center transition hover:shadow-xl">
-                        <img src={product.thumbnail} alt={product.title} className="h-40 object-contain mb-4" />
-                        <h3 className="font-semibold text-center mb-1">{product.title}</h3>
-                        <p className="text-sm text-gray-500 mb-1">{product.brand} • {product.category}</p>
-                        <p className="text-yellow-500 text-sm mb-1">Rating {product.rating}</p>
-                        <p className="text-blue-500 font-bold mb-3">${product.price}</p>
-                        <button
-                            onClick={() => handleAddToCart(product)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                    <div
+                        key={product.id}
+                        className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+                    >
+                        <div className="relative bg-gray-100 p-4 rounded-lg mb-4">
+                            <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                                -30%
+                            </span>
+                            <img
+                                src={product.thumbnail}
+                                alt={product.title}
+                                className="h-40 w-full object-contain"
+                            />
+                        </div>
+
+                        <h3
+                            className="font-semibold  mb-1 truncate"
+                            title={product.title}
                         >
-                            Add to Cart
-                        </button>
+                            {product.title}
+                        </h3>
+
+                        <p className="text-sm text-gray-500 mb-1 ">
+                            {product.brand} * {product.category}
+                        </p>
+
+                        {/* <p className="text-gray-500 text-xs mt-1">{product.brand}</p> */}
+
+                        <div className="flex  items-center gap-2 ">
+                            <span><AiTwotoneLike /></span>
+                            <p className="text-yellow-500 text-xs mt-1">{product.rating}</p>
+                        </div>
+
+                        <div className="mt-auto flex items-center justify-between pt-3">
+                            <span className="text-blue-600 font-bold">${product.price.toFixed(2)}</span>
+                            <button
+                                onClick={() => handleAddToCart(product)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -76,9 +107,8 @@ const AllProducts = () => {
                     <button
                         key={page}
                         onClick={() => paginate(page)}
-                        className={`px-4 py-2 rounded border ${
-                            currentPage === page ? "bg-blue-500 text-white" : "bg-white text-blue-500 border-blue-500"
-                        }`}
+                        className={`px-4 py-2 rounded border ${currentPage === page ? "bg-blue-500 text-white" : "bg-white text-blue-500 border-blue-500"
+                            }`}
                     >
                         {page}
                     </button>
