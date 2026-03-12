@@ -52,6 +52,7 @@ function App() {
     <>
       <div>
         < Navbar />
+        <div className="pt-[70px]"></div>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />

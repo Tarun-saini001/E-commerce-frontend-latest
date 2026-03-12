@@ -13,10 +13,10 @@ const Navbar = () => {
 
 
     return (
-        <div className="bg-blue-400 h-[8%] rounded p-2 transition hover:shadow-xl text-white flex my-3 mx-5 shadow justify-between">
+       <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center shadow">
             <p
                 onClick={() => navigate("/")}
-                className="text-sm pl-10 text-white font-bold gap-4 flex justify-center items-center cursor-pointer"
+                className="text-sm pl-10 text-sky-300 font-bold gap-4 flex justify-center items-center cursor-pointer"
             >
                 TS Mart
                 <FaCartShopping />
@@ -32,10 +32,10 @@ const Navbar = () => {
                             Dashboard
                         </li>
                     )}
-                    <li onClick={() => navigate("/")} className="cursor-pointer text-white">
+                    <li onClick={() => navigate("/")} className="cursor-pointer text-sky-300">
                         Home
                     </li>
-                    <li onClick={() => navigate("/products")} className="cursor-pointer text-white">
+                    <li onClick={() => navigate("/products")} className="cursor-pointer text-sky-300">
                         All Products
                     </li>
 
@@ -48,7 +48,7 @@ const Navbar = () => {
                     <span className="relative flex justify-center items-center cursor-pointer" onClick={() => navigate("/cart")}>
                         <FaCartShopping size={24} />
                         {items.length > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-sky-300 rounded-full w-5 h-5 text-xs flex items-center justify-center">
                                 {items.length}
                             </span>
                         )}
@@ -64,13 +64,13 @@ const Navbar = () => {
                 ) : (
                     <>
                         <button
-                            className="bg-blue-500 text-white w-20 shadow rounded-md"
+                            className=" text-white bg-sky-300 shadow w-20 font-bold rounded-md"
                             onClick={() => navigate("/register")}
                         >
                             Register
                         </button>
                         <button
-                            className="bg-blue-500 text-white w-20 shadow rounded-md"
+                            className=" text-white bg-sky-300 shadow w-20 font-bold rounded-md"
                             onClick={() => navigate("/login")}
                         >
                             Login

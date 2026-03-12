@@ -54,6 +54,62 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Banners */}
+      <div className="max-w-7xl mx-auto px-6 mt-12 grid grid-cols-3 gap-6">
+
+        {/* banner 1 */}
+        <div className="bg-pink-100 rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition">
+          <div>
+            <p className="text-gray-600 text-sm">Bundle Package</p>
+            <h3 className="text-xl font-bold mt-1">Save 30%</h3>
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+              Shop Now
+            </button>
+          </div>
+
+          <img
+            src="/banner-1.jpg"
+            alt="Loading..."
+            className="h-20 object-contain rounded-2xl"
+          />
+        </div>
+
+        {/* banner 2 */}
+        <div className="bg-yellow-100 rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition">
+          <div>
+            <p className="text-gray-600 text-sm">Valentine Offer</p>
+            <h3 className="text-xl font-bold mt-1">30% Sale</h3>
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+              Buy Now
+            </button>
+          </div>
+
+          <img
+            src="/banner-2.jpg"
+            alt="Loading..."
+            className="h-20 object-contain rounded-2xl"
+          />
+        </div>
+
+        {/* banner 3 */}
+        <div className="bg-green-100 rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition">
+          <div>
+            <p className="text-gray-600 text-sm">Relax Chair</p>
+            <h3 className="text-xl font-bold mt-1">New Arrival</h3>
+            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline">
+              Buy Now
+            </button>
+          </div>
+
+          <img
+            src="/banner-3.jpg"
+            alt="Loading..."
+            className="h-20 object-contain"
+          />
+        </div>
+
+      </div>
+      {/* products */}
       <div className="max-w-7xl mx-auto px-6 mt-14">
         <h2 className="text-3xl font-extrabold mb-6 text-gray-900">Featured Items</h2>
 
