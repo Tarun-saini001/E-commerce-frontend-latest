@@ -9,7 +9,7 @@ import CategorySidebar from "../components/CategoriesSidebar";
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { products, loading, error } = useSelector((state: RootState) => state.products)
+  const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products)
   // pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productsPerPage = 9;
@@ -20,12 +20,16 @@ const Home = () => {
     }
   }, [dispatch, products.length]);
 
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // pagination calculations
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 

@@ -3,17 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FaCartShopping } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../redux/store";
+import { useDispatch } from "react-redux";
+import { setSearchTerm } from "../redux/slices/productSlice";
+import { CiSearch } from "react-icons/ci";
+
 const Navbar = () => {
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth();
-
+    const dispatch = useDispatch<AppDispatch>();
 
     const { items } = useSelector((state: RootState) => state.cart);
 
 
     return (
-        <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center shadow">
+        <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center border-b border-gray-200">
 
             <div
                 onClick={() => navigate("/")}
@@ -30,6 +34,21 @@ const Navbar = () => {
                 </span>
             </div>
 
+            {/* searchbar */}
+            <div className="flex-1 flex justify-center">
+                <div className="relative w-[400px]">
+
+                    <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
+
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        className="w-full pl-10 pr-4 py-2 border rounded-md outline-none focus:ring-2 focus:ring-sky-300"
+                        onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+                    />
+
+                </div>
+            </div>
             {/* <nav className="flex justify-center items-center pr-10 w-[60%]">
                 <ul className="flex font-bold space-x-8">
                     {isAuthenticated && user?.role === 1 && (

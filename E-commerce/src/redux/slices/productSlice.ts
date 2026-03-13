@@ -28,6 +28,7 @@ interface ProductState {
   products: Product[];
   loading: boolean;
   error: string | null;
+  searchTerm: string
 }
 
 // initial state
@@ -35,6 +36,7 @@ const initialState: ProductState = {
   products: [],
   loading: false,
   error: null,
+  searchTerm: ""
 };
 
 // create an async thunk for fetching products
@@ -59,7 +61,11 @@ export const fetchProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -76,4 +82,6 @@ const productSlice = createSlice({
   },
 });
 
+
+export const { setSearchTerm } = productSlice.actions;
 export default productSlice.reducer;
