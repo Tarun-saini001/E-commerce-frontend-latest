@@ -1,14 +1,18 @@
 import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchProducts } from "../redux/slices/productSlice";
+import { fetchProducts, type Product } from "../redux/slices/productSlice";
 import { useEffect, useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
 import CategorySidebar from "../components/CategoriesSidebar";
+import { addToCart } from "../redux/slices/cartSlice";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products)
   // pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -36,7 +40,18 @@ const Home = () => {
   if (loading) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">Loading products...</div>;
   if (error) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">{error}</div>;
 
+  const handleAddToCart = (product: Product) => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add to cart!");
+      navigate("/login");
+      return;
+    }
+    dispatch(addToCart(product))
+      .unwrap()
+      .then(() => toast.success("Product added to cart!"))
+      .catch(() => toast.error("Failed to add product to cart"));
 
+  };
   return (
     <div className="min-h-screen bg-white px-2">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-3 items-stretch">
@@ -134,6 +149,7 @@ const Home = () => {
         <div className="grid  grid-cols-3  gap-6">
           {currentProducts.map((product) => (
             <div
+              onClick={() => navigate(`/product/${product.id}`)}
               key={product.id}
               className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
             >
@@ -162,7 +178,15 @@ const Home = () => {
               <div className="mt-auto flex items-center justify-between pt-3">
                 <span className="text-blue-400 font-bold">${product.price.toFixed(2)}</span>
                 <button
-                  onClick={() => navigate(`/product/${product.id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent card click
+                    if (!isAuthenticated) {
+                      navigate("/login");
+                      return;
+                    }
+                    handleAddToCart(product); 
+                    navigate("/cart"); 
+                  }}
                   className="bg-blue-400 cursor-pointer text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
                 >
                   Buy

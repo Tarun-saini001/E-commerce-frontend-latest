@@ -32,6 +32,7 @@ import Footer from './components/Footer'
 import TopMenu from './components/TopMenu'
 import Wishlist from './pages/Wishlist'
 import Orders from './pages/Orders'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
 
@@ -57,8 +58,8 @@ function App() {
       <div>
         < Navbar />
         <div className="pt-[110px]"></div>
-        <TopMenu/>
-
+        <TopMenu />
+        <ScrollToTop />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
@@ -86,7 +87,7 @@ function App() {
           </Route>
         </Routes>
 
-        <Footer/>
+        <Footer />
       </div>
     </>
   )

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../redux/slices/productSlice";
+import { IoStar } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
@@ -9,72 +10,150 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 const ProductDetails = () => {
-    const dispatch = useDispatch<AppDispatch>()
-    const { productId } = useParams<{ productId: string }>();
-    const [product, setProduct] = useState<Product>();
+  const dispatch = useDispatch<AppDispatch>();
+  const { productId } = useParams<{ productId: string }>();
+  const [product, setProduct] = useState<Product>();
+  const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
 
-    const navigate = useNavigate();
-    const {isAuthenticated} = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
-    const handleAddToCart = (product: Product) => {
-        if (!isAuthenticated) {
-            toast.error("Please login to add to cart!");
-            navigate("/login");
-            return;
-        }
-        dispatch(addToCart(product))
-            .unwrap()
-            .then(() => toast.success("Product added to cart!"))
-            .catch(() => toast.error("Failed to add product to cart"));
+  const handleAddToCart = (product: Product) => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add to cart!");
+      navigate("/login");
+      return;
+    }
+    dispatch(addToCart(product))
+      .unwrap()
+      .then(() => toast.success("Product added to cart!"))
+      .catch(() => toast.error("Failed to add product to cart"));
+  };
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const res = await fetch(`https://dummyjson.com/products/${productId}`);
+      const data = await res.json();
+      setProduct(data);
     };
+    fetchProduct();
+  }, [productId]);
 
-    useEffect(() => {
-        const fetchProduct = async () => {
-            const res = await fetch(`https://dummyjson.com/products/${productId}`);
-            const data = await res.json();
-            setProduct(data);
-        };
-
-        fetchProduct();
-    }, [productId]);
-
-    if (!product) return <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">Loading Product...</div>;
-
+  if (!product)
     return (
-        <div className="max-w-6xl mx-auto px-4 py-12">
-            {/* back button */}
-            <button
-                onClick={() => navigate(-1)}
-                className="mb-6 px-3 py-1 rounded  border  border-black  hover:bg-gray-300 transition"
-            >
-                <IoIosArrowBack />
-            </button>
-            <div className="grid md:grid-cols-2 gap-10">
-
-                {/*product image*/}
-                <div className="flex justify-center">
-                    <img src={product.thumbnail} alt={product.title} className="h-96 object-contain" />
-                </div>
-
-                {/* product info */}
-                <div>
-                    <h2 className="text-3xl font-bold mb-3">{product.title}</h2>
-                    <p className="text-gray-500 mb-2">{product.brand} • {product.category}</p>
-                    <p className="text-yellow-500 mb-2">raiting {product.rating}</p>
-                    <p className="text-2xl font-bold text-blue-600 mb-4">${product.price}</p>
-                    <p className="text-gray-700 mb-4">{product.description}</p>
-                    <p className="text-sm text-green-600 mb-6">{product.stock > 0 ? "In Stock" : "Out of Stock"}</p>
-                    <button
-                        onClick={() => handleAddToCart(product)}
-                        className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-        </div>
+      <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">
+        Loading Product...
+      </div>
     );
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-12">
+      {/* Back button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 px-3 py-1 rounded border border-black hover:bg-gray-200 transition"
+      >
+        <IoIosArrowBack />
+      </button>
+
+      {/* Upper section: image + info */}
+      <div className="md:flex md:gap-10">
+        <div className="md:w-1/2 flex justify-center">
+          <img
+            src={product.thumbnail}
+            alt={product.title}
+            className="w-full max-h-[500px] object-contain rounded-lg shadow"
+          />
+        </div>
+
+        <div className="md:w-1/2 mt-6 md:mt-0 bg-white p-6 rounded-lg shadow">
+          <h2 className="text-3xl font-bold mb-2">{product.title}</h2>
+          <p className="text-gray-500 mb-2">
+            {product.brand} • {product.category}
+          </p>
+
+          {/* rating */}
+          <div className="flex items-center mb-2">
+            <IoStar className="text-yellow-400 mr-1" />
+            <span className="text-gray-700">{product.rating.toFixed(1)}</span>
+          </div>
+
+          <p className="text-2xl font-bold text-blue-600 mb-4">${product.price}</p>
+
+          <p
+            className={`text-sm font-semibold mb-4 ${
+              product.stock > 0 ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {product.stock > 0 ? "In Stock" : "Out of Stock"}
+          </p>
+
+          <button
+            onClick={() => handleAddToCart(product)}
+            className="w-full py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+
+      {/* bottom section with tabs */}
+      <div className="mt-12 bg-white p-6 rounded-lg shadow">
+        {/* tabs */}
+        <div className="flex border-b border-gray-300 mb-4">
+          <button
+            onClick={() => setActiveTab("details")}
+            className={`py-2 px-4 -mb-px font-semibold ${
+              activeTab === "details"
+                ? "border-b-2 border-blue-500 text-blue-500"
+                : "text-gray-500"
+            }`}
+          >
+            Details
+          </button>
+          <button
+            onClick={() => setActiveTab("reviews")}
+            className={`py-2 px-4 -mb-px font-semibold ${
+              activeTab === "reviews"
+                ? "border-b-2 border-blue-500 text-blue-500"
+                : "text-gray-500"
+            }`}
+          >
+            Reviews
+          </button>
+        </div>
+
+        {/* content */}
+        <div className="max-h-[400px] overflow-y-auto">
+          {activeTab === "details" && (
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Product Details</h3>
+              <p className="text-gray-700 mb-2">{product.description}</p>
+              <p className="text-gray-700 mb-1">
+                <strong>Category:</strong> {product.category}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Brand:</strong> {product.brand}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Stock:</strong> {product.stock}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Rating:</strong> {product.rating}
+              </p>
+            </div>
+          )}
+
+          {activeTab === "reviews" && (
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Reviews</h3>
+              <p className="text-gray-500">No reviews yet.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ProductDetails;
