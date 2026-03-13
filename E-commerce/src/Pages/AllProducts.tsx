@@ -61,6 +61,7 @@ const AllProducts = () => {
             <div className="grid grid-cols-3 gap-6">
                 {currentProducts.map((product) => (
                     <div
+                        onClick={() => navigate(`/product/${product.id}`)}
                         key={product.id}
                         className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
                     >
@@ -96,7 +97,12 @@ const AllProducts = () => {
                         <div className="mt-auto flex items-center justify-between pt-3">
                             <span className="text-blue-00 font-bold">${product.price.toFixed(2)}</span>
                             <button
-                                onClick={() => handleAddToCart(product)}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent card click
+
+                                    handleAddToCart(product);
+
+                                }}
                                 className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                             >
                                 Add to Cart

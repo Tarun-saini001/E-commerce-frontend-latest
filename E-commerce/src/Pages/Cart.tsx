@@ -5,6 +5,7 @@ import { IoIosRemoveCircle, IoIosAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { RxCross1 } from "react-icons/rx";
+import { BsCart4 } from "react-icons/bs";
 
 const Cart = () => {
     const { items, total } = useSelector((state: RootState) => state.cart);
@@ -12,8 +13,20 @@ const Cart = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    if (items.length === 0)
-        return <div className="text-center text-2xl mt-20">Your cart is empty.</div>;
+    if (items.length === 0){
+        return <div className="text-center my-5">
+        <BsCart4 className="text-6xl text-gray-400 mb-4 mx-auto" />
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Your Cart is Empty</h2>
+        <p className="text-gray-500 mb-4">
+          Looks like you haven't added anything to your cart yet.
+        </p>
+        <button
+          onClick={() => navigate("/products")}
+          className="bg-sky-400 hover:bg-sky-500 text-white px-6 py-3 rounded-lg shadow transition"
+        >
+          Start Shopping
+        </button>
+      </div>}
 
     const handleIncrease = (productId: number, currentQty: number) => {
         console.log("Increase - productId:", productId, "currentQty:", currentQty);
@@ -115,7 +128,7 @@ const Cart = () => {
 
                     <button
                         onClick={handleClearCart}
-                        className="text-sm text-red-500 hover:underline"
+                        className="text-sm bg-gray-100 p-2 rounded hover:bg-gray-300 text-red-500 "
                     >
                         Remove all from cart
                     </button>
