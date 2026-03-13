@@ -15,8 +15,10 @@ const Home = () => {
   const productsPerPage = 9;
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   // pagination calculations
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -33,7 +35,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white px-2">
-      <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-6 items-stretch">
+      <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-3 items-stretch">
         <div className="col-span-3">
           <CategorySidebar />
         </div>

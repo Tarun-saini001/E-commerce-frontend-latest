@@ -38,12 +38,22 @@ const initialState: ProductState = {
 };
 
 // create an async thunk for fetching products
-export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-  const res = await fetch("https://dummyjson.com/products");
-  const data = await res.json();
-  console.log('data: fetch products ', data);
-  return data.products;
-});
+export const fetchProducts = createAsyncThunk(
+  "products/fetch",
+  async (_, { getState }) => {
+    const state: any = getState();
+
+    // if products already exist, return them
+    if (state.products.products.length > 0) {
+      return state.products.products;
+    }
+
+    const res = await fetch("https://dummyjson.com/products");
+    const data = await res.json();
+    console.log('data: fetch products ', data);
+    return data.products;
+  }
+);
 
 // create product slice
 const productSlice = createSlice({

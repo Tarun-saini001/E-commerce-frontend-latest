@@ -29,6 +29,9 @@ import { useEffect } from 'react'
 import { fetchCart } from './redux/slices/cartSlice'
 import AllProducts from './pages/AllProducts'
 import Footer from './components/Footer'
+import TopMenu from './components/TopMenu'
+import Wishlist from './pages/Wishlist'
+import Orders from './pages/Orders'
 
 function App() {
 
@@ -53,7 +56,9 @@ function App() {
     <>
       <div>
         < Navbar />
-        <div className="pt-[70px]"></div>
+        <div className="pt-[110px]"></div>
+        <TopMenu/>
+
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
@@ -67,6 +72,8 @@ function App() {
           <Route path='/product/:productId' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />} />
           <Route path="/products" element={<AllProducts />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>} /> */}
           <Route path="/admin" element={<AdminLayout />}>
@@ -78,6 +85,7 @@ function App() {
             <Route path="users" element={<UsersList />} />
           </Route>
         </Routes>
+
         <Footer/>
       </div>
     </>

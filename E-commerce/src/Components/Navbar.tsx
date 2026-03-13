@@ -13,16 +13,24 @@ const Navbar = () => {
 
 
     return (
-       <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center shadow">
-            <p
-                onClick={() => navigate("/")}
-                className="text-sm pl-10 text-sky-400 font-bold gap-4 flex justify-center items-center cursor-pointer"
-            >
-                TS Mart
-                <FaCartShopping />
-            </p>
+        <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center shadow">
 
-            <nav className="flex justify-center items-center pr-10 w-[60%]">
+            <div
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 pl-6 cursor-pointer"
+            >
+                <img
+                    src="/logo.avif"
+                    alt="TS Mart Logo"
+                    className="h-12 w-12 object-contain rounded-full"
+                />
+
+                <span className="text-xl font-bold text-sky-500">
+                    TS Mart
+                </span>
+            </div>
+
+            {/* <nav className="flex justify-center items-center pr-10 w-[60%]">
                 <ul className="flex font-bold space-x-8">
                     {isAuthenticated && user?.role === 1 && (
                         <li
@@ -40,7 +48,7 @@ const Navbar = () => {
                     </li>
 
                 </ul>
-            </nav>
+            </nav> */}
 
             <span className="flex space-x-4 pr-2 relative">
 
