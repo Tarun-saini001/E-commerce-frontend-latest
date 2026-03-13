@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { useEffect, useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
+import CategorySidebar from "../components/CategoriesSidebar";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,29 +33,34 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white px-2">
-      <div className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
-        <img
-          src="/e-commerce-image.jpg"
-          alt="TS Mart Banner"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-opacity-40 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
-            Welcome to TS Mart
-          </h1>
-          <p className="mt-4 text-lg md:text-2xl text-white drop-shadow-md">
-            Find the best products at amazing prices
-          </p>
-          <button
-            onClick={() => navigate("/products")}
-            className="mt-6 px-6 py-3 bg-gray-300 font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
-          >
-            Shop Now
-          </button>
+      <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-6 items-stretch">
+        <div className="col-span-3">
+          <CategorySidebar />
+        </div>
+        <div className="col-span-9 relative w-full h-full  flex items-center justify-center overflow-hidden rounded-lg">
+          <img
+            src="/home-image.avif"
+            alt="TS Mart Banner"
+            className="w-full h-full object-cover rounded-lg"
+          />
+          <div className="absolute inset-0 bg-black/10 flex flex-col items-center justify-center text-center px-4">
+            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
+              Welcome to TS Mart
+            </h1>
+            <p className="mt-4 text-lg md:text-2xl text-white drop-shadow-md">
+              Find the best products at amazing prices
+            </p>
+            <button
+              onClick={() => navigate("/products")}
+              className="mt-6 px-6 py-3 bg-gray-300 font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
+            >
+              Shop Now
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Banners */}
+      {/* banners */}
       <div className="max-w-7xl mx-auto px-6 mt-12 grid grid-cols-3 gap-6">
 
         {/* banner 1 */}

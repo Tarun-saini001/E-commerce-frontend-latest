@@ -16,7 +16,7 @@ const Navbar = () => {
        <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center shadow">
             <p
                 onClick={() => navigate("/")}
-                className="text-sm pl-10 text-sky-300 font-bold gap-4 flex justify-center items-center cursor-pointer"
+                className="text-sm pl-10 text-sky-400 font-bold gap-4 flex justify-center items-center cursor-pointer"
             >
                 TS Mart
                 <FaCartShopping />
@@ -32,10 +32,10 @@ const Navbar = () => {
                             Dashboard
                         </li>
                     )}
-                    <li onClick={() => navigate("/")} className="cursor-pointer text-sky-300">
+                    <li onClick={() => navigate("/")} className="cursor-pointer text-sky-400">
                         Home
                     </li>
-                    <li onClick={() => navigate("/products")} className="cursor-pointer text-sky-300">
+                    <li onClick={() => navigate("/products")} className="cursor-pointer text-sky-400">
                         All Products
                     </li>
 
