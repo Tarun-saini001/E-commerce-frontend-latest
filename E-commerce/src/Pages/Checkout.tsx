@@ -1,9 +1,13 @@
 // src/pages/Checkout.tsx
 
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../redux/store";
+import { createOrder } from "../redux/slices/orderSlice";
 import { checkoutSchema } from "../schemas/validators";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -14,18 +18,34 @@ const districtsByCountry: Record<string, string[]> = {
 };
 
 const Checkout = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const { items, total } = useSelector((state: RootState) => state.cart);
-
+    const { loading, error, order } = useSelector((state: RootState) => state.order);
     const [selectedCountry, setSelectedCountry] = useState("India");
     const [selectedDistrict, setSelectedDistrict] = useState("Delhi");
+    const [shippingMethod, setShippingMethod] = useState("upi");
 
     const [formData, setFormData] = useState({
+        name: "",
+        email: "",
         postalCode: "",
         streetAddress: "",
         phone: "",
     });
 
     const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+
+    useEffect(() => {
+        if (user) {
+            setFormData((prev) => ({
+                ...prev,
+                name: user.name || "",
+                email: user.email || "",
+            }));
+        }
+    }, [user]);
 
     const validateField = (name: keyof typeof formData, value: string) => {
         const fieldSchema = checkoutSchema.shape[name];
@@ -66,6 +86,43 @@ const Checkout = () => {
     const tax = total * 0.05;
     const grandTotal = total + shippingFee + tax;
 
+    const handlePlaceOrder = async () => {
+        const result = checkoutSchema.safeParse({
+            ...formData,
+            country: selectedCountry,
+            district: selectedDistrict,
+        });
+
+        if (!result.success) {
+            const fieldErrors: Record<string, string> = {};
+            result.error.issues.forEach((err) => {
+                const field = err.path[0] as string;
+                fieldErrors[field] = err.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        }
+
+        dispatch(createOrder({
+            billingDetails: {
+                country: selectedCountry,
+                city: selectedDistrict,
+                district: selectedDistrict,
+                postalCode: formData.postalCode,
+                address: formData.streetAddress,
+                phone: formData.phone,
+            },
+            shippingMethod,
+            orderStatus: "completed",
+        }))
+            .unwrap()
+            .then(() => {
+                toast.success("Order placed successfully!")
+                navigate("/");
+            })
+            .catch(() => toast.error("Failed to place order"));
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-6 py-12">
 
@@ -81,6 +138,10 @@ const Checkout = () => {
                             </label>
                             <input
                                 type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                                 placeholder="Enter Name "
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
@@ -216,6 +277,10 @@ const Checkout = () => {
                             </label>
                             <input
                                 type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                                 placeholder="you@example.com"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
@@ -271,24 +336,32 @@ const Checkout = () => {
                                 type="radio"
                                 name="shippingMethod"
                                 value="upi"
-                                defaultChecked
-                                className="mr-2"
+                                checked={shippingMethod === "upi"}
+                                onChange={(e) => setShippingMethod(e.target.value)}
                             />
                             UPI Payment
                         </label>
 
                         <label className="inline-flex ml-2 items-center mb-2 cursor-pointer">
-                            <input type="radio" name="shippingMethod" value="cod" className="mr-2" />
+                            <input
+                                type="radio"
+                                name="shippingMethod"
+                                value="cod"
+                                checked={shippingMethod === "cod"}
+                                onChange={(e) => setShippingMethod(e.target.value)}
+                            />
                             Cash on Delivery
                         </label>
                     </div>
 
                     {/* Place Order Button */}
                     <button
-                        type="submit"
-                        className="mt-6 w-full bg-pink-600 text-white py-3 rounded-md hover:bg-pink-700 transition"
+                        type="button"
+                        onClick={handlePlaceOrder}
+                        disabled={loading}
+                        className="mt-6 w-full bg-pink-600 text-white py-3 rounded-md"
                     >
-                        Place an Order
+                        {loading ? "Placing Order..." : "Place Order"}
                     </button>
                 </div>
             </div>
