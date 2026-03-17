@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
+import { checkoutSchema } from "../schemas/validators";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -18,6 +19,31 @@ const Checkout = () => {
     const [selectedCountry, setSelectedCountry] = useState("India");
     const [selectedDistrict, setSelectedDistrict] = useState("Delhi");
 
+    const [formData, setFormData] = useState({
+        postalCode: "",
+        streetAddress: "",
+        phone: "",
+    });
+
+    const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+
+    const validateField = (name: keyof typeof formData, value: string) => {
+        const fieldSchema = checkoutSchema.shape[name];
+        if (!fieldSchema) return;
+
+        const result = fieldSchema.safeParse(value);
+        setErrors((prev) => ({
+            ...prev,
+            [name]: result.success ? "" : result.error.issues[0].message,
+        }));
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        validateField(name as keyof typeof formData, value);
+    };
+
     const onCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const country = e.target.value;
         setSelectedCountry(country);
@@ -28,7 +54,15 @@ const Checkout = () => {
         setSelectedDistrict(e.target.value);
     };
 
-    const shippingFee = 15; 
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        validateField(name as keyof typeof formData, value);
+    };
+
+
+
+
+    const shippingFee = 15;
     const tax = total * 0.05;
     const grandTotal = total + shippingFee + tax;
 
@@ -53,7 +87,7 @@ const Checkout = () => {
                             />
                         </div>
 
-                    
+
                         {/* country */}
                         <div>
                             <label className="block mb-1 font-semibold">
@@ -96,10 +130,27 @@ const Checkout = () => {
                                 </label>
                                 <input
                                     type="text"
+                                    inputMode="numeric"
+                                    pattern="\d*"
+                                    maxLength={4}
+                                    name="postalCode"
+                                    value={formData.postalCode}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // only set the value if its empty or contains only digits
+                                        if (/^\d*$/.test(value)) {
+                                            setFormData((prev) => ({ ...prev, postalCode: value }));
+                                            validateField("postalCode", value);
+                                        }
+                                        // if value has any letters thenignore input)
+                                    }}
+                                    onBlur={handleBlur}
                                     placeholder="0000"
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                     required
                                 />
+                                {errors.postalCode && <p className="text-red-500">{errors.postalCode}</p>}
+
                             </div>
                         </div>
 
@@ -129,10 +180,15 @@ const Checkout = () => {
                             </label>
                             <input
                                 type="text"
+                                name="streetAddress"
+                                value={formData.streetAddress}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                                 placeholder="Enter Full Address"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             />
+                            {errors.streetAddress && <p className="text-red-500">{errors.streetAddress}</p>}
                         </div>
 
                         {/* phone number */}
@@ -142,10 +198,15 @@ const Checkout = () => {
                             </label>
                             <input
                                 type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
                                 placeholder="00000-00000"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             />
+                            {errors.phone && <p className="text-red-500">{errors.phone}</p>}
                         </div>
 
                         {/* email address */}

@@ -37,8 +37,8 @@ export const registerSchema = z
             .string()
             .trim()
             .nonempty("Name is required")
-            .min(2, "Name must be at least 2 characters") 
-            .regex(/^[A-Z]/, "Name must start with a capital letter") 
+            .min(2, "Name must be at least 2 characters")
+            .regex(/^[A-Z]/, "Name must start with a capital letter")
             .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
 
         email: z
@@ -111,3 +111,40 @@ export const resetPasswordSchema = z
         message: "Passwords do not match",
         path: ["confirmPassword"],
     });
+
+
+
+// Checkout form schema
+export const checkoutSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .nonempty("Name is required")
+    .min(2, "Name must be at least 2 characters")
+    .regex(/^[A-Z]/, "Name must start with a capital letter")
+    .regex(/^[A-Za-z\s]*$/, "Name must contain only letters").optional(),
+
+  email: z
+    .string()
+    .trim()
+    .nonempty("Email is required")
+    .email("Invalid email format").optional(),
+
+  postalCode: z
+    .string()
+    .trim()
+    .nonempty("Postal code is required")
+    .regex(/^\d{4}$/, "Postal code must be exactly 4 digits"),
+
+  streetAddress: z
+    .string()
+    .trim()
+    
+    .nonempty("Street address is required"),
+
+  phone: z
+    .string()
+    .trim()
+    .nonempty("Phone number is required")
+    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+});
