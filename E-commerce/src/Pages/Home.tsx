@@ -3,20 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts, type Product } from "../redux/slices/productSlice";
 import { useEffect, useState } from "react";
-import { AiTwotoneLike } from "react-icons/ai";
+import { AiFillHeart, AiTwotoneLike } from "react-icons/ai";
 import CategorySidebar from "../components/CategoriesSidebar";
 import { addToCart } from "../redux/slices/cartSlice";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { FaRegHeart } from "react-icons/fa6";
+import { toggleWishlist } from "../redux/slices/wishlistSlice";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products)
+  const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
+
   // pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productsPerPage = 9;
+
+
+  const isInWishlist = (id: number) => {
+    return wishlistItems.some((item) => item.productId === id);
+  };
 
   useEffect(() => {
     if (products.length === 0) {
@@ -184,13 +193,42 @@ const Home = () => {
                       navigate("/login");
                       return;
                     }
-                    handleAddToCart(product); 
-                    navigate("/cart"); 
+                    handleAddToCart(product);
+                    navigate("/cart");
                   }}
-                  className="bg-blue-400 cursor-pointer text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
+                  className="bg-blue-400 cursor-pointer ml-50 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
                 >
                   Buy
                 </button>
+
+                {/* like button */}
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    if (!isAuthenticated) {
+                      navigate("/login");
+                      return;
+                    }
+
+                    const alreadyInWishlist = isInWishlist(product.id);
+
+                    dispatch(toggleWishlist(product.id));
+
+                    if (alreadyInWishlist) {
+                      toast.success("Product removed from wishlist");
+                    } else {
+                      toast.success("Product added to wishlist");
+                    }
+                  }}
+                  className="cursor-pointer text-2xl"
+                >
+                  {isInWishlist(product.id) ? (
+                    <AiFillHeart className="text-pink-600" />
+                  ) : (
+                    <FaRegHeart className="text-gray-300 hover:text-pink-400" />
+                  )}
+                </div>
               </div>
             </div>
           ))}

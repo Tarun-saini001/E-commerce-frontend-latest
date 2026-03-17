@@ -44,7 +44,10 @@ const Navbar = () => {
                         type="text"
                         placeholder="Search products..."
                         className="w-full pl-10 pr-4 py-2 border rounded-md outline-none focus:ring-2 focus:ring-sky-300"
-                        onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+                        onChange={(e) => {
+                            dispatch(setSearchTerm(e.target.value));
+                            navigate("/products");
+                        }}
                     />
 
                 </div>

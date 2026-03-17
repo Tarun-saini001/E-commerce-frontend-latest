@@ -27,12 +27,14 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from './redux/store'
 import { useEffect } from 'react'
 import { fetchCart } from './redux/slices/cartSlice'
+import { fetchWishlist } from "./redux/slices/wishlistSlice";
 import AllProducts from './pages/AllProducts'
 import Footer from './components/Footer'
 import TopMenu from './components/TopMenu'
 import Wishlist from './pages/Wishlist'
 import Orders from './pages/Orders'
 import ScrollToTop from './components/ScrollToTop'
+import Checkout from './pages/Checkout'
 
 function App() {
 
@@ -41,6 +43,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCart());
+    dispatch(fetchWishlist());
   }, [dispatch]);
 
   if (loading) {
@@ -75,6 +78,7 @@ function App() {
           <Route path="/products" element={<AllProducts />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>} /> */}
           <Route path="/admin" element={<AdminLayout />}>

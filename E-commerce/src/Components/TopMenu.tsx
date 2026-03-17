@@ -27,7 +27,7 @@ const TopMenu = () => {
                     onClick={() => navigate("/products")}
                     className={`${baseStyle} ${isActive("/products") ? activeStyle : ""}`}
                 >
-                    All products
+                    All Products
                 </span>
 
                 {isAuthenticated && (

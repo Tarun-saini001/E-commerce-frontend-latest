@@ -30,7 +30,6 @@ const Profile = () => {
           Logout
         </button>
       </div>
-      <p>Your cart is empty</p>
     </div>
   );
 };
