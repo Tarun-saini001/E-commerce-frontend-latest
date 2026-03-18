@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+const API = import.meta.env.VITE_API_URL;
 // product type
 // interface Product {
 //   id: number;
@@ -18,6 +18,7 @@ export interface Product {
   rating: number;
   stock: number;
   brand: string;
+  categoryName: string;
   category: string;
   thumbnail: string;
   images: string[];
@@ -42,18 +43,18 @@ const initialState: ProductState = {
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async (_, { getState }) => {
-    const state: any = getState();
+  async (category: string | null) => {
+    let url = `${API}/service/product/`;
 
-    // if products already exist, return them
-    if (state.products.products.length > 0) {
-      return state.products.products;
+    if (category) {
+      url += `?category=${category}`;
     }
 
-    const res = await fetch("https://dummyjson.com/products");
+    const res = await fetch(url);
     const data = await res.json();
-    console.log('data: fetch products ', data);
-    return data.products;
+    console.log('data: get products', data);
+
+    return data.data;
   }
 );
 

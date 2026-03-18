@@ -31,7 +31,7 @@ const API = import.meta.env.VITE_API_URL;
 export const fetchCart = createAsyncThunk("cart/fetch", async () => {
     const res = await fetch(`${API}/service/cart/`, { credentials: "include",method:"GET" })
     const data = await res.json();
-    console.log(' data.data.items: ',  data.data.items);
+    console.log(' data: cart data ',  data.data.items);
     return data.data as CartResponse;
 })
 
@@ -39,13 +39,13 @@ export const fetchCart = createAsyncThunk("cart/fetch", async () => {
 export const addToCart = createAsyncThunk(
     "cart/add",
     async (product: Product) => {
-        const { id, title, price, thumbnail, brand, category } = product
+        const { id, title, price, thumbnail, brand, categoryName, category } = product
         const quantity=1;
         const res = await fetch(`${API}/service/cart/add`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({ id, title, price, thumbnail, brand, category, quantity }),
+            body: JSON.stringify({ id, title, price, thumbnail, brand,categoryName,category, quantity }),
         });
         const data = await res.json();
         console.log('add to cart res: ', data);

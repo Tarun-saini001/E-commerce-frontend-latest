@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { FaRegHeart } from "react-icons/fa6";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
+import { useSearchParams } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,9 +28,12 @@ const Home = () => {
     return wishlistItems.some((item) => item.productId === id);
   };
 
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
+
   useEffect(() => {
     if (products.length === 0) {
-      dispatch(fetchProducts());
+      dispatch(fetchProducts(category));
     }
   }, [dispatch, products.length]);
 

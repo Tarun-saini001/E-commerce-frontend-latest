@@ -12,6 +12,7 @@ import { AiTwotoneLike } from "react-icons/ai";
 import { AiFillHeart } from "react-icons/ai";
 import { FaRegHeart } from "react-icons/fa";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
+import { useSearchParams } from "react-router-dom";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -34,9 +35,18 @@ const AllProducts = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 9;
 
+
+    const [searchParams] = useSearchParams();
+    const category = searchParams.get("category");
+
     useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
+        dispatch(fetchProducts(category));
+    }, [dispatch, category]);
+
+    //reset pagination when category changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [category]);
 
     const handleAddToCart = (product: any) => {
         if (!isAuthenticated) {
@@ -64,9 +74,28 @@ const AllProducts = () => {
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">
+            <button
+                onClick={() => {
+                    dispatch(fetchProducts(null)); // reset products
+
+                    if (window.history.length > 1) {
+                        navigate(-1);
+                    } else {
+                        navigate("/products");
+                    }
+                }}
+                className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+            >
+                Back
+            </button>
             <div className="text-center mb-10">
+
                 <h2 className="text-3xl font-bold text-blue-400">
-                    {searchTerm ? `Search results for "${searchTerm}"` : "TS Mart Products"}
+                    {category
+                        ? `${category}`
+                        : searchTerm
+                            ? `Search results for "${searchTerm}"`
+                            : "TS Mart Products"}
                 </h2>
                 <p className="text-gray-500 mt-2 text-sm">
                     Shop the latest and trending products from TS Mart at unbeatable prices.
@@ -100,7 +129,7 @@ const AllProducts = () => {
                         </h3>
 
                         <p className="text-sm text-gray-500 mb-1 ">
-                            {product.brand} * {product.category}
+                            {product.brand} * {product.categoryName}
                         </p>
 
                         {/* <p className="text-gray-500 text-xs mt-1">{product.brand}</p> */}

@@ -8,6 +8,7 @@ import { createOrder } from "../redux/slices/orderSlice";
 import { checkoutSchema } from "../schemas/validators";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { clearCart } from "../redux/slices/cartSlice";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -117,6 +118,7 @@ const Checkout = () => {
         }))
             .unwrap()
             .then(() => {
+                dispatch(clearCart());
                 toast.success("Order placed successfully!")
                 navigate("/");
             })

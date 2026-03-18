@@ -97,7 +97,7 @@ const Cart = () => {
                             <div className="flex-1 px-4">
                                 <h3 className="font-semibold">{item.title}</h3>
                                 <p className="text-sm text-gray-500">
-                                    {item.brand} • {item.category}
+                                    {item.brand} * {item.categoryName}
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Price: ${item.price}

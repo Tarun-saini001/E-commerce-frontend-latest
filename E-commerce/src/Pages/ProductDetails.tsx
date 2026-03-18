@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../redux/slices/productSlice";
 import { IoStar } from "react-icons/io5";
-import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
 import type { AppDispatch } from "../redux/store";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+const API = import.meta.env.VITE_API_URL;
 
 const ProductDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,9 +32,14 @@ const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await fetch(`https://dummyjson.com/products/${productId}`);
-      const data = await res.json();
-      setProduct(data);
+      try {
+        const res = await fetch(`${API}/service/product/${productId}`);
+        const data = await res.json();
+
+        setProduct(data.data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
     };
     fetchProduct();
   }, [productId]);
@@ -51,9 +56,9 @@ const ProductDetails = () => {
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 px-3 py-1 rounded border border-black hover:bg-gray-200 transition"
+        className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
       >
-        <IoIosArrowBack />
+        Back
       </button>
 
       {/* Upper section: image + info */}
@@ -69,7 +74,7 @@ const ProductDetails = () => {
         <div className="md:w-1/2 mt-6 md:mt-0 bg-white p-6 rounded-lg shadow">
           <h2 className="text-3xl font-bold mb-2">{product.title}</h2>
           <p className="text-gray-500 mb-2">
-            {product.brand} • {product.category}
+            {product.brand} * {product.categoryName}
           </p>
 
           {/* rating */}
@@ -81,9 +86,8 @@ const ProductDetails = () => {
           <p className="text-2xl font-bold text-blue-600 mb-4">${product.price}</p>
 
           <p
-            className={`text-sm font-semibold mb-4 ${
-              product.stock > 0 ? "text-green-600" : "text-red-600"
-            }`}
+            className={`text-sm font-semibold mb-4 ${product.stock > 0 ? "text-green-600" : "text-red-600"
+              }`}
           >
             {product.stock > 0 ? "In Stock" : "Out of Stock"}
           </p>
@@ -103,21 +107,19 @@ const ProductDetails = () => {
         <div className="flex border-b border-gray-300 mb-4">
           <button
             onClick={() => setActiveTab("details")}
-            className={`py-2 px-4 -mb-px font-semibold ${
-              activeTab === "details"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
+            className={`py-2 px-4 -mb-px font-semibold ${activeTab === "details"
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-gray-500"
+              }`}
           >
             Details
           </button>
           <button
             onClick={() => setActiveTab("reviews")}
-            className={`py-2 px-4 -mb-px font-semibold ${
-              activeTab === "reviews"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
+            className={`py-2 px-4 -mb-px font-semibold ${activeTab === "reviews"
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-gray-500"
+              }`}
           >
             Reviews
           </button>
@@ -130,7 +132,7 @@ const ProductDetails = () => {
               <h3 className="text-2xl font-bold mb-4">Product Details</h3>
               <p className="text-gray-700 mb-2">{product.description}</p>
               <p className="text-gray-700 mb-1">
-                <strong>Category:</strong> {product.category}
+                <strong>Category:</strong> {product.categoryName}
               </p>
               <p className="text-gray-700 mb-1">
                 <strong>Brand:</strong> {product.brand}
