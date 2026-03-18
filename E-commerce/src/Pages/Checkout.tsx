@@ -22,7 +22,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { items, total } = useSelector((state: RootState) => state.cart);
-    const { loading, error, order } = useSelector((state: RootState) => state.order);
+    const { loading, error, orders } = useSelector((state: RootState) => state.order);
     const [selectedCountry, setSelectedCountry] = useState("India");
     const [selectedDistrict, setSelectedDistrict] = useState("Delhi");
     const [shippingMethod, setShippingMethod] = useState("upi");

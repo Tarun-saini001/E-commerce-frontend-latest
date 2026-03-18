@@ -35,6 +35,7 @@ import Wishlist from './pages/Wishlist'
 import Orders from './pages/Orders'
 import ScrollToTop from './components/ScrollToTop'
 import Checkout from './pages/Checkout'
+import OrderDetails from './pages/OrderDetails'
 
 function App() {
 
@@ -78,6 +79,7 @@ function App() {
           <Route path="/products" element={<AllProducts />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/:orderId" element={<OrderDetails />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>} /> */}
