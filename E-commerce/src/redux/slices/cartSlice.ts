@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit"
+// import type { PayloadAction } from "@reduxjs/toolkit"
 import type { Product } from "./productSlice";
 
 export interface CartItem extends Product {

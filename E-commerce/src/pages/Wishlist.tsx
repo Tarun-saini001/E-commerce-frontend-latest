@@ -20,7 +20,7 @@ const Wishlist = () => {
 
     useEffect(() => {
         if (products.length === 0) {
-            dispatch(fetchProducts());
+            dispatch(fetchProducts(null));
         }
     }, [dispatch, products.length]);
 
