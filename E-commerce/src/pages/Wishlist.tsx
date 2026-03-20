@@ -16,7 +16,7 @@ const Wishlist = () => {
     const { isAuthenticated } = useAuth();
 
     const { items } = useSelector((state: RootState) => state.wishlist);
-    const { products } = useSelector((state: RootState) => state.products);
+    const { products, loading } = useSelector((state: RootState) => state.products);
 
     useEffect(() => {
         if (products.length === 0) {
@@ -29,6 +29,7 @@ const Wishlist = () => {
         items.some((item) => item.productId === product.id)
     );
 
+    if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
 
     const handleAddToCart = (product: any) => {
         if (!isAuthenticated) {

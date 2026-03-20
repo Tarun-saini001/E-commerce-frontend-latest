@@ -50,8 +50,8 @@ const Home = () => {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
-  if (loading) return <div className="flex justify-center items-center h-screen text-blue-500 text-2xl font-bold">Loading products...</div>;
-  if (error) return <div className="flex justify-center items-center h-screen text-blue-500 text-2xl font-bold">{error}</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500 text-2xl font-bold">{error}</div>;
 
   const handleAddToCart = (product: Product) => {
     if (!isAuthenticated) {

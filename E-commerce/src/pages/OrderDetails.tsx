@@ -19,7 +19,7 @@ const OrderDetails = () => {
     }, [dispatch, orderId]);
 
     if (loading || !selectedOrder) {
-        return <div className="text-center py-20">Loading order...</div>;
+        return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading order...</div>;
     }
 
     const order = selectedOrder;

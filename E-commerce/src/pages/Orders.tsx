@@ -35,7 +35,7 @@ const Orders = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-20 min-h-[70vh] font-bold text-sky-500">
+            <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
                 Loading your orders...
             </div>
         );

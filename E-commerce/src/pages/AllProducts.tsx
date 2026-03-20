@@ -69,8 +69,8 @@ const AllProducts = () => {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-    if (loading) return <div className="flex justify-center items-center text-blue-300 h-screen text-2xl mt-10">Loading products...</div>;
-    if (error) return <div className="flex justify-center items-center h-screen text-red-500 text-2xl mt-10">{error}</div>;
+    if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
+    if (error) return <div className="flex justify-center items-center min-h-[70vh] text-red-500 text-xl mt-10">{error}</div>;
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">

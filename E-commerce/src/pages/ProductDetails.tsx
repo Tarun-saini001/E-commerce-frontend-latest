@@ -46,7 +46,7 @@ const ProductDetails = () => {
 
   if (!product)
     return (
-      <div className="flex justify-center items-center text-blue-500 text-2xl font-bold">
+      <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
         Loading Product...
       </div>
     );
