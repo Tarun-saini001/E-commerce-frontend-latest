@@ -69,7 +69,7 @@ const AllProducts = () => {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-    if (loading) return <div className="text-center text-blue-300 text-2xl mt-10">Loading products...</div>;
+    if (loading) return <div className="text-center text-blue-300 h-screen text-2xl mt-10">Loading products...</div>;
     if (error) return <div className="text-center text-red-500 text-2xl mt-10">{error}</div>;
 
     return (
