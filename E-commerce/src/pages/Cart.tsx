@@ -21,7 +21,7 @@ const Cart = () => {
 
 
 
-    const isInWishlist = (id: number) => {
+    const isInWishlist = (id: string) => {
         return wishlistItems.some((item) => item.productId === id);
     };
 
@@ -41,19 +41,19 @@ const Cart = () => {
         </div>
     }
 
-    const handleIncrease = (productId: number, currentQty: number) => {
+    const handleIncrease = (productId: string, currentQty: number) => {
         console.log("Increase - productId:", productId, "currentQty:", currentQty);
         dispatch(updateCartQuantity({ productId, quantity: currentQty + 1 }));
     };
 
-    const handleDecrease = (productId: number, currentQty: number) => {
+    const handleDecrease = (productId: string, currentQty: number) => {
         if (currentQty > 1) {
             console.log('productId: ', productId);
             dispatch(updateCartQuantity({ productId, quantity: currentQty - 1 }));
         }
     };
 
-    const handleRemove = (productId: number) => {
+    const handleRemove = (productId: string) => {
         dispatch(removeItem(productId))
             .unwrap()
             .then(() => toast.success("Item removed from cart"))

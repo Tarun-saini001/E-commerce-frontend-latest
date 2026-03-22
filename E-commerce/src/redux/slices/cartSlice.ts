@@ -54,7 +54,7 @@ export const addToCart = createAsyncThunk(
 );
 
 // update quantity
-export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async ({ productId, quantity }: { productId: number, quantity: number }) => {
+export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async ({ productId, quantity }: { productId: string, quantity: number }) => {
     console.log('productId: ', productId);
     const res = await fetch(`${API}/service/cart/update/${productId}`, {
         method: "PATCH",
@@ -73,7 +73,7 @@ export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async 
 // remove item
 export const removeItem = createAsyncThunk(
     "cart/remove",
-    async (productId: number) => {
+    async (productId: string) => {
         const res = await fetch(`${API}/service/cart/${productId}`, {
             method: "DELETE",
             credentials: "include",
