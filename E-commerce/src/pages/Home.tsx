@@ -24,7 +24,7 @@ const Home = () => {
   const productsPerPage = 9;
 
 
-  const isInWishlist = (id: number) => {
+  const isInWishlist = (id: string) => {
     return wishlistItems.some((item) => item.productId === id);
   };
 

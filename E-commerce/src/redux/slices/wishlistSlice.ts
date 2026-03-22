@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 
 interface WishlistItem {
-  productId: number;
+  productId: string;
 }
 
 interface WishlistState {
@@ -33,7 +33,7 @@ export const fetchWishlist = createAsyncThunk("wishlist/fetch", async () => {
 // toggle wishlist
 export const toggleWishlist = createAsyncThunk(
   "wishlist/toggle",
-  async (productId: number) => {
+  async (productId: string) => {
     const res = await fetch(`${API}/service/wishlist/toggle`, {
       method: "POST",
       headers: {

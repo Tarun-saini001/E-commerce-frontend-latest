@@ -10,7 +10,8 @@ const API = import.meta.env.VITE_API_URL;
 //   image: string;
 // }
 export interface Product {
-  id: number;
+  id: string;
+ 
   title: string;
   description: string;
   price: number;
@@ -27,6 +28,7 @@ export interface Product {
 // initial state for products
 interface ProductState {
   products: Product[];
+  singleProduct: Product | null;
   loading: boolean;
   error: string | null;
   searchTerm: string
@@ -35,10 +37,22 @@ interface ProductState {
 // initial state
 const initialState: ProductState = {
   products: [],
+  singleProduct: null,
   loading: false,
   error: null,
   searchTerm: ""
 };
+
+//fetch product by id
+export const fetchProductById = createAsyncThunk(
+  "product/fetchById",
+  async (id: string) => {
+    const res = await fetch(`${API}/service/product/${id}`);
+    const data = await res.json();
+    console.log('data: product by id', data);
+    return data.data;
+  }
+);
 
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
@@ -79,8 +93,21 @@ const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch products";
-      });
-  },
+      })
+
+      //product by id
+      .addCase(fetchProductById.pending, (state) => {
+        state.loading = true;
+      })
+    .addCase(fetchProductById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.singleProduct = action.payload;
+    })
+    .addCase(fetchProductById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || "Failed to fetch product";
+    })
+},
 });
 
 

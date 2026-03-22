@@ -22,7 +22,7 @@ const AllProducts = () => {
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
 
 
-    const isInWishlist = (id: number) => {
+    const isInWishlist = (id: string) => {
         return wishlistItems.some((item) => item.productId === id);
     };
 
