@@ -39,13 +39,13 @@ export const fetchCart = createAsyncThunk("cart/fetch", async () => {
 export const addToCart = createAsyncThunk(
     "cart/add",
     async (product: Product) => {
-        const { _id, title, price, thumbnail, brand, categoryName, category } = product
+        const { _id } = product
         const quantity=1;
         const res = await fetch(`${API}/service/cart/add`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({ _id, title, price, thumbnail, brand,categoryName,category, quantity }),
+            body: JSON.stringify({productId: _id,  quantity }),
         });
         const data = await res.json();
         console.log('add to cart res: ', data);
