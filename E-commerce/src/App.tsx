@@ -74,7 +74,7 @@ function App() {
           <Route path='/verify-otp' element={<VerifyOtp />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/reset-password' element={<ResetPassword />} />
-          <Route path='/product/:productId' element={<ProductDetails />} />
+          <Route path='/product/:id' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />} />
           <Route path="/products" element={<AllProducts />} />
           <Route path="/wishlist" element={<Wishlist />} />
