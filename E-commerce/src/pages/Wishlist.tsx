@@ -26,7 +26,7 @@ const Wishlist = () => {
 
     // match wishlist productIds with products list
     const wishlistProducts = products.filter((product) =>
-        items.some((item) => item.productId === product.id)
+        items.some((item) => item.productId === product._id)
     );
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
@@ -80,8 +80,8 @@ const Wishlist = () => {
             <div className="grid grid-cols-3 gap-6">
                 {wishlistProducts.map((product) => (
                     <div
-                        key={product.id}
-                        onClick={() => navigate(`/product/${product.id}`)}
+                        key={product._id}
+                        onClick={() => navigate(`/product/${product._id}`)}
                         className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 cursor-pointer flex flex-col"
                     >
                         <div className="bg-gray-100 rounded-lg p-4">
@@ -113,7 +113,7 @@ const Wishlist = () => {
                                 className="bg-red-400 text-white w-[80%] px-3 py-1 rounded hover:bg-red-600 transition"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    dispatch(toggleWishlist(product.id))
+                                    dispatch(toggleWishlist(product._id))
                                         .unwrap()
                                         .then(() => toast.success("Product removed from wishlist!"))
                                         .catch(() => toast.error("Failed to remove product from wishlist"));

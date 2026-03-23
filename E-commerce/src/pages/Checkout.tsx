@@ -300,7 +300,7 @@ const Checkout = () => {
                             <p className="text-gray-500">No items in the cart</p>
                         )}
                         {items.map((item) => (
-                            <div key={item.id} className="flex justify-between">
+                            <div key={item._id} className="flex justify-between">
                                 <span>{item.title} (x{item.quantity})</span>
                                 <span>$ {(item.price * item.quantity).toFixed(2)}</span>
                             </div>
