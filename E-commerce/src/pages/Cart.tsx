@@ -80,7 +80,7 @@ const Cart = () => {
 
                     {items.map((item) => (
                         <div
-                            key={item.id}
+                            key={item._id}
                             className="flex items-center justify-between bg-white border rounded-lg p-4 shadow-sm"
                         >
 
@@ -107,7 +107,7 @@ const Cart = () => {
                             {/* quantity */}
                             <div className="flex items-center space-x-2">
                                 <button
-                                    onClick={() => handleDecrease(item.id, item.quantity)}
+                                    onClick={() => handleDecrease(item._id, item.quantity)}
                                     className="text-gray-500 hover:text-black"
                                 >
                                     <IoIosRemoveCircle size={22} />
@@ -116,7 +116,7 @@ const Cart = () => {
                                 <span className="px-2">{item.quantity}</span>
 
                                 <button
-                                    onClick={() => handleIncrease(item.id, item.quantity)}
+                                    onClick={() => handleIncrease(item._id, item.quantity)}
                                     className="text-gray-500 hover:text-black"
                                 >
                                     <IoIosAddCircle size={22} />
@@ -137,9 +137,9 @@ const Cart = () => {
                                             return;
                                         }
 
-                                        const alreadyInWishlist = isInWishlist(item.id);
+                                        const alreadyInWishlist = isInWishlist(item._id);
 
-                                        dispatch(toggleWishlist(item.id));
+                                        dispatch(toggleWishlist(item._id));
 
                                         if (alreadyInWishlist) {
                                             toast.success("Product removed from wishlist");
@@ -149,7 +149,7 @@ const Cart = () => {
                                     }}
                                     className="cursor-pointer text-2xl"
                                 >
-                                    {isInWishlist(item.id) ? (
+                                    {isInWishlist(item._id) ? (
                                         <AiFillHeart className="text-pink-600" />
                                     ) : (
                                         <FaRegHeart className="text-gray-300 hover:text-pink-400" />
@@ -158,7 +158,7 @@ const Cart = () => {
 
                                 {/* remove */}
                                 <button
-                                    onClick={() => handleRemove(item.id)}
+                                    onClick={() => handleRemove(item._id)}
                                     className="text-black hover:text-red-500 text-xl"
                                 >
                                     <RxCross1 />
@@ -183,7 +183,7 @@ const Cart = () => {
                     <div className="space-y-2 text-sm max-h-48 overflow-y-auto">
                         {/* List cart items */}
                         {items.map(item => (
-                            <div key={item.id} className="flex justify-between">
+                            <div key={item._id} className="flex justify-between">
                                 <span>{item.title} (x{item.quantity})</span>
                                 <span>${(item.price * item.quantity).toFixed(2)}</span>
                             </div>

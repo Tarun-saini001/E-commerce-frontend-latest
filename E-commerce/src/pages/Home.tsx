@@ -162,8 +162,8 @@ const Home = () => {
         <div className="grid  grid-cols-3  gap-6">
           {currentProducts.map((product) => (
             <div
-              onClick={() => navigate(`/product/${product.id}`)}
-              key={product.id}
+              onClick={() => navigate(`/product/${product._id}`)}
+              key={product._id}
               className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
             >
               <div className="relative bg-gray-100 p-4 rounded-lg">
@@ -215,9 +215,9 @@ const Home = () => {
                       return;
                     }
 
-                    const alreadyInWishlist = isInWishlist(product.id);
+                    const alreadyInWishlist = isInWishlist(product._id);
 
-                    dispatch(toggleWishlist(product.id));
+                    dispatch(toggleWishlist(product._id));
 
                     if (alreadyInWishlist) {
                       toast.success("Product removed from wishlist");
@@ -227,7 +227,7 @@ const Home = () => {
                   }}
                   className="cursor-pointer text-2xl"
                 >
-                  {isInWishlist(product.id) ? (
+                  {isInWishlist(product._id) ? (
                     <AiFillHeart className="text-pink-600" />
                   ) : (
                     <FaRegHeart className="text-gray-300 hover:text-pink-400" />

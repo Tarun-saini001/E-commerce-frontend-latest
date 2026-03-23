@@ -10,8 +10,7 @@ const API = import.meta.env.VITE_API_URL;
 //   image: string;
 // }
 export interface Product {
-  id: string;
- 
+  _id: string;
   title: string;
   description: string;
   price: number;
