@@ -253,7 +253,7 @@ const Register = () => {
                 <button
                     onClick={handleRegister}
                     disabled={loading}
-                    className="bg-black text-white px-4 w-[60%] py-2 rounded disabled:opacity-50"
+                    className="bg-black text-white cursor-pointer px-4 w-[60%] py-2 rounded disabled:opacity-50"
                 >
                     {loading ? "Registering..." : "Register"}
                 </button>

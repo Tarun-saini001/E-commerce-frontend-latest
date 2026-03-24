@@ -86,7 +86,7 @@ const Home = () => {
             </p>
             <button
               onClick={() => navigate("/products")}
-              className="mt-6 px-6 py-3 bg-gray-300 font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
+              className="mt-6 px-6 py-3 bg-gray-300 cursor-pointer font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
             >
               Shop Now
             </button>
@@ -102,7 +102,7 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Bundle Package</p>
             <h3 className="text-xl font-bold mt-1">Save 30%</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+            <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
               onClick={() => navigate("/products")}
             >
               Shop Now
@@ -121,7 +121,7 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Valentine Offer</p>
             <h3 className="text-xl font-bold mt-1">30% Sale</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+            <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
               onClick={() => navigate("/products")}
             >
               Buy Now
@@ -140,7 +140,7 @@ const Home = () => {
           <div>
             <p className="text-gray-600 text-sm">Relax Chair</p>
             <h3 className="text-xl font-bold mt-1">New Arrival</h3>
-            <button className="mt-3 text-red-500 font-semibold text-sm hover:underline"
+            <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
               onClick={() => navigate("/products")}
             >
               Buy Now
