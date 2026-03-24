@@ -361,7 +361,7 @@ const Checkout = () => {
                         type="button"
                         onClick={handlePlaceOrder}
                         disabled={loading}
-                        className="mt-6 w-full bg-pink-600 text-white py-3 rounded-md"
+                        className="mt-6 w-full bg-blue-500 hover:bg-blue-700 text-white py-3 rounded-md"
                     >
                         {loading ? "Placing Order..." : "Place Order"}
                     </button>
