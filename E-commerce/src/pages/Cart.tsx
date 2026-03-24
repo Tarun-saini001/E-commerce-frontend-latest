@@ -22,7 +22,7 @@ const Cart = () => {
 
 
     const isInWishlist = (id: string) => {
-        return wishlistItems.some((item) => item._id === id);
+        return wishlistItems.some((item) => item.id === id);
     };
 
     if (items.length === 0) {

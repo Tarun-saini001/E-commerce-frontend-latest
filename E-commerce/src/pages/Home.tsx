@@ -25,7 +25,7 @@ const Home = () => {
 
 
   const isInWishlist = (id: string) => {
-    return wishlistItems.some((item) => item.productId === id);
+    return wishlistItems.some((item) => item.id === id);
   };
 
   const [searchParams] = useSearchParams();
