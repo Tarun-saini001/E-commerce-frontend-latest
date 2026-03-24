@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 
 interface WishlistItem {
-  id: string;
+  _id: string;
 }
 
 interface WishlistState {
