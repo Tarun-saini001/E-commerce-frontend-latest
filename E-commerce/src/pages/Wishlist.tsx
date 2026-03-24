@@ -26,7 +26,7 @@ const Wishlist = () => {
 
     // match wishlist productIds with products list
     const wishlistProducts = products.filter((product) =>
-        items.some((item) => item.productId === product._id)
+        items.some((item) => item._id === product._id)
     );
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;

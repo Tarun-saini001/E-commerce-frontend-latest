@@ -23,7 +23,7 @@ const AllProducts = () => {
 
 
     const isInWishlist = (id: string) => {
-        return wishlistItems.some((item) => item.productId === id);
+        return wishlistItems.some((item) => item._id === id);
     };
 
 
