@@ -61,7 +61,7 @@ const VerifyOtp = () => {
         if (timeLeft === 0 && expiresAt) {
             localStorage.removeItem("otpSession");
             toast.error("OTP expired");
-            navigate("/forgot-password");
+            navigate("/register");
         }
     }, [timeLeft]);
 
