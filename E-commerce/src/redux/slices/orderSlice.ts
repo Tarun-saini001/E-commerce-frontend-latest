@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/tool
 const API = import.meta.env.VITE_API_URL;
 
 interface OrderItem {
-  id: number;
+  _id: string;
   title: string;
   price: number;
   quantity: number;
