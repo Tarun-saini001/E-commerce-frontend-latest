@@ -24,9 +24,9 @@ const Checkout = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { items, total } = useSelector((state: RootState) => state.cart);
     const { loading } = useSelector((state: RootState) => state.order);
-    const [selectedCountry, setSelectedCountry] = useState("India");
-    const [selectedDistrict, setSelectedDistrict] = useState("Delhi");
-    const [shippingMethod, setShippingMethod] = useState("upi");
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedDistrict, setSelectedDistrict] = useState("");
+    const [shippingMethod, setShippingMethod] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -68,7 +68,7 @@ const Checkout = () => {
     const onCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const country = e.target.value;
         setSelectedCountry(country);
-        setSelectedDistrict(districtsByCountry[country][0]);
+        setSelectedDistrict("");
     };
 
     const onDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -162,6 +162,7 @@ const Checkout = () => {
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             >
+                                <option value="" disabled>Select Country</option>
                                 {countries.map((country) => (
                                     <option key={country} value={country}>
                                         {country}
@@ -174,12 +175,13 @@ const Checkout = () => {
                         <div className="grid grid-cols-12 gap-4">
                             <div className="col-span-7">
                                 <label className="block mb-1 font-semibold">
-                                    Town / City <span className="text-red-600">*</span>
+                                    State <span className="text-red-600">*</span>
                                 </label>
                                 <select
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                     required
                                 >
+                                    <option value="" disabled>Select State</option>
                                     {districtsByCountry[selectedCountry].map((city) => (
                                         <option key={city} value={city}>
                                             {city}
@@ -195,20 +197,20 @@ const Checkout = () => {
                                     type="text"
                                     inputMode="numeric"
                                     pattern="\d*"
-                                    maxLength={4}
+                                    maxLength={6}
                                     name="postalCode"
                                     value={formData.postalCode}
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         // only set the value if its empty or contains only digits
-                                        if (/^\d*$/.test(value)) {
+                                        if (/^\d$/.test(value)) {
                                             setFormData((prev) => ({ ...prev, postalCode: value }));
                                             validateField("postalCode", value);
                                         }
                                         // if value has any letters thenignore input)
                                     }}
                                     onBlur={handleBlur}
-                                    placeholder="0000"
+                                    placeholder="Enter 6-digit postal code"
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                     required
                                 />
@@ -228,6 +230,7 @@ const Checkout = () => {
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             >
+                                <option value="" disabled>Select District</option>
                                 {districtsByCountry[selectedCountry].map((district) => (
                                     <option key={district} value={district}>
                                         {district}
@@ -255,21 +258,47 @@ const Checkout = () => {
                         </div>
 
                         {/* phone number */}
-                        <div>
-                            <label className="block mb-1 font-semibold">
-                                Phone Number <span className="text-red-600">*</span>
-                            </label>
+                        <div className="flex gap-2">
+                            {/* Country Code */}
+                            <select
+                                className="border border-gray-300 rounded-md px-2 py-2"
+                                onChange={(e) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        phone: e.target.value + prev.phone.replace(/^\+\d+/, "")
+                                    }))
+                                }
+                            >
+                                <option value="">Select</option>
+                                <option value="+91">+91 (India)</option>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+880">+880 (Bangladesh)</option>
+                            </select>
+
+                            {/* Phone Input */}
                             <input
                                 type="tel"
                                 name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
+                                value={formData.phone.replace(/^\+\d+/, "")}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (/^\d*$/.test(value)) {
+                                        const code = formData.phone.match(/^\+\d+/)?.[0] || "";
+
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            phone: code + value
+                                        }));
+
+                                        validateField("phone", value);
+                                    }
+                                }}
                                 onBlur={handleBlur}
-                                placeholder="00000-00000"
+                                placeholder="Enter phone number"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             />
-                            {errors.phone && <p className="text-red-500">{errors.phone}</p>}
                         </div>
 
                         {/* email address */}
