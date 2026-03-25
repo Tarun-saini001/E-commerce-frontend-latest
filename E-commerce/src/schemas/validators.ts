@@ -122,19 +122,19 @@ export const checkoutSchema = z.object({
     .nonempty("Name is required")
     .min(2, "Name must be at least 2 characters")
     .regex(/^[A-Z]/, "Name must start with a capital letter")
-    .regex(/^[A-Za-z\s]*$/, "Name must contain only letters").optional(),
+    .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
 
   email: z
     .string()
     .trim()
     .nonempty("Email is required")
-    .email("Invalid email format").optional(),
+    .email("Invalid email format"),
 
   postalCode: z
     .string()
     .trim()
     .nonempty("Postal code is required")
-    .regex(/^\d{4}$/, "Postal code must be exactly 4 digits"),
+    .regex(/^\d{6}$/, "Postal code must be exactly 6 digits"),
 
   streetAddress: z
     .string()

@@ -27,6 +27,7 @@ const Checkout = () => {
     const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [shippingMethod, setShippingMethod] = useState("");
+    const [selectedState, setSelectedState] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -69,6 +70,7 @@ const Checkout = () => {
         const country = e.target.value;
         setSelectedCountry(country);
         setSelectedDistrict("");
+        setSelectedState("");
     };
 
     const onDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -178,11 +180,14 @@ const Checkout = () => {
                                     State <span className="text-red-600">*</span>
                                 </label>
                                 <select
+                                    value={selectedState}
+                                    onChange={(e) => setSelectedState(e.target.value)}
+                                    disabled={!selectedCountry}
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                     required
                                 >
                                     <option value="" disabled>Select State</option>
-                                    {(districtsByCountry[selectedCountry]|| []).map((city) => (
+                                    {(districtsByCountry[selectedCountry] || []).map((city) => (
                                         <option key={city} value={city}>
                                             {city}
                                         </option>
@@ -203,7 +208,7 @@ const Checkout = () => {
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         // only set the value if its empty or contains only digits
-                                        if (/^\d$/.test(value)) {
+                                        if (/^\d*$/.test(value)) {
                                             setFormData((prev) => ({ ...prev, postalCode: value }));
                                             validateField("postalCode", value);
                                         }
@@ -231,7 +236,7 @@ const Checkout = () => {
                                 required
                             >
                                 <option value="" disabled>Select District</option>
-                                {(districtsByCountry[selectedCountry]|| []).map((district) => (
+                                {(districtsByCountry[selectedCountry] || []).map((district) => (
                                     <option key={district} value={district}>
                                         {district}
                                     </option>
