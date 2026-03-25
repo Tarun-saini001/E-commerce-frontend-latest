@@ -182,7 +182,7 @@ const Checkout = () => {
                                     required
                                 >
                                     <option value="" disabled>Select State</option>
-                                    {districtsByCountry[selectedCountry].map((city) => (
+                                    {(districtsByCountry[selectedCountry]|| []).map((city) => (
                                         <option key={city} value={city}>
                                             {city}
                                         </option>
@@ -231,7 +231,7 @@ const Checkout = () => {
                                 required
                             >
                                 <option value="" disabled>Select District</option>
-                                {districtsByCountry[selectedCountry].map((district) => (
+                                {(districtsByCountry[selectedCountry]|| []).map((district) => (
                                     <option key={district} value={district}>
                                         {district}
                                     </option>
