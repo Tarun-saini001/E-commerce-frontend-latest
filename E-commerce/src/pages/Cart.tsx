@@ -247,7 +247,7 @@ const Cart = () => {
                     <div className="mt-6">
                         <h4 className="font-semibold mb-2">Shipping Method</h4>
 
-                        <label className="inline-flex items-center mb-2 cursor-pointer">
+                        <label className="inline-flex items-center mb-2 mr-3 cursor-pointer">
                             <input type="radio" name="shippingMethod" value="upi" defaultChecked className="mr-2" />
                             UPI Payment
                         </label>

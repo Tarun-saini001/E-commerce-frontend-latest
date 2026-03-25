@@ -374,17 +374,19 @@ const Checkout = () => {
                                 value="upi"
                                 checked={shippingMethod === "upi"}
                                 onChange={(e) => setShippingMethod(e.target.value)}
+                                className="mr-2"
                             />
                             UPI Payment
                         </label>
 
-                        <label className="inline-flex ml-2 items-center mb-2 cursor-pointer">
+                        <label className="inline-flex ml-3 items-center mb-2 cursor-pointer">
                             <input
                                 type="radio"
                                 name="shippingMethod"
                                 value="cod"
                                 checked={shippingMethod === "cod"}
                                 onChange={(e) => setShippingMethod(e.target.value)}
+                                className="mr-2"
                             />
                             Cash on Delivery
                         </label>
