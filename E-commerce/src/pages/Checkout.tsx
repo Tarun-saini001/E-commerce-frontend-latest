@@ -147,7 +147,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder="Enter Name "
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -161,7 +161,7 @@ const Checkout = () => {
                             <select
                                 value={selectedCountry}
                                 onChange={onCountryChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             >
                                 <option value="" disabled>Select Country</option>
@@ -183,7 +183,7 @@ const Checkout = () => {
                                     value={selectedState}
                                     onChange={(e) => setSelectedState(e.target.value)}
                                     disabled={!selectedCountry}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 >
                                     <option value="" disabled>Select State</option>
@@ -216,7 +216,7 @@ const Checkout = () => {
                                     }}
                                     onBlur={handleBlur}
                                     placeholder="Enter 6-digit postal code"
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 />
                                 {errors.postalCode && <p className="text-red-500">{errors.postalCode}</p>}
@@ -232,7 +232,7 @@ const Checkout = () => {
                             <select
                                 value={selectedDistrict}
                                 onChange={onDistrictChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             >
                                 <option value="" disabled>Select District</option>
@@ -256,7 +256,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder="Enter Full Address"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                             {errors.streetAddress && <p className="text-red-500">{errors.streetAddress}</p>}
@@ -301,7 +301,7 @@ const Checkout = () => {
                                 }}
                                 onBlur={handleBlur}
                                 placeholder="Enter phone number"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -318,7 +318,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder="you@example.com"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -397,7 +397,7 @@ const Checkout = () => {
                         type="button"
                         onClick={handlePlaceOrder}
                         disabled={loading}
-                        className="mt-6 w-full bg-blue-500 hover:bg-blue-700 text-white py-3 rounded-md"
+                        className="mt-6 w-full cursor-pointer bg-blue-500 hover:bg-blue-700 text-white py-3 rounded-md"
                     >
                         {loading ? "Placing Order..." : "Place Order"}
                     </button>
