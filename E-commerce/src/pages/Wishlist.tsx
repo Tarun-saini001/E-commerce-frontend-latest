@@ -5,7 +5,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { AiFillHeart } from "react-icons/ai";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { addToCart } from "../redux/slices/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
@@ -14,6 +14,7 @@ const Wishlist = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { isAuthenticated } = useAuth();
+    const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
     const { items } = useSelector((state: RootState) => state.wishlist);
     const { products, loading } = useSelector((state: RootState) => state.products);
@@ -31,16 +32,24 @@ const Wishlist = () => {
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
             toast.error("Please login to add to cart!");
             navigate("/login");
             return;
         }
-        dispatch(addToCart(product))
-            .unwrap()
-            .then(() => toast.success("Product added to cart!"))
-            .catch(() => toast.error("Failed to add product to cart"));
+        const id = product._id;
+
+        if (loadingMap[id]) return;
+        setLoadingMap((prev) => ({ ...prev, [id]: true }));
+        try {
+            await dispatch(addToCart(product))
+                .unwrap()
+                .then(() => toast.success("Product added to cart!"))
+                .catch(() => toast.error("Failed to add product to cart"));
+        } finally {
+            setLoadingMap((prev) => ({ ...prev, [id]: false }))
+        }
     };
 
 
@@ -126,9 +135,10 @@ const Wishlist = () => {
                                     e.stopPropagation();
                                     handleAddToCart(product);
                                 }}
+                                disabled={loadingMap[product._id]}
                                 className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
                             >
-                                Add to Cart
+                                {loadingMap[product._id]?"Adding...":"Add to Cart"}
                             </button>
                         </div>
 
