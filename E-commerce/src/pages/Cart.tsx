@@ -43,27 +43,48 @@ const Cart = () => {
         </div>
     }
 
-    const handleIncrease = (productId: string, currentQty: number) => {
+    const handleIncrease = async (productId: string, currentQty: number) => {
         console.log("Increase - productId:", productId, "currentQty:", currentQty);
-        dispatch(updateCartQuantity({ productId, quantity: currentQty + 1 }));
-    };
+        if (loadingMap[productId]) return;
 
-    const handleDecrease = (productId: string, currentQty: number) => {
-        if (currentQty > 1) {
-            console.log('productId: ', productId);
-            dispatch(updateCartQuantity({ productId, quantity: currentQty - 1 }));
+        setLoadingMap((prev) => ({ ...prev, [productId]: true }));
+        try {
+            await dispatch(updateCartQuantity({ productId, quantity: currentQty + 1 }));
+        } finally {
+            setLoadingMap((prev) => ({ ...prev, [productId]: false }));
         }
     };
 
-    const handleRemove = (productId: string) => {
-        dispatch(removeItem(productId))
-            .unwrap()
-            .then(() => toast.success("Item removed from cart"))
-            .catch(() => toast.error("Failed to remove item"))
+    const handleDecrease = async (productId: string, currentQty: number) => {
+        if (loadingMap[productId]) return;
+
+        setLoadingMap((prev) => ({ ...prev, [productId]: true }));
+        if (currentQty > 1) {
+            console.log('productId: ', productId);
+            try {
+                await dispatch(updateCartQuantity({ productId, quantity: currentQty - 1 }));
+            } finally {
+                setLoadingMap((prev) => ({ ...prev, [productId]: false }));
+            }
+        }
     };
 
-    const handleClearCart = () => {
-        dispatch(clearCart())
+    const handleRemove = async (productId: string) => {
+        if (loadingMap[productId]) return;
+
+        setLoadingMap((prev) => ({ ...prev, [productId]: true }));
+        try {
+            await dispatch(removeItem(productId))
+                .unwrap()
+                .then(() => toast.success("Item removed from cart"))
+                .catch(() => toast.error("Failed to remove item"))
+        } finally {
+            setLoadingMap((prev) => ({ ...prev, [productId]: false }));
+        }
+    };
+
+    const handleClearCart = async () => {
+        await dispatch(clearCart())
             .unwrap()
             .then(() => toast.success("Cart cleared"))
             .catch(() => toast.error("Failed to clear cart"))
