@@ -48,7 +48,7 @@ const AllProducts = () => {
         setCurrentPage(1);
     }, [category]);
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
             toast.error("Please login to add to cart!");
             navigate("/login");
@@ -59,7 +59,7 @@ const AllProducts = () => {
         if (loadingMap[id]) return;
         setLoadingMap((prev) => ({ ...prev, [id]: true }));
         try {
-            dispatch(addToCart(product))
+            await dispatch(addToCart(product))
                 .unwrap()
                 .then(() => toast.success("Product added to cart!"))
                 .catch(() => toast.error("Failed to add product to cart"));
