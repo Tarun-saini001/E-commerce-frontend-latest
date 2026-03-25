@@ -146,5 +146,5 @@ export const checkoutSchema = z.object({
     .string()
     .trim()
     .nonempty("Phone number is required")
-    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+    .regex(/^\+?\d{10,14}$/, "Invalid phone number"),
 });

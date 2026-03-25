@@ -28,6 +28,7 @@ const Checkout = () => {
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [shippingMethod, setShippingMethod] = useState("");
     const [selectedState, setSelectedState] = useState("");
+    const [phoneCode, setPhoneCode] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -90,6 +91,12 @@ const Checkout = () => {
     const grandTotal = total + shippingFee + tax;
 
     const handlePlaceOrder = async () => {
+
+        if (!selectedCountry || !selectedState || !selectedDistrict || !shippingMethod || !phoneCode) {
+            toast.error("Please fill all required fields");
+            return;
+        }
+
         const result = checkoutSchema.safeParse({
             ...formData,
             country: selectedCountry,
@@ -103,17 +110,18 @@ const Checkout = () => {
                 fieldErrors[field] = err.message;
             });
             setErrors(fieldErrors);
+            toast.error("Please correct the form errors");
             return;
         }
 
         dispatch(createOrder({
             billingDetails: {
                 country: selectedCountry,
-                city: selectedDistrict,
+                city: selectedState,
                 district: selectedDistrict,
                 postalCode: formData.postalCode,
                 address: formData.streetAddress,
-                phone: formData.phone,
+                phone: phoneCode + formData.phone,
             },
             shippingMethod,
             orderStatus: "completed",
@@ -266,13 +274,9 @@ const Checkout = () => {
                         <div className="flex gap-2">
                             {/* Country Code */}
                             <select
+                                value={phoneCode}
                                 className="border border-gray-300 rounded-md px-2 py-2"
-                                onChange={(e) =>
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        phone: e.target.value + prev.phone.replace(/^\+\d+/, "")
-                                    }))
-                                }
+                                onChange={(e) => setPhoneCode(e.target.value)}
                             >
                                 <option value="">Select</option>
                                 <option value="+91">+91 (India)</option>
@@ -285,18 +289,17 @@ const Checkout = () => {
                             <input
                                 type="tel"
                                 name="phone"
-                                value={formData.phone.replace(/^\+\d+/, "")}
+                                value={formData.phone}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    if (/^\d*$/.test(value)) {
-                                        const code = formData.phone.match(/^\+\d+/)?.[0] || "";
 
+                                    if (/^\d*$/.test(value)) {
                                         setFormData((prev) => ({
                                             ...prev,
-                                            phone: code + value
+                                            phone: value
                                         }));
 
-                                        validateField("phone", value);
+                                        validateField("phone", phoneCode + value);
                                     }
                                 }}
                                 onBlur={handleBlur}
