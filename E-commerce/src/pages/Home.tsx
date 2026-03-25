@@ -33,9 +33,8 @@ const Home = () => {
   const category = searchParams.get("category");
 
   useEffect(() => {
-    if (products.length === 0) {
-      dispatch(fetchProducts(category));
-    }
+    dispatch(fetchProducts(category));
+
   }, [dispatch, products.length]);
 
   const filteredProducts = products.filter((product) =>
@@ -226,7 +225,7 @@ const Home = () => {
                     e.stopPropagation();
 
                     if (loadingMap[product._id]) return;
-                    
+
                     if (!isAuthenticated) {
                       navigate("/login");
                       return;
@@ -234,7 +233,7 @@ const Home = () => {
 
                     const alreadyInWishlist = isInWishlist(product._id);
 
-                   handleWishlist(product);
+                    handleWishlist(product);
 
                     if (alreadyInWishlist) {
                       toast.success("Product removed from wishlist");
