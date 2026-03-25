@@ -68,6 +68,18 @@ const AllProducts = () => {
         }
     };
 
+    const handleWishlist = async (product: any) => {
+        const id = product._id;
+        if (loadingMap[id]) return;
+
+        setLoadingMap((prev) => ({ ...prev, [id]: true }));
+
+        try {
+            await dispatch(toggleWishlist(id));
+        } finally {
+            setLoadingMap((prev) => ({ ...prev, [id]: false }));
+        }
+    };
     // pagination calculations
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -154,6 +166,8 @@ const AllProducts = () => {
                                     onClick={(e) => {
                                         e.stopPropagation();
 
+                                        if (loadingMap[product._id]) return;
+
                                         if (!isAuthenticated) {
                                             navigate("/login");
                                             return;
@@ -161,8 +175,7 @@ const AllProducts = () => {
 
                                         const alreadyInWishlist = isInWishlist(product._id);
 
-                                        dispatch(toggleWishlist(product._id));
-
+                                        handleWishlist(product);
                                         if (alreadyInWishlist) {
                                             toast.success("Product removed from wishlist");
                                         } else {
@@ -170,7 +183,7 @@ const AllProducts = () => {
                                         }
                                     }}
                                     className="cursor-pointer text-2xl"
-                                >
+                                    >
                                     {isInWishlist(product._id) ? (
                                         <AiFillHeart className="text-pink-600" />
                                     ) : (

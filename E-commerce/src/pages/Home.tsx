@@ -18,6 +18,7 @@ const Home = () => {
   const { isAuthenticated } = useAuth();
   const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
+  const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
   // pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -53,18 +54,32 @@ const Home = () => {
   if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
   if (error) return <div className="flex justify-center items-center h-screen text-red-500 text-2xl font-bold">{error}</div>;
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = async (product: Product) => {
     if (!isAuthenticated) {
       toast.error("Please login to add to cart!");
       navigate("/login");
       return;
     }
-    dispatch(addToCart(product))
+    await dispatch(addToCart(product))
       .unwrap()
       .then(() => toast.success("Product added to cart!"))
       .catch(() => toast.error("Failed to add product to cart"));
 
   };
+
+  const handleWishlist = async (product: any) => {
+    const id = product._id;
+    if (loadingMap[id]) return;
+
+    setLoadingMap((prev) => ({ ...prev, [id]: true }));
+
+    try {
+      await dispatch(toggleWishlist(id));
+    } finally {
+      setLoadingMap((prev) => ({ ...prev, [id]: false }));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white px-2">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-3 items-stretch">
@@ -210,6 +225,8 @@ const Home = () => {
                   onClick={(e) => {
                     e.stopPropagation();
 
+                    if (loadingMap[product._id]) return;
+                    
                     if (!isAuthenticated) {
                       navigate("/login");
                       return;
@@ -217,7 +234,7 @@ const Home = () => {
 
                     const alreadyInWishlist = isInWishlist(product._id);
 
-                    dispatch(toggleWishlist(product._id));
+                   handleWishlist(product);
 
                     if (alreadyInWishlist) {
                       toast.success("Product removed from wishlist");

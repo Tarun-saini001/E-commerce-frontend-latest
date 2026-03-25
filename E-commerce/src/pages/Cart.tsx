@@ -10,6 +10,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { AiFillHeart } from "react-icons/ai";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 const Cart = () => {
     const { items, total } = useSelector((state: RootState) => state.cart);
@@ -18,6 +19,7 @@ const Cart = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
+    const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
 
 
@@ -67,7 +69,18 @@ const Cart = () => {
             .catch(() => toast.error("Failed to clear cart"))
     };
 
+    const handleWishlist = async (product: any) => {
+        const id = product._id;
+        if (loadingMap[id]) return;
 
+        setLoadingMap((prev) => ({ ...prev, [id]: true }));
+
+        try {
+            await dispatch(toggleWishlist(id));
+        } finally {
+            setLoadingMap((prev) => ({ ...prev, [id]: false }));
+        }
+    };
     return (
         <div className="max-w-7xl mx-auto px-6 py-12">
 
@@ -131,7 +144,7 @@ const Cart = () => {
                                 <div
                                     onClick={(e) => {
                                         e.stopPropagation();
-
+                                        if (loadingMap[item._id]) return;
                                         if (!isAuthenticated) {
                                             navigate("/login");
                                             return;
@@ -140,7 +153,7 @@ const Cart = () => {
                                         const alreadyInWishlist = isInWishlist(item._id);
 
                                         dispatch(toggleWishlist(item._id));
-
+                                        handleWishlist(item);
                                         if (alreadyInWishlist) {
                                             toast.success("Product removed from wishlist");
                                         } else {
