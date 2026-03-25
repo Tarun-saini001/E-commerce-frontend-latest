@@ -20,7 +20,8 @@ const AllProducts = () => {
     const { isAuthenticated } = useAuth();
     const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products);
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
-    const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
+    const [cartLoadingMap, setCartLoadingMap] = useState<Record<string, boolean>>({});
+    const [wishlistLoadingMap, setWishlistLoadingMap] = useState<Record<string, boolean>>({});
 
     const isInWishlist = (id: string) => {
         return wishlistItems.some((item) => item._id === id);
@@ -56,28 +57,28 @@ const AllProducts = () => {
         }
         const id = product._id;
 
-        if (loadingMap[id]) return;
-        setLoadingMap((prev) => ({ ...prev, [id]: true }));
+        if (cartLoadingMap[id]) return;
+        setCartLoadingMap((prev) => ({ ...prev, [id]: true }));
         try {
             await dispatch(addToCart(product))
                 .unwrap()
                 .then(() => toast.success("Product added to cart!"))
                 .catch(() => toast.error("Failed to add product to cart"));
         } finally {
-            setLoadingMap((prev) => ({ ...prev, [id]: false }))
+            setCartLoadingMap((prev) => ({ ...prev, [id]: false }))
         }
     };
 
     const handleWishlist = async (product: any) => {
         const id = product._id;
-        if (loadingMap[id]) return;
+        if (wishlistLoadingMap[id]) return;
 
-        setLoadingMap((prev) => ({ ...prev, [id]: true }));
+        setWishlistLoadingMap((prev) => ({ ...prev, [id]: true }));
 
         try {
             await dispatch(toggleWishlist(id));
         } finally {
-            setLoadingMap((prev) => ({ ...prev, [id]: false }));
+            setWishlistLoadingMap((prev) => ({ ...prev, [id]: false }));
         }
     };
     // pagination calculations
@@ -166,7 +167,7 @@ const AllProducts = () => {
                                     onClick={(e) => {
                                         e.stopPropagation();
 
-                                        if (loadingMap[product._id]) return;
+                                        if (wishlistLoadingMap[product._id]) return;
 
                                         if (!isAuthenticated) {
                                             navigate("/login");
@@ -183,7 +184,7 @@ const AllProducts = () => {
                                         }
                                     }}
                                     className="cursor-pointer text-2xl"
-                                    >
+                                >
                                     {isInWishlist(product._id) ? (
                                         <AiFillHeart className="text-pink-600" />
                                     ) : (
@@ -211,10 +212,10 @@ const AllProducts = () => {
 
                                     handleAddToCart(product);
                                 }}
-                                disabled={loadingMap[product._id]}
+                                disabled={cartLoadingMap[product._id]}
                                 className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
                             >
-                                {loadingMap[product._id] ? "Adding..." : "Add to Cart"}
+                                {cartLoadingMap[product._id] ? "Adding..." : "Add to Cart"}
                             </button>
                         </div>
                     </div>

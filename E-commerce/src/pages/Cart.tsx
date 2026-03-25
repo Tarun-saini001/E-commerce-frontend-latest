@@ -152,7 +152,6 @@ const Cart = () => {
 
                                         const alreadyInWishlist = isInWishlist(item._id);
 
-                                        dispatch(toggleWishlist(item._id));
                                         handleWishlist(item);
                                         if (alreadyInWishlist) {
                                             toast.success("Product removed from wishlist");
