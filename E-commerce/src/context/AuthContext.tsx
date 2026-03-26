@@ -102,12 +102,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Fetch profile from server
     const fetchProfile = async () => {
         try {
+            console.log("before fetching user profile");
             const res = await fetch(`${API}/service/user/me`, {
                 credentials: "include",
             });
             if (!res.ok) throw new Error("Failed to fetch profile");
 
             const data = await res.json();
+            console.log('data:fetch profile ', data);
             setUser(data.data);
         } catch (err) {
             setUser(null);
