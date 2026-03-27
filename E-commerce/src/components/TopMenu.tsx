@@ -15,7 +15,14 @@ const TopMenu = () => {
     return (
         <div className='fixed top-[60px] left-0 w-full bg-white border-b border-gray-200 z-40'>
             <div className="max-w-7xl mx-auto justify-center items-center flex gap-8 px-6 py-3 font-semibold text-gray-700">
-
+                {isAuthenticated && (
+                    <span
+                        onClick={() => navigate("/admin")}
+                        className={`${baseStyle} ${isActive("/admin") ? activeStyle : ""}`}
+                    >
+                        Dashboard
+                    </span>
+                )}
                 <span
                     onClick={() => navigate("/")}
                     className={`${baseStyle} ${isActive("/") ? activeStyle : ""}`}
