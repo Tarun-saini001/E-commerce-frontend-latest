@@ -46,7 +46,11 @@ const initialState: ProductState = {
 export const fetchProductById = createAsyncThunk(
   "product/fetchById",
   async (id: string) => {
-    const res = await fetch(`${API}/service/product/${id}`);
+    const res = await fetch(`${API}/service/product/${id}`,{
+        method: "GET",
+        headers: { "content-type": "application/json" },
+        credentials: "include"
+    });
     const data = await res.json();
     console.log('data: product by id', data);
     return data.data;

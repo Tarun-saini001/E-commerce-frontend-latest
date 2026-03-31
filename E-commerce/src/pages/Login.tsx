@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginSchema } from "../schemas/validators";
 import type { LoginInput } from "../types/authTypes";
@@ -8,7 +8,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-    const { login } = useAuth();
+    const { login, user } = useAuth();
     const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL;
     const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +20,18 @@ const Login = () => {
     const [errors, setErrors] = useState<Partial<Record<keyof LoginInput, string>>>({});
     const [loading, setLoading] = useState(false);
 
+
+
+    useEffect(() => {
+        if (user) {
+            if (user.role === 1) {
+                navigate("/admin", { replace: true });
+            } else {
+                navigate("/");
+            }
+        }
+    }, [user]);
+    
     // Validate individual field
     const validateField = (name: keyof LoginInput, value: string) => {
         const fieldSchema = loginSchema.shape[name];
@@ -83,11 +95,12 @@ const Login = () => {
             if (response.ok) {
                 login();
                 toast.success("login successfully!");
-                if (data.data?.role === 1) {
-                    navigate("/dashboard");
-                } else {
-                    navigate("/");
-                }
+                // console.log('data.data: ', data.data);
+                // if (user?.role === 1) {
+                //     navigate("/admin", { replace: true });
+                // } else {
+                //     navigate("/");
+                // }
             } else {
                 setErrors({ password: "Invalid password" });
                 toast.error(data.message || "Something went wrong");

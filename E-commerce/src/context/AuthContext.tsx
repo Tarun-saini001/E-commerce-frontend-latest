@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (!res.ok) throw new Error("Failed to fetch profile");
 
             const data = await res.json();
-            console.log('data:fetch profile ', data);
+            console.log('data:fetch profile- ', data);
             setUser(data.data);
         } catch (err) {
             setUser(null);
