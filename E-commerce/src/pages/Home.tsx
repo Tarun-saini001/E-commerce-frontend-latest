@@ -16,7 +16,7 @@ const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products)
+  const { products = [], loading, error, searchTerm } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
@@ -203,7 +203,7 @@ const Home = () => {
 
 
               <div className="mt-auto flex items-center justify-between pt-3">
-                <span className="text-blue-400 font-bold">${product.price.toFixed(2)}</span>
+                <span className="text-blue-400 font-bold">{product.price.toFixed(2)} Rs.</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // prevent card click

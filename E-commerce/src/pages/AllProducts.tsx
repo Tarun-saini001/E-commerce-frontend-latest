@@ -162,7 +162,7 @@ const AllProducts = () => {
 
                         <div className="mt-auto flex items-center flex-col gap-2 justify-between pt-3">
                             <div className="flex justify-between w-full mb-4">
-                                <span className="text-blue-00 items-start w-full font-bold">${product.price.toFixed(2)}</span>
+                                <span className="text-blue-00 items-start w-full font-bold">{product.price.toFixed(2)} Rs.</span>
                                 <div
                                     onClick={(e) => {
                                         e.stopPropagation();

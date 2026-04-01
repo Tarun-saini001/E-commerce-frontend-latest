@@ -1,117 +1,120 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 import toast from "react-hot-toast";
 
 const AddCategory = () => {
-  const API = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  const [name, setName] = useState("");
-  const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+    const existingData = location.state;
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+    console.log('existingData: ', existingData);
+    const API = import.meta.env.VITE_API_URL;
+    const [name, setName] = useState(existingData?.name || "");
+    const [image, setImage] = useState<File | string>(existingData?.image ? `${API}${existingData.image}` : "");
+    const [preview, setPreview] = useState< string>(existingData?.image ? `${API}${existingData.image}` : "");
 
-    const file = e.target.files[0];
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      toast.error("Category name is required");
-      return;
-    }
 
-    if (!image) {
-      toast.error("Please upload an image");
-      return;
-    }
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-    try {
-      setLoading(true);
+        const imageUrl = URL.createObjectURL(file);
+        setPreview(imageUrl);
 
-      const formData = new FormData();
-      formData.append("categoryName", name);
-      formData.append("image", image);
+        setImage(file);
+    };
 
-      const response = await fetch(`${API}/admin/category`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          app: "anstmasr2588",
-        },
-      });
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("name", name);
+            if (image instanceof File) {
+                formData.append("image", image);
+            }
 
-      const data = await response.json();
+            const url = existingData
+                ? `${API}/service/category/${existingData._id}`
+                : `${API}/service/category/`;
 
-      if (response.ok) {
-        toast.success("Category added successfully!");
-        setName("");
-        setImage(null);
-        setPreview(null);
-      } else {
-        toast.error(data.message || "Something went wrong");
-      }
-    } catch (error) {
-      toast.error("Server error");
-    } finally {
-      setLoading(false);
-    }
-  };
+            const method = existingData ? "PATCH" : "POST";
 
-  return (
-    <div className="max-w-lg mx-auto bg-white shadow-lg p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6">Add Category</h2>
+            const res = await fetch(url, {
+                method,
+                body: formData,
+                credentials: "include",
+            });
 
-      {/* Category Name */}
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">
-          Category Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter category name"
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2"
-        />
-      </div>
+            const data = await res.json();
+            console.log("category added/updated", data);
 
-      {/* Image Upload */}
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">
-          Category Image <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full"
-        />
-      </div>
+            if (res.ok) {
+                 toast.success(existingData ? "Category updated successfully!" : "Category added successfully!");
+                navigate("/admin/categories");
+            }
+        } catch (err) {
+            console.log("Error:", err);
+        }
+    };
 
-      {/* Image Preview */}
-      {preview && (
-        <div className="mb-4">
-          <img
-            src={preview}
-            alt="Preview"
-            className="w-40 h-40 object-cover rounded border"
-          />
+    return (
+        <div className="p-6">
+
+            <div className="flex items-center gap-3 mb-6">
+                <button onClick={() => navigate(-1)} className="text-xl cursor-pointer">
+                    <IoIosArrowBack />
+                </button>
+
+                <h1 className="text-2xl font-semibold">
+                    {existingData ? "Edit Category" : "Add New Category"}
+                </h1>
+            </div>
+
+
+            <div className="max-w-md">
+
+
+                <label className="block mb-2 font-medium">Category Name</label>
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border rounded p-2 mb-6"
+                />
+
+
+                <label className="block mb-2 font-medium">Category Image</label>
+
+                <label className="w-40 h-40 border-2 border-dashed flex items-center justify-center rounded cursor-pointer overflow-hidden">
+                    {preview ? (
+                        <img
+                            src={preview}
+                            alt="preview"
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <span className="text-gray-500">Upload Image</span>
+                    )}
+
+                    <input
+                        type="file"
+                        hidden
+                        onChange={handleImageChange}
+                    />
+                </label>
+
+
+                <button
+                    onClick={handleSubmit}
+                    className="mt-6 bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
+                >
+                    {existingData ? "Update Category" : "Publish Category"}
+                </button>
+            </div>
         </div>
-      )}
-
-      {/* Submit Button */}
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="w-full bg-black text-white py-2 rounded disabled:opacity-50"
-      >
-        {loading ? "Adding..." : "Add Category"}
-      </button>
-    </div>
-  );
+    );
 };
 
 export default AddCategory;

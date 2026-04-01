@@ -66,6 +66,7 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaBox, FaShoppingCart, } from "react-icons/fa";
+import { BiSolidCategory } from "react-icons/bi";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -99,6 +100,15 @@ const Sidebar = () => {
         >
           <FaUsers />
           Users
+        </li>
+
+        {/* category */}
+        <li
+          onClick={() => navigate("/admin/categories")}
+          className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin/categories")}`}
+        >
+          <BiSolidCategory />
+          Categories
         </li>
 
         {/* products */}

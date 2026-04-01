@@ -88,7 +88,7 @@
               <span className="text-gray-700">{singleProduct.rating.toFixed(1)}</span>
             </div>
 
-            <p className="text-2xl font-bold text-blue-600 mb-4">${singleProduct.price}</p>
+            <p className="text-2xl font-bold text-blue-600 mb-4">{singleProduct.price} Rs.</p>
 
             <p
               className={`text-sm font-semibold mb-4 ${singleProduct.stock > 0 ? "text-green-600" : "text-red-600"

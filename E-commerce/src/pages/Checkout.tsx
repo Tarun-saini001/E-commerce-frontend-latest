@@ -339,7 +339,7 @@ const Checkout = () => {
                         {items.map((item) => (
                             <div key={item._id} className="flex justify-between">
                                 <span>{item.title} (x{item.quantity})</span>
-                                <span>$ {(item.price * item.quantity).toFixed(2)}</span>
+                                <span> {(item.price * item.quantity).toFixed(2)} Rs.</span>
                             </div>
                         ))}
                     </div>
@@ -347,22 +347,22 @@ const Checkout = () => {
                     <div className="mt-4 border-t" >
                         <div className="flex justify-between text-gray-700 mb-1">
                             <span>Subtotal</span>
-                            <span>$ {total.toFixed(2)}</span>
+                            <span> {total.toFixed(2)} Rs.</span>
                         </div>
 
                         <div className="flex justify-between text-gray-700 mb-1">
                             <span>Shipping Fee</span>
-                            <span>$ {shippingFee.toFixed(2)}</span>
+                            <span> {shippingFee.toFixed(2)} Rs.</span>
                         </div>
 
                         <div className="flex justify-between text-gray-700 mb-4">
                             <span>Tax (5%)</span>
-                            <span>$ {tax.toFixed(2)}</span>
+                            <span> {tax.toFixed(2)} Rs.</span>
                         </div>
 
                         <div className="border-t pt-3 flex justify-between font-bold text-lg">
                             <span>Total</span>
-                            <span>$ {grandTotal.toFixed(2)}</span>
+                            <span>{grandTotal.toFixed(2)} Rs.</span>
                         </div>
                     </div>
 

@@ -124,10 +124,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/profile";
 
 // admin pages
-import AddProduct from "./pages/admin/AddProduct";
+// import AddProduct from "./pages/admin/AddProduct";
 import DashboardHome from "./pages/admin/DashboardHome";
 import UsersList from "./pages/admin/UsersList";
-
+import Categories from "./pages/admin/Categories";
+import AddCategory from "./pages/admin/AddCategory";
+import Products from "./pages/admin/Products";
+import AddProduct from "./pages/admin/AddProduct";
 function App() {
   return (
     <Routes>
@@ -163,6 +166,10 @@ function App() {
         {/* <Route path="products/add" element={<AddProduct />} />
         <Route path="products/add" element={<AddProduct />} /> */}
         <Route path="users" element={<UsersList/>}/>
+        <Route path="categories" element={<Categories/>}/>
+        <Route path="add-category" element={<AddCategory/>}/>
+        <Route path="products" element={<Products/>}/>
+        <Route path="add-product" element={<AddProduct/>}/>
       </Route>
 
     </Routes>

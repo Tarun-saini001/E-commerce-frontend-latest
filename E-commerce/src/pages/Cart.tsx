@@ -134,7 +134,7 @@ const Cart = () => {
                                     {item.brand} * {item.categoryName}
                                 </p>
                                 <p className="text-sm text-gray-400">
-                                    Price: ${item.price}
+                                    Price: {item.price} Rs.
                                 </p>
                             </div>
 
@@ -218,29 +218,29 @@ const Cart = () => {
                         {items.map(item => (
                             <div key={item._id} className="flex justify-between">
                                 <span>{item.title} (x{item.quantity})</span>
-                                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                <span>{(item.price * item.quantity).toFixed(2)} Rs.</span>
                             </div>
                         ))}
                     </div>
 
                     <div className="flex justify-between mt-4">
                         <span>Subtotal</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>{total.toFixed(2)} Rs.</span>
                     </div>
 
                     <div className="flex justify-between mt-2">
                         <span>Shipping Fee</span>
-                        <span>$15.00</span>
+                        <span>15.00 Rs.</span>
                     </div>
 
                     <div className="flex justify-between mt-2">
                         <span>Tax (5%)</span>
-                        <span>${(total * 0.05).toFixed(2)}</span>
+                        <span>{(total * 0.05).toFixed(2)} Rs.</span>
                     </div>
 
                     <div className="border-t pt-3 flex justify-between font-bold text-lg mt-2">
                         <span>Total</span>
-                        <span>${(total + 15 + total * 0.05).toFixed(2)}</span>
+                        <span>{(total + 15 + total * 0.05).toFixed(2)} Rs.</span>
                     </div>
 
                     {/* Shipping Method */}

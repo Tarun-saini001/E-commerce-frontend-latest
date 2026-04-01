@@ -23,7 +23,7 @@ import type { RootState, AppDispatch } from "../redux/store";
 const CategoriesSidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { categories } = useSelector(
+  const { categories=[] } = useSelector(
     (state: RootState) => state.category
   );
 

@@ -93,14 +93,14 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <>
-                        <button
+                        {/* <button
                             className=" text-black bg-white shadow w-20 cursor-pointer font-semibold rounded-md"
                             onClick={() => navigate("/register")}
                         >
                             Register
-                        </button>
+                        </button> */}
                         <button
-                            className=" text-black bg-white shadow w-20 cursor-pointer font-semibold rounded-md"
+                            className=" text-white bg-sky-500 p-2 shadow w-20 cursor-pointer font-semibold rounded-md"
                             onClick={() => navigate("/login")}
                         >
                             Login

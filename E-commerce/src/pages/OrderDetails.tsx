@@ -77,7 +77,7 @@ const OrderDetails = () => {
                             </div>
 
                             <p className="font-bold">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                {(item.price * item.quantity).toFixed(2)} Rs.
                             </p>
                         </div>
                     ))}
@@ -90,22 +90,22 @@ const OrderDetails = () => {
 
                 <div className="flex justify-between mb-2">
                     <span>Subtotal</span>
-                    <span>${order.subtotal.toFixed(2)}</span>
+                    <span>{order.subtotal.toFixed(2)} Rs.</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
                     <span>Shipping</span>
-                    <span>${order.shippingFee.toFixed(2)}</span>
+                    <span>{order.shippingFee.toFixed(2)} Rs.</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
                     <span>Tax</span>
-                    <span>${order.tax.toFixed(2)}</span>
+                    <span>{order.tax.toFixed(2)} Rs.</span>
                 </div>
 
                 <div className="border-t pt-3 flex justify-between font-bold">
                     <span>Total</span>
-                    <span>${order.total.toFixed(2)}</span>
+                    <span>{order.total.toFixed(2)} Rs.</span>
                 </div>
             </div>
         </div>
