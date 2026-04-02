@@ -14,27 +14,47 @@ const Categories = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
+  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) || 1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
 
+  useEffect(() => {
+    localStorage.setItem("catPage", page.toString());
+  }, [page]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (currentPage = 1) => {
     try {
-      const res = await fetch(`${API}/service/category`, {
+      setLoading(true);
+      const res = await fetch(`${API}/service/category?page=${currentPage}&limit=6`, {
         credentials: "include",
       });
       const data = await res.json();
       console.log('fetch category: ', data.data);
 
-      setCategories(data.data || []);
+      setCategories(data.data.categories || []);
+      setTotalPages(data.data.totalPages);
+      setPage(data.data.currentPage);
     } catch (err) {
       console.log("Error fetching categories", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchCategories(page);
+  }, [page]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full text-xl">
+        Loading...
+      </div>
+    );
+  }
 
   const deleteCategory = async () => {
     if (!selectedCategory) return;
@@ -132,9 +152,40 @@ const Categories = () => {
         ))}
       </div>
 
+      <div className="flex justify-center gap-2 mt-6">
+        <button
+          onClick={() => setPage((prev) => prev - 1)}
+          disabled={page === 1}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i + 1)}
+            className={`px-3 py-1 rounded ${page === i + 1
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200"
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={page === totalPages}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
       {/*cinfirmation message*/}
       {showModal && selectedCategory && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl text-center w-[350px]">
             <h2 className="text-xl font-semibold mb-2">
               Delete Category

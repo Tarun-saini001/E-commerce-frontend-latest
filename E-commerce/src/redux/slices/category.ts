@@ -27,7 +27,7 @@ export const fetchCategories = createAsyncThunk(
     const res = await fetch(`${API}/service/category/`);
     const data = await res.json();
     console.log('data:get categories ', data);
-    return data.data;
+    return data.data.categories;
   }
 );
 

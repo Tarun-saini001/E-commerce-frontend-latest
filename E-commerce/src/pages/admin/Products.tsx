@@ -15,7 +15,7 @@ interface Product {
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) ||1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -24,6 +24,10 @@ const Products = () => {
 
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    localStorage.setItem("catPage", page.toString());
+  }, [page]);
 
   const fetchProducts = async (currentPage = 1) => {
     try {
@@ -92,7 +96,7 @@ const Products = () => {
 
         <button
           onClick={() => navigate("/admin/add-product")}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded"
         >
           Add Product
         </button>
@@ -140,18 +144,18 @@ const Products = () => {
                     state: product,
                   })
                 }
-                className="text-blue-500"
+                className="text-blue-500 cursor-pointer"
               >
                 <FaEdit />
               </button>
 
-              {/* Delete */}
+              {/* delete */}
               <button
                 onClick={() => {
                   setSelectedProduct(product);
                   setShowModal(true);
                 }}
-                className="text-red-500"
+                className="text-red-500 cursor-pointer"
               >
                 <MdDelete />
               </button>
@@ -160,12 +164,12 @@ const Products = () => {
         ))}
       </div>
 
-      {/* Pagination */}
+      {/* pagination */}
       <div className="flex justify-center gap-2 mt-6">
         <button
           onClick={() => setPage((prev) => prev - 1)}
           disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 cursor-pointer rounded disabled:opacity-50"
         >
           Prev
         </button>
@@ -174,7 +178,7 @@ const Products = () => {
           <button
             key={i}
             onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 rounded ${page === i + 1
+            className={`px-3 py-1 cursor-pointer  rounded ${page === i + 1
               ? "bg-blue-500 text-white"
               : "bg-gray-200"
               }`}
@@ -186,14 +190,14 @@ const Products = () => {
         <button
           onClick={() => setPage((prev) => prev + 1)}
           disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 cursor-pointer bg-gray-200 rounded disabled:opacity-50"
         >
           Next
         </button>
       </div>
 
       {showModal && selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl text-center w-[350px]">
 
             <h2 className="text-xl font-semibold mb-2">
@@ -207,14 +211,14 @@ const Products = () => {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 border rounded"
+                className="px-4 py-2 cursor-pointer border rounded"
               >
                 Cancel
               </button>
 
               <button
                 onClick={deleteProduct}
-                className="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 cursor-pointer bg-red-500 text-white rounded"
               >
                 Delete
               </button>

@@ -116,35 +116,63 @@ export const resetPasswordSchema = z
 
 // Checkout form schema
 export const checkoutSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .nonempty("Name is required")
-    .min(2, "Name must be at least 2 characters")
-    .regex(/^[A-Z]/, "Name must start with a capital letter")
-    .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
+    name: z
+        .string()
+        .trim()
+        .nonempty("Name is required")
+        .min(2, "Name must be at least 2 characters")
+        .regex(/^[A-Z]/, "Name must start with a capital letter")
+        .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
 
-  email: z
-    .string()
-    .trim()
-    .nonempty("Email is required")
-    .email("Invalid email format"),
+    email: z
+        .string()
+        .trim()
+        .nonempty("Email is required")
+        .email("Invalid email format"),
 
-  postalCode: z
-    .string()
-    .trim()
-    .nonempty("Postal code is required")
-    .regex(/^\d{6}$/, "Postal code must be exactly 6 digits"),
+    postalCode: z
+        .string()
+        .trim()
+        .nonempty("Postal code is required")
+        .regex(/^\d{6}$/, "Postal code must be exactly 6 digits"),
 
-  streetAddress: z
-    .string()
-    .trim()
-    
-    .nonempty("Street address is required"),
+    streetAddress: z
+        .string()
+        .trim()
 
-  phone: z
-    .string()
-    .trim()
-    .nonempty("Phone number is required")
-    .regex(/^\+?\d{10,14}$/, "Invalid phone number"),
+        .nonempty("Street address is required"),
+
+    phone: z
+        .string()
+        .trim()
+        .nonempty("Phone number is required")
+        .regex(/^\+?\d{10,14}$/, "Invalid phone number"),
+});
+
+
+
+export const categorySchema = z.object({
+    name: z
+        .string()
+        .trim()
+        .nonempty("Name is required")
+        .min(1, "Name is required")
+        .min(2, "Name must be at least 2 characters")
+        .regex(/^[A-Z]/, "Name must start with a capital letter")
+        .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
+
+    image: z
+        .any()
+        .refine((file) => file instanceof File || typeof file === "string",
+            "Please upload an image")
+        .refine(
+            (file) => {
+                if (typeof file === "string") return true; 
+                if (file instanceof File) {
+                    return ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type);
+                }
+                return false;
+            },
+            "Only images are allowed"
+        )
 });

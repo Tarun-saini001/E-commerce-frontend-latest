@@ -8,14 +8,16 @@ interface User {
 }
 
 const UsersList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users=[], setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) ||1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const API = import.meta.env.VITE_API_URL;
+
+  
 
   const fetchUsers = async (currentPage = 1) => {
     try {
@@ -187,7 +189,7 @@ const UsersList = () => {
 
       </div>
       {showModal && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/70  flex items-center justify-center z-50">
 
           <div className="bg-white rounded-xl shadow-lg p-6 w-[350px] text-center">
 
