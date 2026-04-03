@@ -8,16 +8,16 @@ interface User {
 }
 
 const UsersList = () => {
-  const [users=[], setUsers] = useState<User[]>([]);
+  const [users = [], setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) ||1);
+  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) || 1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const API = import.meta.env.VITE_API_URL;
 
-  
+
 
   const fetchUsers = async (currentPage = 1) => {
     try {
@@ -47,6 +47,10 @@ const UsersList = () => {
     fetchUsers(page);
   }, [page]);
 
+  useEffect(() => {
+    localStorage.setItem("catPage", page.toString());
+  }, [page]);
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
@@ -217,8 +221,8 @@ const UsersList = () => {
               <button
                 onClick={handleConfirm}
                 className={`px-4 py-2 rounded text-white ${selectedUser.isActive
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-green-500 hover:bg-green-600"
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-green-500 hover:bg-green-600"
                   }`}
               >
                 {selectedUser.isActive ? "Deactivate" : "Activate"}

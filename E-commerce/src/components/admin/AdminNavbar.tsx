@@ -24,7 +24,7 @@ const AdminNavbar = () => {
             </div>
 
             <div
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/admin/profile")}
                 className="w-10 h-10 rounded-full bg-gray-300 text-black flex items-center justify-center cursor-pointer"
             >
                 {user?.name?.charAt(0).toUpperCase()}

@@ -63,7 +63,9 @@ const AddCategory = () => {
 
             result.error.issues.forEach((err) => {
                 const field = err.path[0] as string;
-                fieldErrors[field] = err.message;
+                if (!fieldErrors[field]) {
+                    fieldErrors[field] = err.message;
+                }
             });
 
             console.log('fieldErrors: ', fieldErrors);
@@ -78,7 +80,7 @@ const AddCategory = () => {
             if (image instanceof File) {
                 formData.append("image", image);
             } else if (typeof image === "string") {
-                formData.append("image", image); 
+                formData.append("image", image);
             }
 
             const url = existingData

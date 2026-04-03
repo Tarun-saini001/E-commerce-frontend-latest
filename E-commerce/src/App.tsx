@@ -132,6 +132,7 @@ import AddCategory from "./pages/admin/AddCategory";
 import Products from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
 import OrdersList from "./pages/admin/OrdersList";
+import AdminProfile from "./pages/admin/AdminProfile";
 function App() {
   return (
     <Routes>
@@ -172,6 +173,7 @@ function App() {
         <Route path="products" element={<Products/>}/>
         <Route path="add-product" element={<AddProduct/>}/>
         <Route path="orders" element={<OrdersList/>}/>
+        <Route path="profile" element={<AdminProfile/>}/>
       </Route>
 
     </Routes>

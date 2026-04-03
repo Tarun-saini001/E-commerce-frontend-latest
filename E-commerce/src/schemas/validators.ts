@@ -167,7 +167,7 @@ export const categorySchema = z.object({
             "Please upload an image")
         .refine(
             (file) => {
-                if (typeof file === "string") return true; 
+                if (typeof file === "string") return true;
                 if (file instanceof File) {
                     return ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type);
                 }
@@ -181,32 +181,31 @@ export const productSchema = z.object({
     title: z
         .string()
         .trim()
-        .nonempty("Title is required")
+        .min(1, "Title is required")
         .min(2, "Title must be at least 2 characters"),
 
     description: z
         .string()
         .trim()
-        .nonempty("Description is required")
+        .min(1, "Description is required")
         .min(10, "Description must be at least 10 characters"),
-
+        
     price: z
-        .number()
-        .min(1, "Price must be greater than 0"),
+        .coerce.number()
+        .refine((val) => Number.isFinite(val) && val > 0, {
+            message: "Price is required",
+        }),
 
     stock: z
-        .number()
-        .min(0, "Stock cannot be negative"),
+        .coerce.number()
+        .refine((val) => Number.isFinite(val) && val > 0, {
+            message: "Stock is required",
+        }),
 
-    brand: z
-        .string()
-        .trim()
-        .nonempty("Brand is required"),
 
     category: z
         .string()
-        .trim()
-        .nonempty("Category is required"),
+        .trim(),
 
     thumbnail: z
         .any()

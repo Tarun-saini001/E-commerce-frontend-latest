@@ -36,7 +36,6 @@ const Categories = () => {
 
       setCategories(data.data.categories || []);
       setTotalPages(data.data.totalPages);
-      setPage(data.data.currentPage);
     } catch (err) {
       console.log("Error fetching categories", err);
     } finally {
@@ -156,7 +155,7 @@ const Categories = () => {
         <button
           onClick={() => setPage((prev) => prev - 1)}
           disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 cursor-pointer rounded disabled:opacity-50"
         >
           Prev
         </button>
@@ -165,7 +164,7 @@ const Categories = () => {
           <button
             key={i}
             onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 rounded ${page === i + 1
+            className={`px-3 py-1 rounded cursor-pointer ${page === i + 1
               ? "bg-blue-500 text-white"
               : "bg-gray-200"
               }`}
@@ -177,7 +176,7 @@ const Categories = () => {
         <button
           onClick={() => setPage((prev) => prev + 1)}
           disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 rounded cursor-pointer disabled:opacity-50"
         >
           Next
         </button>
