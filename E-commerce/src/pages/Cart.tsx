@@ -28,7 +28,7 @@ const Cart = () => {
     };
 
     if (items.length === 0) {
-        return <div className="text-center my-5">
+        return <div className=" flex flex-col justify-center items-center my-5  h-screen">
             <BsCart4 className="text-6xl text-gray-400 mb-4 mx-auto" />
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Your Cart is Empty</h2>
             <p className="text-gray-500 mb-4">
@@ -109,7 +109,7 @@ const Cart = () => {
 
             <div className="grid grid-cols-3 gap-8">
 
-                {/* LEFT SIDE - CART ITEMS */}
+                
                 <div className="col-span-2 space-y-4">
 
                     {items.map((item) => (

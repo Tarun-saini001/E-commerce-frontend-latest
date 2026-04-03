@@ -31,6 +31,9 @@ interface ProductState {
   loading: boolean;
   error: string | null;
   searchTerm: string
+
+  currentPage: number;
+  totalPages: number;
 }
 
 // initial state
@@ -39,17 +42,19 @@ const initialState: ProductState = {
   singleProduct: null,
   loading: false,
   error: null,
-  searchTerm: ""
+  searchTerm: "",
+  currentPage: 1,
+  totalPages: 1,
 };
 
 //fetch product by id
 export const fetchProductById = createAsyncThunk(
   "product/fetchById",
   async (id: string) => {
-    const res = await fetch(`${API}/service/product/${id}`,{
-        method: "GET",
-        headers: { "content-type": "application/json" },
-        credentials: "include"
+    const res = await fetch(`${API}/service/product/${id}`, {
+      method: "GET",
+      headers: { "content-type": "application/json" },
+      credentials: "include"
     });
     const data = await res.json();
     console.log('data: product by id', data);
@@ -60,18 +65,18 @@ export const fetchProductById = createAsyncThunk(
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async (category: string | null) => {
-    let url = `${API}/service/product/`;
+  async ({ category, page = 1, limit = 9 }: { category: string | null; page?: number; limit?: number }) => {
+    let url = `${API}/service/product/?page=${page}&limit=${limit}`;
 
     if (category) {
-      url += `?category=${category}`;
+      url += `&category=${category}`;
     }
 
     const res = await fetch(url);
     const data = await res.json();
     console.log('data: get products', data);
 
-    return data.data.products;
+    return data.data;
   }
 );
 
@@ -91,7 +96,9 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -102,15 +109,15 @@ const productSlice = createSlice({
       .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
       })
-    .addCase(fetchProductById.fulfilled, (state, action) => {
-      state.loading = false;
-      state.singleProduct = action.payload;
-    })
-    .addCase(fetchProductById.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || "Failed to fetch product";
-    })
-},
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleProduct = action.payload;
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch product";
+      })
+  },
 });
 
 

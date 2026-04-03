@@ -27,7 +27,7 @@ const AddProduct = () => {
     });
 
     const [image, setImage] = useState<File | null>(null);
-
+    const [errors, setErrors] = useState<any>({});
 
     useEffect(() => {
         if (existingData) {
@@ -41,11 +41,13 @@ const AddProduct = () => {
 
             const imageUrl = existingData.thumbnail.startsWith("http")
                 ? existingData.thumbnail
-                : `${API}${existingData.thumbnail}`;
+                : `${API}/${existingData.thumbnail}`;
 
             setPreview(imageUrl);
         }
     }, [existingData]);
+
+
 
     const fetchCategories = async () => {
         try {

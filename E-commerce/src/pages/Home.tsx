@@ -16,13 +16,13 @@ const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { products = [], loading, error, searchTerm } = useSelector((state: RootState) => state.products)
+  const { products = [], loading, error, searchTerm, totalPages } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
   // pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const productsPerPage = 9;
+  // const productsPerPage = 9;
 
 
   const isInWishlist = (id: string) => {
@@ -33,20 +33,33 @@ const Home = () => {
   const category = searchParams.get("category");
 
   useEffect(() => {
-    dispatch(fetchProducts(category));
+    dispatch(fetchProducts({ category, page: currentPage, limit: 9 }));
 
-  }, [dispatch, products.length]);
+  }, [dispatch, category, currentPage]);
+
+  useEffect(() => {
+    localStorage.setItem("homePage", currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("homePage");
+    if (saved) setCurrentPage(Number(saved));
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category]);
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // pagination calculations
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  // // pagination calculations
+  // const indexOfLastProduct = currentPage * productsPerPage;
+  // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  // const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
@@ -174,7 +187,7 @@ const Home = () => {
         <h2 className="text-3xl font-extrabold mb-6 text-gray-900">Featured Items</h2>
 
         <div className="grid  grid-cols-3  gap-6">
-          {currentProducts.map((product) => (
+          {products.map((product) => (
             <div
               onClick={() => navigate(`/product/${product._id}`)}
               key={product._id}
@@ -268,7 +281,38 @@ const Home = () => {
             </button>
           ))}
         </div>
+        {/* <div className="flex justify-center items-center gap-2 mt-4">
 
+          <button
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => paginate(page)}
+              className={`px-3 py-1 rounded ${currentPage === page
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200"
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+
+        </div> */}
       </div>
 
     </div>

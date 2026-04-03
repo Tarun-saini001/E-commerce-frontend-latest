@@ -25,8 +25,8 @@ interface Order {
     email: string;
   };
   items: OrderItem[];
-  subtotal: number;     
-  shippingFee: number;  
+  subtotal: number;
+  shippingFee: number;
   tax: number;
   total: number;
   shippingMethod: string;
@@ -36,6 +36,7 @@ interface Order {
 
 interface OrderState {
   orders: Order[];
+  allOrders: Order[];
   selectedOrder: Order | null;
   loading: boolean;
   error: string | null;
@@ -43,6 +44,7 @@ interface OrderState {
 
 const initialState: OrderState = {
   orders: [],
+  allOrders: [],
   selectedOrder: null,
   loading: false,
   error: null,
@@ -75,7 +77,7 @@ export const fetchOrderById = createAsyncThunk(
   }
 );
 
-// Fetch all orders
+// fetch all orders of a user
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (_, { rejectWithValue }) => {
@@ -94,9 +96,36 @@ export const fetchOrders = createAsyncThunk(
       }
 
       const data = await res.json();
-      return data.data; // array of orders
+      console.log('order list fetched ', data);
+      return data.data.orders; // array of orders
     } catch (err: any) {
       return rejectWithValue(err.message || "Failed to fetch orders");
+    }
+  }
+);
+
+export const fetchAllOrders = createAsyncThunk(
+  "orders/fetchAllOrders",
+  async ({ page = 1, limit = 6 }: { page?: number; limit?: number }
+    , { rejectWithValue }) => {
+    try {
+      const res = await fetch(`${API}/service/order/orders?page=${page}&limit=${limit}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return rejectWithValue(data.message);
+      }
+
+      return data.data.orders; // from backend
+    } catch (err: any) {
+      return rejectWithValue(err.message || "Failed to fetch all orders");
     }
   }
 );
@@ -172,6 +201,22 @@ const orderSlice = createSlice({
     });
 
     builder.addCase(fetchOrderById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+
+    // fetchAllOrders (admin)
+    builder.addCase(fetchAllOrders.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
+      state.loading = false;
+      state.allOrders = action.payload;
+    });
+
+    builder.addCase(fetchAllOrders.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
     });

@@ -122,7 +122,7 @@ const Products = () => {
             <img
               src={product.thumbnail.startsWith("http")
                 ? product.thumbnail
-                : `${API}${product.thumbnail}`}
+                : `${API}/${product.thumbnail}`}
               alt={product.title}
               className="w-14 h-14 object-cover rounded"
             />

@@ -176,3 +176,52 @@ export const categorySchema = z.object({
             "Only images are allowed"
         )
 });
+
+export const productSchema = z.object({
+    title: z
+        .string()
+        .trim()
+        .nonempty("Title is required")
+        .min(2, "Title must be at least 2 characters"),
+
+    description: z
+        .string()
+        .trim()
+        .nonempty("Description is required")
+        .min(10, "Description must be at least 10 characters"),
+
+    price: z
+        .number()
+        .min(1, "Price must be greater than 0"),
+
+    stock: z
+        .number()
+        .min(0, "Stock cannot be negative"),
+
+    brand: z
+        .string()
+        .trim()
+        .nonempty("Brand is required"),
+
+    category: z
+        .string()
+        .trim()
+        .nonempty("Category is required"),
+
+    thumbnail: z
+        .any()
+        .refine(
+            (file) => file instanceof File || typeof file === "string",
+            "Please upload an image"
+        )
+        .refine(
+            (file) => {
+                if (typeof file === "string") return true;
+                if (file instanceof File) {
+                    return ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+                }
+                return false;
+            },
+            "Only images are allowed"
+        ),
+});

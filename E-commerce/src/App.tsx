@@ -131,6 +131,7 @@ import Categories from "./pages/admin/Categories";
 import AddCategory from "./pages/admin/AddCategory";
 import Products from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
+import OrdersList from "./pages/admin/OrdersList";
 function App() {
   return (
     <Routes>
@@ -170,6 +171,7 @@ function App() {
         <Route path="add-category" element={<AddCategory/>}/>
         <Route path="products" element={<Products/>}/>
         <Route path="add-product" element={<AddProduct/>}/>
+        <Route path="orders" element={<OrdersList/>}/>
       </Route>
 
     </Routes>

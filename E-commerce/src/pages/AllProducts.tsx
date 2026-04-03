@@ -18,7 +18,7 @@ const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-    const { products, loading, error, searchTerm } = useSelector((state: RootState) => state.products);
+    const { products, loading, error, searchTerm, totalPages } = useSelector((state: RootState) => state.products);
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
     const [cartLoadingMap, setCartLoadingMap] = useState<Record<string, boolean>>({});
     const [wishlistLoadingMap, setWishlistLoadingMap] = useState<Record<string, boolean>>({});
@@ -41,8 +41,8 @@ const AllProducts = () => {
     const category = searchParams.get("category");
 
     useEffect(() => {
-        dispatch(fetchProducts(category));
-    }, [dispatch, category]);
+        dispatch(fetchProducts({ category, page: currentPage, limit: 9 }));
+    }, [dispatch, category, currentPage]);
 
     //reset pagination when category changes
     useEffect(() => {
@@ -82,11 +82,11 @@ const AllProducts = () => {
         }
     };
     // pagination calculations
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    // const indexOfLastProduct = currentPage * productsPerPage;
+    // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    // const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -97,7 +97,7 @@ const AllProducts = () => {
         <div className="max-w-6xl mx-auto px-4 py-12">
             <button
                 onClick={() => {
-                    dispatch(fetchProducts(null)); // reset products
+                    dispatch(fetchProducts({ category: null, page: 1, limit: 9 })); // reset products
 
                     if (window.history.length > 1) {
                         navigate(-1);
@@ -125,101 +125,105 @@ const AllProducts = () => {
 
             {/* products  */}
             <div className="grid grid-cols-3 gap-6">
-                {currentProducts.map((product) => (
-                    <div
-                        onClick={() => navigate(`/product/${product._id}`)}
-                        key={product._id}
-                        className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
-                    >
-                        <div className="relative bg-gray-100 p-4 rounded-lg mb-4">
-                            <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                                -30%
-                            </span>
-                            <img
-                                src={product.thumbnail}
-                                alt={product.title}
-                                className="h-40 w-full object-contain"
-                            />
-                        </div>
-
-                        <h3
-                            className="font-semibold  mb-1 truncate"
-                            title={product.title}
+                {products
+                    .filter((product) =>
+                        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((product) => (
+                        <div
+                            onClick={() => navigate(`/product/${product._id}`)}
+                            key={product._id}
+                            className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
                         >
-                            {product.title}
-                        </h3>
+                            <div className="relative bg-gray-100 p-4 rounded-lg mb-4">
+                                <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                                    -30%
+                                </span>
+                                <img
+                                    src={product.thumbnail}
+                                    alt={product.title}
+                                    className="h-40 w-full object-contain"
+                                />
+                            </div>
 
-                        <p className="text-sm text-gray-500 mb-1 ">
-                            {product.brand} * {product.categoryName}
-                        </p>
+                            <h3
+                                className="font-semibold  mb-1 truncate"
+                                title={product.title}
+                            >
+                                {product.title}
+                            </h3>
 
-                        {/* <p className="text-gray-500 text-xs mt-1">{product.brand}</p> */}
+                            <p className="text-sm text-gray-500 mb-1 ">
+                                {product.brand} * {product.categoryName}
+                            </p>
 
-                        <div className="flex  items-center gap-2 ">
-                            <span><AiTwotoneLike /></span>
-                            <p className="text-yellow-500 text-xs mt-1">{product.rating}</p>
-                        </div>
+                            {/* <p className="text-gray-500 text-xs mt-1">{product.brand}</p> */}
 
-                        <div className="mt-auto flex items-center flex-col gap-2 justify-between pt-3">
-                            <div className="flex justify-between w-full mb-4">
-                                <span className="text-blue-00 items-start w-full font-bold">{product.price.toFixed(2)} Rs.</span>
-                                <div
+                            <div className="flex  items-center gap-2 ">
+                                <span><AiTwotoneLike /></span>
+                                <p className="text-yellow-500 text-xs mt-1">{product.rating}</p>
+                            </div>
+
+                            <div className="mt-auto flex items-center flex-col gap-2 justify-between pt-3">
+                                <div className="flex justify-between w-full mb-4">
+                                    <span className="text-blue-00 items-start w-full font-bold">{product.price.toFixed(2)} Rs.</span>
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+
+                                            if (wishlistLoadingMap[product._id]) return;
+
+                                            if (!isAuthenticated) {
+                                                navigate("/login");
+                                                return;
+                                            }
+
+                                            const alreadyInWishlist = isInWishlist(product._id);
+
+                                            handleWishlist(product);
+                                            if (alreadyInWishlist) {
+                                                toast.success("Product removed from wishlist");
+                                            } else {
+                                                toast.success("Product added to wishlist");
+                                            }
+                                        }}
+                                        className="cursor-pointer text-2xl"
+                                    >
+                                        {isInWishlist(product._id) ? (
+                                            <AiFillHeart className="text-pink-600" />
+                                        ) : (
+                                            <FaRegHeart className="text-gray-300 hover:text-pink-400" />
+                                        )}
+                                    </div>
+                                </div>
+                                <button
                                     onClick={(e) => {
-                                        e.stopPropagation();
-
-                                        if (wishlistLoadingMap[product._id]) return;
-
+                                        e.stopPropagation(); // prevent card click
                                         if (!isAuthenticated) {
                                             navigate("/login");
                                             return;
                                         }
-
-                                        const alreadyInWishlist = isInWishlist(product._id);
-
-                                        handleWishlist(product);
-                                        if (alreadyInWishlist) {
-                                            toast.success("Product removed from wishlist");
-                                        } else {
-                                            toast.success("Product added to wishlist");
-                                        }
+                                        handleAddToCart(product);
+                                        navigate("/cart");
                                     }}
-                                    className="cursor-pointer text-2xl"
+                                    className="bg-blue-400 cursor-pointer w-[80%]  text-white px-3 py-1 rounded hover:bg-blue-600 transition"
                                 >
-                                    {isInWishlist(product._id) ? (
-                                        <AiFillHeart className="text-pink-600" />
-                                    ) : (
-                                        <FaRegHeart className="text-gray-300 hover:text-pink-400" />
-                                    )}
-                                </div>
-                            </div>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation(); // prevent card click
-                                    if (!isAuthenticated) {
-                                        navigate("/login");
-                                        return;
-                                    }
-                                    handleAddToCart(product);
-                                    navigate("/cart");
-                                }}
-                                className="bg-blue-400 cursor-pointer w-[80%]  text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-                            >
-                                Buy Now
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation(); // prevent card click
+                                    Buy Now
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // prevent card click
 
-                                    handleAddToCart(product);
-                                }}
-                                disabled={cartLoadingMap[product._id]}
-                                className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
-                            >
-                                {cartLoadingMap[product._id] ? "Adding..." : "Add to Cart"}
-                            </button>
+                                        handleAddToCart(product);
+                                    }}
+                                    disabled={cartLoadingMap[product._id]}
+                                    className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
+                                >
+                                    {cartLoadingMap[product._id] ? "Adding..." : "Add to Cart"}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
 
             {/* page buttons */}
@@ -228,7 +232,9 @@ const AllProducts = () => {
                     <button
                         key={page}
                         onClick={() => paginate(page)}
-                        className={`px-4 py-2 rounded border ${currentPage === page ? "bg-blue-300 text-white" : "bg-white text-blue-500 border-blue-500"
+                        className={`px-4 py-2 rounded border ${currentPage === page
+                                ? "bg-blue-300 text-white"
+                                : "bg-white text-blue-500 border-blue-500"
                             }`}
                     >
                         {page}
