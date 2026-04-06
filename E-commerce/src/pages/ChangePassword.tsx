@@ -107,10 +107,14 @@ const ChangePassword = () => {
 
                 navigate("/profile");
             } else {
-                toast.error(data.message);
+                toast.error(data.message, {
+                    id: "change-password-error"
+                });
             }
         } catch (err) {
-            toast.error("Server error");
+            toast.error("Server error", {
+                id: "server-error"
+            });
         } finally {
             setLoading(false);
         }

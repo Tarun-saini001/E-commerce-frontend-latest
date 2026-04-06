@@ -43,7 +43,9 @@ const ForgotPassword = () => {
       console.log('data:(forgot) ', data);
 
       if (response.ok && data.message !== "Account not found") {
-        toast.success("OTP sent successfully!");
+        toast.success("OTP sent successfully!", {
+          id: "otp-sent"
+        });
         const otpSession = {
           email,
           otpType: 3,
@@ -55,10 +57,14 @@ const ForgotPassword = () => {
         navigate("/verify-otp");
       } else {
         setError(data.message || "Something went wrong");
-        toast.error(data.message);
+        toast.error(data.message, {
+          id: "server-error"
+        });
       }
     } catch (err) {
-      toast.error("Server error");
+      toast.error("Server-error", {
+        id: "server-error"
+      });
     } finally {
       setLoading(false);
     }

@@ -74,8 +74,12 @@ const Home = () => {
     }
     await dispatch(addToCart(product))
       .unwrap()
-      .then(() => toast.success("Product added to cart!"))
-      .catch(() => toast.error("Failed to add product to cart"));
+      .then(() => toast.success("Product added to cart!", {
+        id: "add-to-cart"
+      }))
+      .catch(() => toast.error("Failed to add product to cart", {
+        id: "add-to-cart-error"
+      }));
 
   };
 
@@ -249,9 +253,13 @@ const Home = () => {
                     handleWishlist(product);
 
                     if (alreadyInWishlist) {
-                      toast.success("Product removed from wishlist");
+                      toast.success("Product removed from wishlist", {
+                        id: "product-removed"
+                      });
                     } else {
-                      toast.success("Product added to wishlist");
+                      toast.success("Product added to wishlist", {
+                        id: "add-to-wishlist"
+                      });
                     }
                   }}
                   className="cursor-pointer text-2xl"

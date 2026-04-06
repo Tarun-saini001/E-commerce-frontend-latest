@@ -24,7 +24,9 @@ const ResetPassword = () => {
     useEffect(() => {
         const resetToken = localStorage.getItem("tempToken");
         if (!email || !resetToken) {
-            toast.error("Unauthorized access");
+            toast.error("Unauthorized access", {
+                id: "unautherized-error"
+            });
             navigate("/forgot-password");
         }
     }, [email, navigate]);
@@ -52,7 +54,9 @@ const ResetPassword = () => {
             console.log('resetToken: ', resetToken);
 
             if (!resetToken) {
-                toast.error("Autherizstion error");
+                toast.error("Autherizstion error", {
+                    id: "unautherization-error"
+                });
                 navigate("/forgot-password");
                 return;
             }
@@ -85,11 +89,15 @@ const ResetPassword = () => {
                 navigate("/login"); // not logged in - navigate login
                 // }
             } else {
-                toast.error(data.message);
+                toast.error(data.message, {
+                    id: "reset-password-error"
+                });
             }
         } catch (err) {
             console.error(err);
-            toast.error("Server error");
+            toast.error("Server error", {
+                id: "server-error"
+            });
         } finally {
             setLoading(false);
         }

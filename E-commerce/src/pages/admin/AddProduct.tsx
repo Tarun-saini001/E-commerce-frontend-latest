@@ -244,10 +244,14 @@ const AddProduct = () => {
                 );
                 navigate("/admin/products");
             } else {
-                toast.error(data.message || "Error adding product");
+                toast.error(data.message || "Error adding product", {
+                    id: "add-product-error"
+                });
             }
         } catch (err) {
-            toast.error("Something went wrong");
+            toast.error("Something went wrong", {
+                id: "server-error"
+            });
         }
     };
 

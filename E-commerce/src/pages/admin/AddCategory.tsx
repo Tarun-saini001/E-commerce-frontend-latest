@@ -102,7 +102,9 @@ const AddCategory = () => {
                 toast.success(existingData ? "Category updated successfully!" : "Category added successfully!");
                 navigate("/admin/categories");
             } else {
-                toast.error(data.message || "Something went wrong");
+                toast.error(data.message || "Something went wrong",{
+                                                id:"add-category"
+                                            });
             }
         } catch (err) {
             console.log("Error:", err);

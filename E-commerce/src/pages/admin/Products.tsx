@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";

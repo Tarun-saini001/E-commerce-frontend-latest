@@ -93,7 +93,9 @@ const Checkout = () => {
     const handlePlaceOrder = async () => {
 
         if (!selectedCountry || !selectedState || !selectedDistrict || !shippingMethod || !phoneCode) {
-            toast.error("Please fill all required fields");
+            toast.error("Please fill all required fields", {
+                id: "checkout-form-error"
+            });
             return;
         }
 
@@ -110,7 +112,9 @@ const Checkout = () => {
                 fieldErrors[field] = err.message;
             });
             setErrors(fieldErrors);
-            toast.error("Please correct the form errors");
+            toast.error("Please correct the form errors", {
+                id: "form-error"
+            });
             return;
         }
 
@@ -132,7 +136,9 @@ const Checkout = () => {
                 toast.success("Order placed successfully!")
                 navigate("/");
             })
-            .catch(() => toast.error("Failed to place order"));
+            .catch(() => toast.error("Failed to place order", {
+                id: "place-order-error"
+            }));
     };
 
     return (

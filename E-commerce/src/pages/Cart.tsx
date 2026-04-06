@@ -76,8 +76,12 @@ const Cart = () => {
         try {
             await dispatch(removeItem(productId))
                 .unwrap()
-                .then(() => toast.success("Item removed from cart"))
-                .catch(() => toast.error("Failed to remove item"))
+                .then(() => toast.success("Item removed from cart",{
+                    id:"item-removed"
+                }))
+                .catch(() => toast.error("Failed to remove item",{
+                    id:"item-remove-error"
+                }))
         } finally {
             setLoadingMap((prev) => ({ ...prev, [productId]: false }));
         }
@@ -87,7 +91,9 @@ const Cart = () => {
         await dispatch(clearCart())
             .unwrap()
             .then(() => toast.success("Cart cleared"))
-            .catch(() => toast.error("Failed to clear cart"))
+            .catch(() => toast.error("Failed to clear cart",{
+                id:"clear-cart-error"
+            }))
     };
 
     const handleWishlist = async (product: any) => {
@@ -175,9 +181,13 @@ const Cart = () => {
 
                                         handleWishlist(item);
                                         if (alreadyInWishlist) {
-                                            toast.success("Product removed from wishlist");
+                                            toast.success("Product removed from wishlist",{
+                                                id:"product-removed"
+                                            });
                                         } else {
-                                            toast.success("Product added to wishlist");
+                                            toast.success("Product added to wishlist",{
+                                                id:"product-added"
+                                            });
                                         }
                                     }}
                                     className="cursor-pointer text-2xl"

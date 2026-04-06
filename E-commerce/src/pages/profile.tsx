@@ -34,10 +34,14 @@ const Profile = () => {
         await refreshUser();
         setIsEditing(false);
       } else {
-        toast.error(data.message);
+        toast.error(data.message, {
+          id: "update-profile-error"
+        });
       }
     } catch (err) {
-      toast.error("Error updating name");
+      toast.error("Error updating name", {
+        id: "server-error"
+      });
     }
   };
 
@@ -62,10 +66,14 @@ const Profile = () => {
         toast.success("Profile updated");
         await refreshUser();
       } else {
-        toast.error(data.message);
+        toast.error(data.message, {
+          id: "update-profile-error"
+        });
       }
     } catch (err) {
-      toast.error("Upload failed");
+      toast.error("Upload failed", {
+        id: "upload-profile-error"
+      });
     }
   };
 

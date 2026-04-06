@@ -134,10 +134,14 @@ const Register = () => {
                 );
                 navigate("/verify-otp");
             } else {
-                toast.error(data.message || "Something went wrong");
+                toast.error(data.message || "Something went wrong", {
+                    id: "send-otp-error"
+                });
             }
         } catch (error) {
-            toast.error("Server error");
+            toast.error("Server error", {
+                id: "server-error"
+            });
         } finally {
             setLoading(false);
         }

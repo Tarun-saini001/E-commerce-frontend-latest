@@ -21,7 +21,7 @@ const Wishlist = () => {
 
     useEffect(() => {
         if (products.length === 0) {
-            dispatch(fetchProducts(null));
+            dispatch(fetchProducts({category:null}));
         }
     }, [dispatch, products.length]);
 
@@ -45,15 +45,19 @@ const Wishlist = () => {
         try {
             await dispatch(addToCart(product))
                 .unwrap()
-                .then(() => toast.success("Product added to cart!"))
-                .catch(() => toast.error("Failed to add product to cart"));
+                .then(() => toast.success("Product added to cart!", {
+                    id: "product-added"
+                }))
+                .catch(() => toast.error("Failed to add product to cart", {
+                    id: "fail-addition"
+                }));
         } finally {
             setLoadingMap((prev) => ({ ...prev, [id]: false }))
         }
     };
 
 
-    // Empty Wishlist UI
+    // empty wishlist ui
     if (wishlistProducts.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 space-y-6 min-h-[70vh]">
@@ -124,8 +128,12 @@ const Wishlist = () => {
                                     e.stopPropagation();
                                     dispatch(toggleWishlist(product._id))
                                         .unwrap()
-                                        .then(() => toast.success("Product removed from wishlist!"))
-                                        .catch(() => toast.error("Failed to remove product from wishlist"));
+                                        .then(() => toast.success("Product removed from wishlist!", {
+                                            id: "add-to-wishlist"
+                                        }))
+                                        .catch(() => toast.error("Failed to remove product from wishlist", {
+                                            id: "remove-from-wishlist"
+                                        }));
                                 }}
                             >
                                 Remove
@@ -138,7 +146,7 @@ const Wishlist = () => {
                                 disabled={loadingMap[product._id]}
                                 className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
                             >
-                                {loadingMap[product._id]?"Adding...":"Add to Cart"}
+                                {loadingMap[product._id] ? "Adding..." : "Add to Cart"}
                             </button>
                         </div>
 

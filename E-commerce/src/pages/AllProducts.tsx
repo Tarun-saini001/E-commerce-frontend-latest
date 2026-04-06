@@ -63,7 +63,7 @@ const AllProducts = () => {
             await dispatch(addToCart(product))
                 .unwrap()
                 .then(() => toast.success("Product added to cart!"))
-                .catch(() => toast.error("Failed to add product to cart"));
+                .catch(() => toast.error("Failed to add product to cart",{id:"AddToCart-error"}));
         } finally {
             setCartLoadingMap((prev) => ({ ...prev, [id]: false }))
         }
@@ -182,9 +182,13 @@ const AllProducts = () => {
 
                                             handleWishlist(product);
                                             if (alreadyInWishlist) {
-                                                toast.success("Product removed from wishlist");
+                                                toast.success("Product removed from wishlist",{
+                                                    id:"product-removed"
+                                                });
                                             } else {
-                                                toast.success("Product added to wishlist");
+                                                toast.success("Product added to wishlist",{
+                                                    id:"produt-added"
+                                                });
                                             }
                                         }}
                                         className="cursor-pointer text-2xl"

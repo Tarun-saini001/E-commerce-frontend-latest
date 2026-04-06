@@ -60,7 +60,9 @@ const VerifyOtp = () => {
     useEffect(() => {
         if (timeLeft === 0 && expiresAt) {
             localStorage.removeItem("otpSession");
-            toast.error("OTP expired");
+            toast.error("OTP expired", {
+                id: "otp-expired"
+            });
             navigate("/register");
         }
     }, [timeLeft]);
@@ -92,7 +94,9 @@ const VerifyOtp = () => {
         }
 
         if (timeLeft === 0) {
-            toast.error("OTP expired");
+            toast.error("OTP expired", {
+                id: "expired-otp"
+            });
             return;
         }
 
@@ -139,10 +143,14 @@ const VerifyOtp = () => {
                 }
             } else {
                 setError(data.message || "Invalid OTP");
-                toast.error(data.message || "Invalid OTP");
+                toast.error(data.message || "Invalid OTP", {
+                    id: "invalid-otp"
+                });
             }
         } catch {
-            toast.error("Server error");
+            toast.error("Server error", {
+                id: "server-error"
+            });
         } finally {
             setLoading(false);
         }
