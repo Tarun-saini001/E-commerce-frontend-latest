@@ -25,7 +25,7 @@ const Profile = () => {
             logout();
             navigate("/");
           }}
-          className="mt-4 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition"
+          className="mt-4 w-full bg-black cursor-pointer text-white py-2 rounded-lg hover:bg-gray-900 transition"
         >
           Logout
         </button>

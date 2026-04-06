@@ -31,7 +31,7 @@ const Login = () => {
             }
         }
     }, [user]);
-    
+
     // Validate individual field
     const validateField = (name: keyof LoginInput, value: string) => {
         const fieldSchema = loginSchema.shape[name];
@@ -147,6 +147,9 @@ const Login = () => {
                             value={formData.password}
                             onChange={handleChange}
                             onBlur={handleBlur}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleLogin();
+                            }}
                             className={`bg-white px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.password
                                 ? "border-red-500 focus:ring-red-200"
                                 : "border-gray-500 focus:ring-blue-500"

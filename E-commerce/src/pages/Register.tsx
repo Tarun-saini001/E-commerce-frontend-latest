@@ -230,6 +230,9 @@ const Register = () => {
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleRegister();
+                            }}
                             className={`bg-white px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.confirmPassword
                                 ? "border-red-500 focus:ring-red-200"
                                 : "border-gray-500 focus:ring-blue-500"

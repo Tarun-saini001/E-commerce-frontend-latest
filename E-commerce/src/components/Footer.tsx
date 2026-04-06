@@ -50,7 +50,7 @@ const Footer = () => {
  
         <div>
           <div className="text-2xl flex gap-2 items-center mb-4">
-            <BsCart4 /> Ecomzy
+            <BsCart4 /> TS Mart
           </div>
  
           <div className="flex items-center gap-2">
@@ -58,14 +58,14 @@ const Footer = () => {
           </div>
  
           <div className="flex items-center gap-2">
-            <MdOutlineMailOutline /> sahil@example.com
+            <MdOutlineMailOutline /> tarun@yopmail.com
           </div>
         </div>
  
         <div>
           <div className="text-lg font-semibold mb-2">Address</div>
-          <div>Ecomzy, Supreme Tower</div>
-          <div>Sector-67, Mohali</div>
+          <div>TS Mart, 3b2</div>
+          <div>Sector-60, Mohali</div>
           <div>India</div>
         </div>
  

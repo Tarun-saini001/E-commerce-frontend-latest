@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CiSearch } from "react-icons/ci";
 
 interface User {
   _id: string;
@@ -15,16 +16,29 @@ const UsersList = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const API = import.meta.env.VITE_API_URL;
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (search.length >= 3) {
+        setDebouncedSearch(search);
+      } else {
+        setDebouncedSearch("");
+      }
+    }, 1000);
 
+    return () => clearTimeout(timer);
+  }, [search]);
 
-  const fetchUsers = async (currentPage = 1) => {
+  const fetchUsers = async (currentPage = 1, searchQuery = "") => {
     try {
       setLoading(true);
 
       const res = await fetch(
-        `${API}/service/user/users?page=${currentPage}&limit=6`, {
+        `${API}/service/user/users?page=${currentPage}&limit=6&search=${searchQuery}`, {
         credentials: "include"
       }
       );
@@ -32,9 +46,9 @@ const UsersList = () => {
       const data = await res.json();
       console.log('fetch all users- ', data);
 
-      setUsers(data.data.users);
-      setTotalPages(data.data.totalPages);
-      setPage(data.data.currentPage);
+      setUsers(data.data.users || []);
+      setTotalPages(data.data.totalPages || 1);
+      setPage(data.data.currentPage || 1);
 
     } catch (err) {
       console.log("Error fetching users", err);
@@ -44,13 +58,17 @@ const UsersList = () => {
   };
 
   useEffect(() => {
-    fetchUsers(page);
+    fetchUsers(1, debouncedSearch);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    fetchUsers(page, debouncedSearch);
   }, [page]);
 
   useEffect(() => {
     localStorage.setItem("catPage", page.toString());
   }, [page]);
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
@@ -100,12 +118,34 @@ const UsersList = () => {
 
   return (
     <div className="p-6">
+      <div className="flex flex-col items-center mb-6">
+        <div className="relative w-[400px]">
+          <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xl" />
+
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        {search && (
+          <p className="mt-3 text-blue-500 font-medium">
+            Showing results for <span className="font-semibold">"{search}"</span>
+          </p>
+        )}
+      </div>
       <h1 className="text-2xl font-bold mb-6">Users List</h1>
 
       {/* user table */}
       <div className="bg-white rounded-xl shadow overflow-hidden">
 
-        <div className="grid grid-cols-4 font-semibold p-4 border-b bg-gray-100">
+        <div className="grid grid-cols-4 font-semibold p-4 border-b bg-gray-50 text-gray-600">
           <p>Profile</p>
           <p>Name</p>
           <p>Email</p>
@@ -113,7 +153,16 @@ const UsersList = () => {
         </div>
 
         {/* users */}
-        {users.map((user) => (
+        {users.length === 0 ? (
+          <div className="p-6 text-center text-gray-500 font-medium">
+            <div className="p-10 text-center">
+              <p className="text-gray-500 text-lg font-medium">
+                No users found
+              </p>
+
+            </div>
+          </div>
+        ) : (users.map((user) => (
           <div
             key={user._id}
             className="grid grid-cols-4 items-center p-4 border-b"
@@ -156,7 +205,8 @@ const UsersList = () => {
 
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
 
       {/* page */}
@@ -165,7 +215,7 @@ const UsersList = () => {
         <button
           onClick={() => setPage((prev) => prev - 1)}
           disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 cursor-pointer rounded disabled:opacity-50"
         >
           Prev
         </button>
@@ -174,7 +224,7 @@ const UsersList = () => {
           <button
             key={i}
             onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 rounded ${page === i + 1
+            className={`px-3 py-1 rounded cursor-pointer ${page === i + 1
               ? "bg-blue-500 text-white"
               : "bg-gray-200"
               }`}
@@ -186,7 +236,7 @@ const UsersList = () => {
         <button
           onClick={() => setPage((prev) => prev + 1)}
           disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-200 rounded cursor-pointer disabled:opacity-50"
         >
           Next
         </button>
