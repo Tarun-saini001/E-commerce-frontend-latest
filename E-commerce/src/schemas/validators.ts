@@ -90,6 +90,35 @@ export const forgotPasswordSchema = z.object({
         .email("Invalid email format"),
 });
 
+// change pssword
+export const changePasswordSchema = z
+    .object({
+        currentPassword: z
+            .string()
+            .trim()
+            .nonempty("Current password is required"),
+
+        newPassword: z
+            .string()
+            .trim()
+            .nonempty("New password is required")
+            .min(6, "Password must be at least 6 characters")
+            .regex(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/,
+                "Password must contain uppercase, lowercase, number & special character"
+            ),
+
+        confirmPassword: z
+            .string()
+            .trim()
+            .nonempty("Confirm password is required"),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
+
+
 // reset password schema
 export const resetPasswordSchema = z
     .object({
@@ -189,7 +218,7 @@ export const productSchema = z.object({
         .trim()
         .min(1, "Description is required")
         .min(10, "Description must be at least 10 characters"),
-        
+
     price: z
         .coerce.number()
         .refine((val) => Number.isFinite(val) && val > 0, {

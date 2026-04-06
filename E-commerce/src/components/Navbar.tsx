@@ -9,6 +9,7 @@ import { setSearchTerm } from "../redux/slices/productSlice";
 import { CiSearch } from "react-icons/ci";
 
 const Navbar = () => {
+    const API = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth();
     const dispatch = useDispatch<AppDispatch>();
@@ -41,7 +42,7 @@ const Navbar = () => {
                     <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
 
                     <input
-                        type="text" 
+                        type="text"
                         placeholder="Search products..."
                         className="w-full pl-10 pr-4 py-2 border rounded-md outline-none focus:ring-2 focus:ring-sky-300"
                         onChange={(e) => {
@@ -85,13 +86,22 @@ const Navbar = () => {
                     </span>
                 )}
                 {isAuthenticated ? (
-                    <div
-                        onClick={() => navigate("/profile")}
-                        className="w-10 h-10 rounded-full bg-gray-300 text-black flex items-center justify-center cursor-pointer"
-                    >
-                        {user?.name?.charAt(0).toUpperCase()}
-                    </div>
-                ) : (
+                    user?.profilePic ? (
+                        <img
+                            src={`${API}${user.profilePic}`}
+                            alt="profile"
+                            className="w-8 h-8 rounded-full cursor-pointer"
+                            onClick={() => navigate("/profile")}
+                        />
+                    ) : (
+
+                        < div
+                            onClick={() => navigate("/profile")}
+                            className="w-10 h-10 rounded-full bg-gray-300 text-black flex items-center justify-center cursor-pointer"
+                        >
+                            {user?.name?.charAt(0).toUpperCase()}
+                        </div>
+                    )) : (
                     <>
                         {/* <button
                             className=" text-black bg-white shadow w-20 cursor-pointer font-semibold rounded-md"
@@ -106,9 +116,10 @@ const Navbar = () => {
                             Login
                         </button>
                     </>
-                )}
-            </span>
-        </div>
+                )
+                }
+            </span >
+        </div >
     );
 };
 

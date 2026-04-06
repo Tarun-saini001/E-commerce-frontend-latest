@@ -81,12 +81,14 @@ interface User {
     name: string;
     email: string;
     role: number;
+    profilePic: string
 }
 
 interface AuthContextType {
     user: User | null;
     login: () => Promise<void>;
     logout: () => Promise<void>;
+    refreshUser: () => Promise<void>; 
     isAuthenticated: boolean;
     loading: boolean;
 }
@@ -168,6 +170,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 login,
                 logout,
                 isAuthenticated: !!user,
+                 refreshUser: fetchProfile,
                 loading,
             }}
         >

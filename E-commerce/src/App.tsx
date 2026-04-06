@@ -133,6 +133,8 @@ import Products from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
 import OrdersList from "./pages/admin/OrdersList";
 import AdminProfile from "./pages/admin/AdminProfile";
+import ResetPassword from "./pages/ResetPassword";
+import ChangePassword from "./pages/ChangePassword";
 function App() {
   return (
     <Routes>
@@ -153,9 +155,10 @@ function App() {
         <Route path="/orders/:orderId" element={<OrderDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path='/change-password' element={< ChangePassword/>} />
       </Route>
 
-     {/* admin routes */}
+      {/* admin routes */}
       <Route
         path="/admin"
         element={
@@ -167,13 +170,13 @@ function App() {
         <Route index element={<DashboardHome />} />
         {/* <Route path="products/add" element={<AddProduct />} />
         <Route path="products/add" element={<AddProduct />} /> */}
-        <Route path="users" element={<UsersList/>}/>
-        <Route path="categories" element={<Categories/>}/>
-        <Route path="add-category" element={<AddCategory/>}/>
-        <Route path="products" element={<Products/>}/>
-        <Route path="add-product" element={<AddProduct/>}/>
-        <Route path="orders" element={<OrdersList/>}/>
-        <Route path="profile" element={<AdminProfile/>}/>
+        <Route path="users" element={<UsersList />} />
+        <Route path="categories" element={<Categories />} />
+        <Route path="add-category" element={<AddCategory />} />
+        <Route path="products" element={<Products />} />
+        <Route path="add-product" element={<AddProduct />} />
+        <Route path="orders" element={<OrdersList />} />
+        <Route path="profile" element={<AdminProfile />} />
       </Route>
 
     </Routes>
