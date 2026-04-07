@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { FaEdit } from "react-icons/fa";
 
 const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
@@ -18,6 +19,10 @@ const Profile = () => {
 
   const handleUpdateName = async () => {
     try {
+      if (name.trim() === user.name) {
+        setIsEditing(false);
+        return;
+      }
       const res = await fetch(`${API}/service/user/`, {
         method: "PATCH",
         credentials: "include",
@@ -30,7 +35,7 @@ const Profile = () => {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Name updated");
+        toast.success("Name updated",{id:"name-updated"});
         await refreshUser();
         setIsEditing(false);
       } else {
@@ -71,7 +76,7 @@ const Profile = () => {
         });
       }
     } catch (err) {
-      toast.error("Upload failed", {
+      toast.error("Please upload an image", {
         id: "upload-profile-error"
       });
     }
@@ -124,12 +129,21 @@ const Profile = () => {
             </button>
           </div>
         ) : (
-          <h2
-            onClick={() => setIsEditing(true)}
-            className="text-xl font-semibold cursor-pointer hover:text-blue-600"
-          >
-            {user.name}
-          </h2>
+          <div className="flex gap-3 justify-center items-center">
+            <h2
+              className="text-xl font-semibold cursor-pointer hover:text-blue-600"
+            >
+              {user.name}
+            </h2>
+            <span
+              onClick={() => setIsEditing(true)}
+              className="text-blue-500 cursor-pointer"
+            >
+              <FaEdit />
+            </span>
+
+          </div>
+
         )}
 
 

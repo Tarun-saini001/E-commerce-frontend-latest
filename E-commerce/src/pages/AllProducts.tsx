@@ -1,6 +1,6 @@
 
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { addToCart } from "../redux/slices/cartSlice";
@@ -27,25 +27,44 @@ const AllProducts = () => {
         return wishlistItems.some((item) => item._id === id);
     };
 
+    const isFirstRender = useRef(true);
 
-    const filteredProducts = products.filter((product) =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // pagination 
-    const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 9;
-
-
+    // const filteredProducts = products.filter((product) =>
+    //     product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
     const [searchParams] = useSearchParams();
     const category = searchParams.get("category");
 
+    const storageKey = `allProductsPage_${category || "all"}`;
+    // pagination 
+    const [currentPage, setCurrentPage] = useState(() => {
+        const saved = localStorage.getItem(storageKey);
+        return saved ? Number(saved) : 1;
+    });
+    // const productsPerPage = 9;
+
     useEffect(() => {
-        dispatch(fetchProducts({ category, page: currentPage, limit: 9 }));
-    }, [dispatch, category, currentPage]);
+        localStorage.setItem(storageKey, currentPage.toString());
+    }, [currentPage, storageKey]);
+
+
+
+
+    useEffect(() => {
+        dispatch(fetchProducts({ category, page: currentPage, limit: 9, search: searchTerm }));
+    }, [dispatch, category, currentPage, searchTerm]);
+
+    // reset the page when user try to search
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
 
     //reset pagination when category changes
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         setCurrentPage(1);
     }, [category]);
 
@@ -62,8 +81,8 @@ const AllProducts = () => {
         try {
             await dispatch(addToCart(product))
                 .unwrap()
-                .then(() => toast.success("Product added to cart!"))
-                .catch(() => toast.error("Failed to add product to cart",{id:"AddToCart-error"}));
+                .then(() => toast.success("Product added to cart!", { id: "Add-to-cart" }))
+                .catch(() => toast.error("Failed to add product to cart", { id: "AddToCart-error" }));
         } finally {
             setCartLoadingMap((prev) => ({ ...prev, [id]: false }))
         }
@@ -126,9 +145,6 @@ const AllProducts = () => {
             {/* products  */}
             <div className="grid grid-cols-3 gap-6">
                 {products
-                    .filter((product) =>
-                        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
                     .map((product) => (
                         <div
                             onClick={() => navigate(`/product/${product._id}`)}
@@ -182,12 +198,12 @@ const AllProducts = () => {
 
                                             handleWishlist(product);
                                             if (alreadyInWishlist) {
-                                                toast.success("Product removed from wishlist",{
-                                                    id:"product-removed"
+                                                toast.success("Product removed from wishlist", {
+                                                    id: "product-removed"
                                                 });
                                             } else {
-                                                toast.success("Product added to wishlist",{
-                                                    id:"produt-added"
+                                                toast.success("Product added to wishlist", {
+                                                    id: "produt-added"
                                                 });
                                             }
                                         }}
@@ -237,8 +253,8 @@ const AllProducts = () => {
                         key={page}
                         onClick={() => paginate(page)}
                         className={`px-4 py-2 rounded border ${currentPage === page
-                                ? "bg-blue-300 text-white"
-                                : "bg-white text-blue-500 border-blue-500"
+                            ? "bg-blue-300 text-white"
+                            : "bg-white text-blue-500 border-blue-500"
                             }`}
                     >
                         {page}

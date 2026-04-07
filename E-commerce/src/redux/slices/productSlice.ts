@@ -65,11 +65,15 @@ export const fetchProductById = createAsyncThunk(
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async ({ category, page = 1, limit = 9 }: { category: string | null; page?: number; limit?: number }) => {
+  async ({ category, page = 1, limit = 9, search = "" }: { category: string | null; page?: number; limit?: number; search?: string }) => {
     let url = `${API}/service/product/?page=${page}&limit=${limit}`;
 
     if (category) {
       url += `&category=${category}`;
+    }
+
+    if (search.trim()) {
+      url += `&search=${encodeURIComponent(search.trim())}`;
     }
 
     const res = await fetch(url);

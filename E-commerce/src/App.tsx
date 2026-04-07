@@ -133,7 +133,6 @@ import Products from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
 import OrdersList from "./pages/admin/OrdersList";
 import AdminProfile from "./pages/admin/AdminProfile";
-import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
 function App() {
   return (

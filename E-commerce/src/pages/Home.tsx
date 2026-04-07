@@ -2,7 +2,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts, type Product } from "../redux/slices/productSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiFillHeart, AiTwotoneLike } from "react-icons/ai";
 import CategorySidebar from "../components/CategoriesSidebar";
 import { addToCart } from "../redux/slices/cartSlice";
@@ -16,12 +16,16 @@ const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const isFirstRender = useRef(true);
   const { products = [], loading, error, searchTerm, totalPages } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
   // pagination
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(() => {
+    const saved = localStorage.getItem("homePage");
+    return saved ? Number(saved) : 1;
+  });
   // const productsPerPage = 9;
 
 
@@ -41,18 +45,19 @@ const Home = () => {
     localStorage.setItem("homePage", currentPage.toString());
   }, [currentPage]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("homePage");
-    if (saved) setCurrentPage(Number(saved));
-  }, []);
+
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return; 
+    }
     setCurrentPage(1);
   }, [category]);
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredProducts = products.filter((product) =>
+  //   product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   // // pagination calculations
   // const indexOfLastProduct = currentPage * productsPerPage;
