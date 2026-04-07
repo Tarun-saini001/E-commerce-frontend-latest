@@ -2,7 +2,7 @@ import { FaChevronRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCategories, fetchCategories } from "../redux/slices/category";
+import { fetchAllCategories } from "../redux/slices/category";
 import type { RootState, AppDispatch } from "../redux/store";
 
 
