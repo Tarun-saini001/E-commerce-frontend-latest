@@ -2,7 +2,7 @@ import { FaChevronRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../redux/slices/category";
+import { fetchAllCategories, fetchCategories } from "../redux/slices/category";
 import type { RootState, AppDispatch } from "../redux/store";
 
 
@@ -23,12 +23,12 @@ import type { RootState, AppDispatch } from "../redux/store";
 const CategoriesSidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { categories=[] } = useSelector(
+  const { allCategories=[] } = useSelector(
     (state: RootState) => state.category
   );
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchAllCategories());
   }, [dispatch]);
 
   return (
@@ -38,7 +38,7 @@ const CategoriesSidebar = () => {
       </h3>
 
       <ul>
-        {categories.map((cat) => (
+        {allCategories.map((cat) => (
           <li
             key={cat._id}
             onClick={() => navigate(`/products?category=${cat.name}`)}
