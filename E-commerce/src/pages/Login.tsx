@@ -94,9 +94,9 @@ const Login = () => {
 
             if (response.ok) {
                 login();
-                toast.success("login successfully!",{
-                                                id:"login-success"
-                                            });
+                toast.success("login successfully!", {
+                    id: "login-success"
+                });
                 // console.log('data.data: ', data.data);
                 // if (user?.role === 1) {
                 //     navigate("/admin", { replace: true });
@@ -104,14 +104,18 @@ const Login = () => {
                 //     navigate("/");
                 // }
             } else {
-                setErrors({ password: "Invalid password" });
+                if (data.message === "User not found") {
+                    setErrors({ email: "User not found" });
+                } else if (data.message === "Invalid password") {
+                    setErrors({ password: "Invalid password" });
+                }
                 toast.error(data.message || "Something went wrong", {
                     id: "login-error"
                 });
             }
         } catch (err) {
-            toast.error("Server error",{
-                id:"server-error"
+            toast.error("Server error", {
+                id: "server-error"
             });
         } finally {
             setLoading(false);
