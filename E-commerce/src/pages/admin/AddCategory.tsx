@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import toast from "react-hot-toast";
 import { categorySchema } from "../../schemas/validators";
+import { FaRegEye } from "react-icons/fa6";
+import { SiEditorconfig } from "react-icons/si";
 
 const AddCategory = () => {
     const navigate = useNavigate();
@@ -16,8 +18,9 @@ const AddCategory = () => {
     const [image, setImage] = useState<File | string | undefined>(existingData?.image ? `${API}${existingData.image}` : undefined);
     const [preview, setPreview] = useState<string>(existingData?.image ? `${API}${existingData.image}` : "");
     const [errors, setErrors] = useState<{ name?: string; image?: string }>({});
+    const [showImageModal, setShowImageModal] = useState(false);
 
-
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -102,9 +105,9 @@ const AddCategory = () => {
                 toast.success(existingData ? "Category updated successfully!" : "Category added successfully!");
                 navigate("/admin/categories");
             } else {
-                toast.error(data.message || "Something went wrong",{
-                                                id:"add-category"
-                                            });
+                toast.error(data.message || "Something went wrong", {
+                    id: "add-category"
+                });
             }
         } catch (err) {
             console.log("Error:", err);
@@ -157,11 +160,26 @@ const AddCategory = () => {
                     <input
                         type="file"
                         hidden
+                        ref={fileInputRef}
                         onChange={handleImageChange}
                     />
                 </label>
                 {errors.image && <p className="text-red-500 text-sm ">{errors.image}</p>}
+                {preview && !errors.image &&(<div className="flex justify-center items-center gap-2 w-40 mt-4 text-xl">
+                    {/* view category image option */}
+                    <button
+                        onClick={() => setShowImageModal(true)}
+                        className=" px-3 py-1 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer">
+                        <FaRegEye />
+                    </button>
+                    {/* change category image option */}
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className=" px-3 py-1 rounded bg-gray-300  hover:bg-gray-400 cursor-pointer">
+                        <SiEditorconfig />
+                    </button>
 
+                </div>)}
 
                 <button
                     onClick={handleSubmit}
@@ -170,6 +188,21 @@ const AddCategory = () => {
                     {existingData ? "Update Category" : "Publish Category"}
                 </button>
             </div>
+
+            {showImageModal && (
+                <div
+                    onClick={() => setShowImageModal(false)}
+                    className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg relative">
+
+                        <img
+                            src={preview}
+                            alt="Full Preview"
+                            className="max-w-[500px] max-h-[500px] object-contain"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

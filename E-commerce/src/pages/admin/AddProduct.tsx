@@ -1,10 +1,12 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { ProductInput } from "../../types/productTypes";
 import { productSchema } from "../../schemas/validators";
+import { FaRegEye } from "react-icons/fa6";
+import { SiEditorconfig } from "react-icons/si";
 
 interface Category {
     _id: string;
@@ -19,7 +21,7 @@ const AddProduct = () => {
     const API = import.meta.env.VITE_API_URL;
 
     const [categories, setCategories] = useState<Category[]>([]);
-    const [preview, setPreview] = useState<string | null>(null);
+    const [preview, setPreview] = useState<string | undefined>(undefined);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -32,6 +34,9 @@ const AddProduct = () => {
     const [errors, setErrors] = useState<
         Partial<Record<keyof ProductInput, string>>
     >({});
+
+    const [showImageModal, setShowImageModal] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         if (existingData) {
@@ -380,12 +385,30 @@ const AddProduct = () => {
                         <input
                             type="file"
                             hidden
+                            ref={fileInputRef}
                             onChange={handleImageChange}
                         />
                     </label>
                     {errors.thumbnail && (
                         <p className="text-red-500 text-xs">{errors.thumbnail}</p>
                     )}
+                    {preview && !errors.thumbnail && (<div className="flex justify-center items-center gap-2 w-40 mt-4 text-xl">
+                        {/* view product image option */}
+                        <button
+                            type="button"
+                            onClick={() => setShowImageModal(true)}
+                            className=" px-3 py-1 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer">
+                            <FaRegEye />
+                        </button>
+                        {/* change product image option */}
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className=" px-3 py-1 rounded bg-gray-300  hover:bg-gray-400 cursor-pointer">
+                            <SiEditorconfig />
+                        </button>
+
+                    </div>)}
                 </div>
 
 
@@ -396,6 +419,20 @@ const AddProduct = () => {
                     {existingData ? "Update Product" : "Publish Product"}
                 </button>
             </form>
+            {showImageModal && (
+                <div
+                    onClick={() => setShowImageModal(false)}
+                    className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg relative">
+
+                        <img
+                            src={preview}
+                            alt="Full Preview"
+                            className="max-w-[500px] max-h-[500px] object-contain"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
