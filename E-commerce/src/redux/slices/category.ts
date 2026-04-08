@@ -6,6 +6,7 @@ const API = import.meta.env.VITE_API_URL;
 export interface Category {
   _id: string;
   name: string;
+  image:string
 }
 
 interface CategoryState {
@@ -13,6 +14,8 @@ interface CategoryState {
   allCategories: Category[];
   loading: boolean;
   error: string | null;
+  currentPage: number;
+  totalPages: number;
 }
 
 const initialState: CategoryState = {
@@ -20,16 +23,18 @@ const initialState: CategoryState = {
   allCategories: [],
   loading: false,
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 
 export const fetchCategories = createAsyncThunk(
   "category/fetch",
-  async () => {
-    const res = await fetch(`${API}/service/category/`);
+  async ({ page = 1, limit = 6 }: { page?: number; limit?: number }) => {
+    const res = await fetch(`${API}/service/category/?page=${page}&limit=${limit}`);
     const data = await res.json();
     console.log('data:get categories ', data);
-    return data.data.categories;
+    return data.data;
   }
 );
 //categories without pagination for category sidebar
@@ -54,7 +59,9 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload;
+        state.categories = action.payload.categories;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;

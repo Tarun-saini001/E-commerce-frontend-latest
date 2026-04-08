@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 const API = import.meta.env.VITE_API_URL;
 // product type
 // interface Product {
@@ -65,14 +65,14 @@ export const fetchProductById = createAsyncThunk(
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async ({ category, page = 1, limit = 9, search = "" }: { category: string | null; page?: number; limit?: number; search?: string }) => {
+  async ({ category="", page = 1, limit = 9, search = "" }: { category: string | null; page?: number; limit?: number; search?: string | null }) => {
     let url = `${API}/service/product/?page=${page}&limit=${limit}`;
 
-    if (category) {
+    if (category?.trim()) {
       url += `&category=${category}`;
     }
 
-    if (search.trim()) {
+    if (search?.trim()) {
       url += `&search=${encodeURIComponent(search.trim())}`;
     }
 
@@ -98,7 +98,11 @@ const productSlice = createSlice({
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
+      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<{
+        products: Product[],
+        currentPage: number,
+        totalPages: number
+      }>) => {
         state.loading = false;
         state.products = action.payload.products;
         state.currentPage = action.payload.currentPage;

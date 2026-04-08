@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Pagination from "../../components/Pagination";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../redux/slices/category";
 
 interface Category {
   _id: string;
@@ -10,13 +14,24 @@ interface Category {
 }
 
 const Categories = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { categories, loading, totalPages } = useSelector(
+    (state: RootState) => state.category
+  )
+  // const [categories, setCategories] = useState<Category[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) || 1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+
+  const updatePage = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
+
+  // const [page, setPage] = useState(Number(localStorage.getItem("catPage")) || 1);
+
 
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
@@ -25,35 +40,10 @@ const Categories = () => {
     localStorage.setItem("catPage", page.toString());
   }, [page]);
 
-  const fetchCategories = async (currentPage = 1) => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${API}/service/category?page=${currentPage}&limit=6`, {
-        credentials: "include",
-      });
-      const data = await res.json();
-      console.log('fetch category: ', data.data);
-
-      setCategories(data.data.categories || []);
-      setTotalPages(data.data.totalPages);
-    } catch (err) {
-      console.log("Error fetching categories", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCategories(page);
-  }, [page]);
+    dispatch(fetchCategories({ page, limit: 6 }));
+  }, [dispatch, page]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full text-xl">
-        Loading...
-      </div>
-    );
-  }
 
   const deleteCategory = async () => {
     if (!selectedCategory) return;
@@ -68,9 +58,10 @@ const Categories = () => {
       );
 
       if (res.ok) {
-        setCategories((prev) =>
-          prev.filter((cat) => cat._id !== selectedCategory._id)
-        );
+        {
+          dispatch(fetchCategories({ page, limit: 6 }));
+        }
+
       }
     } catch (err) {
       console.log("Delete error", err);
@@ -107,80 +98,61 @@ const Categories = () => {
         </div>
 
 
-        {categories.map((cat) => (
+        {loading ? (
           <div
-            key={cat._id}
-            className="grid grid-cols-3 items-center p-4 border-b"
-          >
-            {/* image */}
-            <img
-              src={`${API}${cat.image}`}
-              alt={cat.name}
-              className="w-16 h-16 object-cover rounded"
-            />
-
-            {/* category name */}
-            <p className="font-medium">{cat.name}</p>
-
-            {/* actions */}
-            <div className="flex justify-center gap-4 text-xl">
-              {/* edit */}
-              <button
-                onClick={() =>
-                  navigate("/admin/add-category", {
-                    state: cat,
-                  })
-                }
-                className="text-blue-500 cursor-pointer"
-              >
-                <FaEdit />
-              </button>
-
-              {/* delete */}
-              <button
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setShowModal(true);
-                }}
-                className="text-red-500 cursor-pointer"
-              >
-                <MdDelete />
-              </button>
-            </div>
+            className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
+            Loading...
           </div>
-        ))}
+        ) :
+          categories.map((cat) => (
+            <div
+              key={cat._id}
+              className="grid grid-cols-3 items-center p-4 border-b"
+            >
+              {/* image */}
+              <img
+                src={`${API}${cat.image}`}
+                alt={cat.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+
+              {/* category name */}
+              <p className="font-medium">{cat.name}</p>
+
+              {/* actions */}
+              <div className="flex justify-center gap-4 text-xl">
+                {/* edit */}
+                <button
+                  onClick={() =>
+                    navigate("/admin/add-category", {
+                      state: cat,
+                    })
+                  }
+                  className="text-blue-500 cursor-pointer"
+                >
+                  <FaEdit />
+                </button>
+
+                {/* delete */}
+                <button
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setShowModal(true);
+                  }}
+                  className="text-red-500 cursor-pointer"
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            </div>
+          ))}
       </div>
 
-      <div className="flex justify-center gap-2 mt-6">
-        <button
-          onClick={() => setPage((prev) => prev - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 cursor-pointer rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 rounded cursor-pointer ${page === i + 1
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200"
-              }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded cursor-pointer disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={updatePage}
+      />
 
       {/*cinfirmation message*/}
       {showModal && selectedCategory && (

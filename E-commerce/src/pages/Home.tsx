@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { FaRegHeart } from "react-icons/fa6";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,51 +22,37 @@ const Home = () => {
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
-  // pagination
-  const [currentPage, setCurrentPage] = useState<number>(() => {
-    const saved = localStorage.getItem("homePage");
-    return saved ? Number(saved) : 1;
-  });
-  // const productsPerPage = 9;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+
+  const updatePage = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
 
 
   const isInWishlist = (id: string) => {
     return wishlistItems.some((item) => item._id === id);
   };
 
-  const [searchParams] = useSearchParams();
+  
   const category = searchParams.get("category");
 
   useEffect(() => {
-    dispatch(fetchProducts({ category, page: currentPage, limit: 9 }));
+    dispatch(fetchProducts({ category, page, limit: 9 }));
 
-  }, [dispatch, category, currentPage]);
-
-  useEffect(() => {
-    localStorage.setItem("homePage", currentPage.toString());
-  }, [currentPage]);
+  }, [dispatch, category, page]);
 
 
 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return; 
+      return;
     }
-    setCurrentPage(1);
+    updatePage(1);
   }, [category]);
 
-  // const filteredProducts = products.filter((product) =>
-  //   product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
-  // // pagination calculations
-  // const indexOfLastProduct = currentPage * productsPerPage;
-  // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  // const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
   if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
@@ -280,52 +267,12 @@ const Home = () => {
           ))}
         </div>
         {/* pages */}
-        <div className="flex justify-center my-10 space-x-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => paginate(page)}
-              className={`px-4 py-2 rounded border ${currentPage === page
-                ? "bg-blue-300 text-white"
-                : "bg-white text-blue-500 border-blue-500"
-                }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-        {/* <div className="flex justify-center items-center gap-2 mt-4">
-
-          <button
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => paginate(page)}
-              className={`px-3 py-1 rounded ${currentPage === page
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-                }`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-
-        </div> */}
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={updatePage}
+        />
+       
       </div>
 
     </div>

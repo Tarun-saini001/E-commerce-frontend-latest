@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { fetchProducts } from "../../redux/slices/productSlice";
+import Pagination from "../../components/Pagination";
 
 interface Product {
   _id: string;
@@ -13,10 +17,16 @@ interface Product {
 }
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [page, setPage] = useState(Number(localStorage.getItem("catPage")) ||1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { products, loading, searchTerm, totalPages } = useSelector(
+    (state: RootState) => state.products
+  )
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+
+  const updatePage = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -24,35 +34,12 @@ const Products = () => {
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    localStorage.setItem("catPage", page.toString());
-  }, [page]);
-
-  const fetchProducts = async (currentPage = 1) => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `${API}/service/product?page=${currentPage}&limit=6`,
-        { credentials: "include" }
-      );
-
-      const data = await res.json();
-      console.log('product list fetched ', data);
-
-      setProducts(data.data.products);
-      setTotalPages(data.data.totalPages);
-      setPage(data.data.currentPage);
-    } catch (err) {
-      console.log("Error fetching products", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchProducts(page);
-  }, [page]);
+    dispatch(fetchProducts({ category: null, page, limit: 9, search: null }));
+  }, [dispatch, page]);
+
+  
 
   const deleteProduct = async () => {
     if (!selectedProduct) return;
@@ -67,8 +54,13 @@ const Products = () => {
       );
 
       if (res.ok) {
-        setProducts((prev) =>
-          prev.filter((p) => p._id !== selectedProduct._id)
+        dispatch(
+          fetchProducts({
+            category: null,
+            page,
+            limit: 9,
+            search: searchTerm,
+          })
         );
       }
     } catch (err) {
@@ -81,7 +73,7 @@ const Products = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full text-xl">
+      <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
         Loading...
       </div>
     );
@@ -164,36 +156,11 @@ const Products = () => {
       </div>
 
       {/* pagination */}
-      <div className="flex justify-center gap-2 mt-6">
-        <button
-          onClick={() => setPage((prev) => prev - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 cursor-pointer rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 cursor-pointer  rounded ${page === i + 1
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200"
-              }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          disabled={page === totalPages}
-          className="px-3 py-1 cursor-pointer bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={updatePage}
+      />
 
       {showModal && selectedProduct && (
         <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">

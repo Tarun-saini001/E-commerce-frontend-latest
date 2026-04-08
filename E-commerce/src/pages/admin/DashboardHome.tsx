@@ -51,7 +51,7 @@ const DashboardHome = () => {
 
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading...</p>
       ) : (
         <div className="grid grid-cols-4 gap-6">
 

@@ -40,6 +40,8 @@ interface OrderState {
   selectedOrder: Order | null;
   loading: boolean;
   error: string | null;
+  currentPage: number;
+  totalPages: number;
 }
 
 const initialState: OrderState = {
@@ -48,6 +50,8 @@ const initialState: OrderState = {
   selectedOrder: null,
   loading: false,
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 
@@ -118,12 +122,13 @@ export const fetchAllOrders = createAsyncThunk(
       });
 
       const data = await res.json();
+      console.log('data:(all orders) ', data);
 
       if (!res.ok) {
         return rejectWithValue(data.message);
       }
 
-      return data.data.orders; // from backend
+      return data.data;
     } catch (err: any) {
       return rejectWithValue(err.message || "Failed to fetch all orders");
     }
@@ -211,9 +216,16 @@ const orderSlice = createSlice({
       state.error = null;
     });
 
-    builder.addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
+    builder.addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<{
+      orders: Order[];
+      currentPage: number;
+      totalPages: number;
+      totalOrders: number
+    }>) => {
       state.loading = false;
-      state.allOrders = action.payload;
+      state.allOrders = action.payload.orders;
+      state.currentPage = action.payload.currentPage;
+      state.totalPages = action.payload.totalPages;
     });
 
     builder.addCase(fetchAllOrders.rejected, (state, action) => {

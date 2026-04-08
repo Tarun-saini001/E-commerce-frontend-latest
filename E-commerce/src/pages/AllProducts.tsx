@@ -13,60 +13,61 @@ import { AiFillHeart } from "react-icons/ai";
 import { FaRegHeart } from "react-icons/fa";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-    const { products, loading, error, searchTerm, totalPages } = useSelector((state: RootState) => state.products);
+    const { products, loading, error, totalPages } = useSelector((state: RootState) => state.products);
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
     const [cartLoadingMap, setCartLoadingMap] = useState<Record<string, boolean>>({});
     const [wishlistLoadingMap, setWishlistLoadingMap] = useState<Record<string, boolean>>({});
+    const isFirstRender = useRef(true);
 
     const isInWishlist = (id: string) => {
         return wishlistItems.some((item) => item._id === id);
     };
 
-    const isFirstRender = useRef(true);
 
-    // const filteredProducts = products.filter((product) =>
-    //     product.title.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = Number(searchParams.get("page")) || 1;
+
+    const updatePage = (newPage: number) => {
+        const params: any = {
+            page: newPage.toString(),
+        };
+
+        if (category) params.category = category;
+        if (search) params.search = search;
+
+        setSearchParams(params);
+    };
+
     const category = searchParams.get("category");
-
-    const storageKey = `allProductsPage_${category || "all"}`;
-    // pagination 
-    const [currentPage, setCurrentPage] = useState(() => {
-        const saved = localStorage.getItem(storageKey);
-        return saved ? Number(saved) : 1;
-    });
-    // const productsPerPage = 9;
-
-    useEffect(() => {
-        localStorage.setItem(storageKey, currentPage.toString());
-    }, [currentPage, storageKey]);
-
+    const search = searchParams.get("search");
 
 
 
     useEffect(() => {
-        dispatch(fetchProducts({ category, page: currentPage, limit: 9, search: searchTerm }));
-    }, [dispatch, category, currentPage, searchTerm]);
+        dispatch(fetchProducts({ category, page, limit: 9, search }));
+    }, [dispatch, category, page, search]);
 
-    // reset the page when user try to search
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm]);
 
-    //reset pagination when category changes
+
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
-        setCurrentPage(1);
-    }, [category]);
+        // update the current params (set page to 1)
+        setSearchParams((prev) => {
+            const params = new URLSearchParams(prev);// create copy of current url
+            params.set("page", "1");
+            return params;
+        });
+    }, [category, search]);
+   
 
     const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
@@ -100,14 +101,6 @@ const AllProducts = () => {
             setWishlistLoadingMap((prev) => ({ ...prev, [id]: false }));
         }
     };
-    // pagination calculations
-    // const indexOfLastProduct = currentPage * productsPerPage;
-    // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-    // const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
     if (error) return <div className="flex justify-center items-center min-h-[70vh] text-red-500 text-xl mt-10">{error}</div>;
@@ -133,8 +126,8 @@ const AllProducts = () => {
                 <h2 className="text-3xl font-bold text-blue-400">
                     {category
                         ? `${category}`
-                        : searchTerm
-                            ? `Search results for "${searchTerm}"`
+                        : search
+                            ? `Search results for "${search}"`
                             : "TS Mart Products"}
                 </h2>
                 <p className="text-gray-500 mt-2 text-sm">
@@ -247,20 +240,12 @@ const AllProducts = () => {
             </div>
 
             {/* page buttons */}
-            <div className="flex justify-center mt-8 space-x-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                        key={page}
-                        onClick={() => paginate(page)}
-                        className={`px-4 py-2 rounded border ${currentPage === page
-                            ? "bg-blue-300 text-white"
-                            : "bg-white text-blue-500 border-blue-500"
-                            }`}
-                    >
-                        {page}
-                    </button>
-                ))}
-            </div>
+            <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPageChange={updatePage}
+            />
+            
         </div>
     );
 };
