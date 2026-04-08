@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 
@@ -10,7 +10,7 @@ type PaginationProps = {
 
 const Pagination = ({ page, totalPages, onPageChange }: PaginationProps) => {
 
-   
+    if (totalPages <= 1) return null;
     return (
 
         <div className="flex justify-center gap-2 mt-6">

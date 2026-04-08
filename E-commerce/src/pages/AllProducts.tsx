@@ -14,6 +14,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import AuthModal from "../components/AuthModal";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,7 @@ const AllProducts = () => {
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
     const [cartLoadingMap, setCartLoadingMap] = useState<Record<string, boolean>>({});
     const [wishlistLoadingMap, setWishlistLoadingMap] = useState<Record<string, boolean>>({});
+    const [showAuthModal, setShowAuthModal] = useState(false);
     const isFirstRender = useRef(true);
 
     const isInWishlist = (id: string) => {
@@ -67,7 +69,7 @@ const AllProducts = () => {
             return params;
         });
     }, [category, search]);
-   
+
 
     const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
@@ -100,6 +102,11 @@ const AllProducts = () => {
         } finally {
             setWishlistLoadingMap((prev) => ({ ...prev, [id]: false }));
         }
+    };
+
+    const handleLoginRedirect = () => {
+        setShowAuthModal(false);
+        navigate("/login");
     };
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
@@ -183,7 +190,7 @@ const AllProducts = () => {
                                             if (wishlistLoadingMap[product._id]) return;
 
                                             if (!isAuthenticated) {
-                                                navigate("/login");
+                                                setShowAuthModal(true);
                                                 return;
                                             }
 
@@ -213,7 +220,7 @@ const AllProducts = () => {
                                     onClick={(e) => {
                                         e.stopPropagation(); // prevent card click
                                         if (!isAuthenticated) {
-                                            navigate("/login");
+                                            setShowAuthModal(true);
                                             return;
                                         }
                                         handleAddToCart(product);
@@ -226,7 +233,10 @@ const AllProducts = () => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation(); // prevent card click
-
+                                        if (!isAuthenticated) {
+                                            setShowAuthModal(true);
+                                            return;
+                                        }
                                         handleAddToCart(product);
                                     }}
                                     disabled={cartLoadingMap[product._id]}
@@ -245,7 +255,15 @@ const AllProducts = () => {
                 totalPages={totalPages}
                 onPageChange={updatePage}
             />
-            
+
+            {/* login modal message */}
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                onConfirm={handleLoginRedirect}
+                message="You need to login to perform this action."
+            />
+
         </div>
     );
 };

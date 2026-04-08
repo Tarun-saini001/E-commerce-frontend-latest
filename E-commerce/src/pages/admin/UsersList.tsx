@@ -65,7 +65,7 @@ const UsersList = () => {
   };
 
   useEffect(() => {
-    fetchUsers(1, debouncedSearch);
+    fetchUsers(page, debouncedSearch);
   }, [page, debouncedSearch]);
 
   useEffect(() => {

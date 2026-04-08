@@ -187,6 +187,7 @@ export const categorySchema = z.object({
         .nonempty("Name is required")
         .min(1, "Name is required")
         .min(2, "Name must be at least 2 characters")
+        .max(20,"Too long category name")
         .regex(/^[A-Z]/, "Name must start with a capital letter")
         .regex(/^[A-Za-z\s]*$/, "Name must contain only letters"),
 

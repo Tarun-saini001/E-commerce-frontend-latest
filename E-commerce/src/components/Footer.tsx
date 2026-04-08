@@ -22,17 +22,17 @@ const Footer = () => {
         <div className="flex flex-col gap-3">
           <div className="text-xl font-semibold">Links</div>
           <div className="cursor-pointer">Home</div>
-          <div className="cursor-pointer">Services</div>
-          <div className="cursor-pointer">Shop</div>
-          <div className="cursor-pointer">Sale</div>
+          <div className="cursor-pointer">All products</div>
+          <div className="cursor-pointer">Wishlist</div>
+          <div className="cursor-pointer">Orders</div>
         </div>
  
         <div className="flex flex-col gap-3">
           <div className="text-xl font-semibold">Categories</div>
-          <div>Men</div>
-          <div>Women</div>
-          <div>Children</div>
-          <div>Winter</div>
+          <div>Mens Shirts</div>
+          <div>Beauty</div>
+          <div>Laptops</div>
+          <div>Womens Dresses</div>
         </div>
  
         <div className="flex flex-col gap-3">

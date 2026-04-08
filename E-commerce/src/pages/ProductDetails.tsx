@@ -7,6 +7,7 @@ import { addToCart } from "../redux/slices/cartSlice";
 import type { AppDispatch, RootState } from "../redux/store";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import AuthModal from "../components/AuthModal";
 // const API = import.meta.env.VITE_API_URL;
 
 const ProductDetails = () => {
@@ -14,6 +15,7 @@ const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   // const [product, setProduct] = useState<Product>();
   const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { singleProduct, loading, error } = useSelector(
     (state: RootState) => state.products
   );
@@ -60,6 +62,11 @@ const ProductDetails = () => {
     >Product not found</div>;
   }
 
+   const handleLoginRedirect = () => {
+        setShowAuthModal(false);
+        navigate("/login");
+    };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Back button */}
@@ -102,7 +109,12 @@ const ProductDetails = () => {
           </p>
 
           <button
-            onClick={() => handleAddToCart(singleProduct)}
+            onClick={() => {
+              if (!isAuthenticated) {
+                      setShowAuthModal(true);
+                      return;
+                    }
+              handleAddToCart(singleProduct)}}
             className="w-full py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
           >
             Add to Cart
@@ -163,6 +175,13 @@ const ProductDetails = () => {
           )}
         </div>
       </div>
+      {/* login modal message */}
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                onConfirm={handleLoginRedirect}
+                message="You need to login to perform this action."
+            />
     </div>
   );
 };

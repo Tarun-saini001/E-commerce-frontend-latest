@@ -12,6 +12,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { toggleWishlist } from "../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import AuthModal from "../components/AuthModal";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +22,7 @@ const Home = () => {
   const { products = [], loading, error, totalPages } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
-
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
@@ -35,7 +36,7 @@ const Home = () => {
     return wishlistItems.some((item) => item._id === id);
   };
 
-  
+
   const category = searchParams.get("category");
 
   useEffect(() => {
@@ -86,6 +87,10 @@ const Home = () => {
     } finally {
       setLoadingMap((prev) => ({ ...prev, [id]: false }));
     }
+  };
+  const handleLoginRedirect = () => {
+    setShowAuthModal(false);
+    navigate("/login");
   };
 
   return (
@@ -217,7 +222,7 @@ const Home = () => {
                   onClick={(e) => {
                     e.stopPropagation(); // prevent card click
                     if (!isAuthenticated) {
-                      navigate("/login");
+                      setShowAuthModal(true);
                       return;
                     }
                     handleAddToCart(product);
@@ -236,7 +241,7 @@ const Home = () => {
                     if (loadingMap[product._id]) return;
 
                     if (!isAuthenticated) {
-                      navigate("/login");
+                      setShowAuthModal(true);
                       return;
                     }
 
@@ -272,7 +277,14 @@ const Home = () => {
           totalPages={totalPages}
           onPageChange={updatePage}
         />
-       
+
+        {/* login modal message */}
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onConfirm={handleLoginRedirect}
+          message="You need to login to perform this action."
+        />
       </div>
 
     </div>
