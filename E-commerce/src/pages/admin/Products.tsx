@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../../redux/store";
-import { fetchProducts, setSearchTerm } from "../../redux/slices/productSlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
 import Pagination from "../../components/common/Pagination";
 import { CiSearch } from "react-icons/ci";
 import { paths } from "../../constants/paths";
@@ -20,14 +20,20 @@ interface Product {
 
 const Products = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { products, loading, searchTerm, totalPages } = useSelector(
+  const { products, loading, totalPages } = useSelector(
     (state: RootState) => state.products
   )
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 
   const updatePage = (newPage: number) => {
-    setSearchParams({ page: newPage.toString() });
+    const params: any = {
+      page: newPage.toString(),
+    };
+
+    if (search) params.search = search;
+
+    setSearchParams(params);
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -35,12 +41,12 @@ const Products = () => {
 
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
-
+  const search = searchParams.get("search") || "";
+  console.log("search param:", search);
 
   useEffect(() => {
-    dispatch(fetchProducts({ category: null, page, limit: 9, search: null }));
-  }, [dispatch, page]);
-
+    dispatch(fetchProducts({ category: null, page, limit: 9, search }));
+  }, [dispatch, page, search]);
 
 
   const deleteProduct = async () => {
@@ -61,7 +67,7 @@ const Products = () => {
             category: null,
             page,
             limit: 9,
-            search: searchTerm,
+            search,
           })
         );
       }
@@ -77,27 +83,36 @@ const Products = () => {
   return (
     <div className="p-6">
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-2">
         <h1 className="text-2xl font-bold">Product List</h1>
 
         <div className="flex flex ml-[35%] justify-center">
-                <div className="relative w-[400px]">
+          <div className="relative w-[400px]">
 
-                    <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
+            <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
 
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        placeholder="Search products..."
-                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            dispatch(setSearchTerm(value));
-                        }}
-                    />
+            <input
+              type="text"
+              value={search}
+              placeholder="Search products..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              onChange={(e) => {
+                const value = e.target.value;
+                const params: any = {
+                  page: "1",
+                };
 
-                </div>
-            </div>
+                if (value.trim()) {
+                  params.search = value;
+                }
+
+                setSearchParams(params);
+
+              }}
+            />
+
+          </div>
+        </div>
 
         <button
           onClick={() => navigate(paths.ADMIN_ADD_PRODUCT)}
@@ -105,6 +120,16 @@ const Products = () => {
         >
           Add Product
         </button>
+      </div>
+
+
+      <div className=" ml-[50%] text-xsm mb-8">
+
+        <h2 className="text-xl  text-blue-400">
+          {search
+            ? `Search results for "${search}"`
+            : ""}
+        </h2>
       </div>
 
       <div className="bg-white rounded-xl shadow overflow-hidden">
@@ -124,16 +149,16 @@ const Products = () => {
             Loading...
           </div>
         ) :
-          products.length === 0 ? (
-            <div className="p-6 text-center text-gray-500 font-medium">
-              <div className="p-10 text-center">
-                <p className="text-gray-500 text-lg font-medium">
-                  No products found
-                </p>
+            products.length === 0 ? (
+              <div className="p-6 text-center text-gray-500 font-medium">
+                <div className="p-10 text-center">
+                  <p className="text-gray-500 text-lg font-medium">
+                    No products found
+                  </p>
 
+                </div>
               </div>
-            </div>
-          ) : (products.map((product) => (
+            ) : (products.map((product) => (
             <div
               key={product._id}
               className="grid grid-cols-6 items-center p-4 border-b"
@@ -182,7 +207,7 @@ const Products = () => {
               </div>
             </div>
           ))
-        )}
+          )}
       </div>
 
       {/* pagination */}

@@ -7,6 +7,7 @@ import type { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/category";
 import { paths } from "../../constants/paths";
+import { CiSearch } from "react-icons/ci";
 
 interface Category {
   _id: string;
@@ -26,9 +27,16 @@ const Categories = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
+  const search = searchParams.get("search") || "";
 
   const updatePage = (newPage: number) => {
-    setSearchParams({ page: newPage.toString() });
+    const params: any = {
+      page: newPage.toString(),
+    };
+
+    if (search) params.search = search;
+
+    setSearchParams(params);
   };
 
   // const [page, setPage] = useState(Number(localStorage.getItem("catPage")) || 1);
@@ -42,8 +50,8 @@ const Categories = () => {
   }, [page]);
 
   useEffect(() => {
-    dispatch(fetchCategories({ page, limit: 6 }));
-  }, [dispatch, page]);
+    dispatch(fetchCategories({ page, limit: 6, search }));
+  }, [dispatch, page, search]);
 
 
   const deleteCategory = async () => {
@@ -78,7 +86,33 @@ const Categories = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Category List</h1>
 
+        <div className="flex flex ml-[31%] justify-center">
+          <div className="relative w-[400px]">
 
+            <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
+
+            <input
+              type="text"
+              value={search}
+              placeholder="Search products..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              onChange={(e) => {
+                const value = e.target.value;
+                const params: any = {
+                  page: "1",
+                };
+
+                if (value.trim()) {
+                  params.search = value;
+                }
+
+                setSearchParams(params);
+
+              }}
+            />
+
+          </div>
+        </div>
 
         <div className="flex gap-3">
 
@@ -89,6 +123,15 @@ const Categories = () => {
             Add Category
           </button>
         </div>
+      </div>
+
+      <div className=" ml-[48%]  text-xsm mb-8">
+
+        <h2 className="text-xl  text-blue-400">
+          {search
+            ? `Search results for "${search}"`
+            : ""}
+        </h2>
       </div>
 
       {/* table */}
@@ -106,7 +149,16 @@ const Categories = () => {
             className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
             Loading...
           </div>
-        ) :
+        ):  categories.length === 0 ? (
+            <div className="p-6 text-center text-gray-500 font-medium">
+              <div className="p-10 text-center">
+                <p className="text-gray-500 text-lg font-medium">
+                  No categories found
+                </p>
+
+              </div>
+            </div>
+          ) :
           categories.map((cat) => (
             <div
               key={cat._id}

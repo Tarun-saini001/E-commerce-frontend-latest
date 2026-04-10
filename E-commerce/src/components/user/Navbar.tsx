@@ -5,10 +5,11 @@ import { FaCartShopping } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import { setSearchTerm } from "../../redux/slices/productSlice";
+// import { setSearchTerm } from "../../redux/slices/productSlice";
 import { CiSearch } from "react-icons/ci";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { paths } from "../../constants/paths";
 
 const Navbar = () => {
@@ -16,16 +17,19 @@ const Navbar = () => {
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth();
     const dispatch = useDispatch<AppDispatch>();
-    const { searchTerm } = useSelector((state: RootState) => state.products);
+    // const { searchTerm } = useSelector((state: RootState) => state.products);
 
     const { items } = useSelector((state: RootState) => state.cart);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const search = searchParams.get("search") || "";
     const location = useLocation();
 
-    useEffect(() => {
-        if (location.pathname !== "/products") {
-            dispatch(setSearchTerm(""));
-        }
-    }, [location.pathname, dispatch]);
+    // useEffect(() => {
+    //     if (location.pathname !== "/products") {
+    //         dispatch(setSearchTerm(""));
+    //     }
+    // }, [location.pathname, dispatch]);
 
     return (
         <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center border-b border-gray-200">
@@ -53,15 +57,25 @@ const Navbar = () => {
 
                     <input
                         type="text"
-                        value={searchTerm}
+                        value={search}
                         placeholder="Search products..."
                         className="w-full pl-10 pr-4 py-2 border rounded-md outline-none focus:ring-2 focus:ring-sky-300"
                         onChange={(e) => {
                             const value = e.target.value;
-                            dispatch(setSearchTerm(value));
-                            if (window.location.pathname !== "/products") {
-                                navigate(paths.PRODUCTS);
+
+                            const params = new URLSearchParams();
+                            params.set("page", "1");
+
+                            if (value.trim()) {
+                                params.set("search", value);
                             }
+
+                            setSearchParams(params);
+
+                            navigate({
+                                pathname: paths.PRODUCTS,
+                                search: params.toString(), 
+                            });
                         }}
                     />
 

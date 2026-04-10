@@ -49,6 +49,7 @@ const AllProducts = () => {
 
     const category = searchParams.get("category");
     const search = searchParams.get("search");
+    console.log('search: ', search);
 
 
 

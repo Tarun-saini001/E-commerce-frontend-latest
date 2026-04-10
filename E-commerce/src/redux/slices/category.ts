@@ -6,7 +6,7 @@ const API = import.meta.env.VITE_API_URL;
 export interface Category {
   _id: string;
   name: string;
-  image:string
+  image: string
 }
 
 interface CategoryState {
@@ -30,8 +30,14 @@ const initialState: CategoryState = {
 
 export const fetchCategories = createAsyncThunk(
   "category/fetch",
-  async ({ page = 1, limit = 6 }: { page?: number; limit?: number }) => {
-    const res = await fetch(`${API}/service/category/?page=${page}&limit=${limit}`);
+  async ({ page = 1, limit = 6, search = "" }: { page?: number; limit?: number; search?: string }) => {
+    let url = `${API}/service/category/?page=${page}&limit=${limit}`;
+
+    if (search?.trim()) {
+      url += `&search=${encodeURIComponent(search.trim())}`;
+    }
+
+    const res = await fetch(url);
     const data = await res.json();
     console.log('data:get categories ', data);
     return data.data;

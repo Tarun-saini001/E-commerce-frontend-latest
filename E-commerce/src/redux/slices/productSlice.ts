@@ -32,7 +32,7 @@ interface ProductState {
   singleProduct: Product | null;
   loading: boolean;
   error: string | null;
-  searchTerm: string
+  // searchTerm: string
 
   currentPage: number;
   totalPages: number;
@@ -44,7 +44,7 @@ const initialState: ProductState = {
   singleProduct: null,
   loading: false,
   error: null,
-  searchTerm: "",
+  // searchTerm: "",
   currentPage: 1,
   totalPages: 1,
 };
@@ -95,11 +95,12 @@ export const fetchProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {
-    setSearchTerm: (state, action) => {
-      state.searchTerm = action.payload;
-    },
-  },
+  reducers: {},
+  // {
+  //   setSearchTerm: (state, action) => {
+  //     state.searchTerm = action.payload;
+  //   },
+  // },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -136,5 +137,5 @@ const productSlice = createSlice({
 });
 
 
-export const { setSearchTerm } = productSlice.actions;
+// export const { setSearchTerm } = productSlice.actions;
 export default productSlice.reducer;
