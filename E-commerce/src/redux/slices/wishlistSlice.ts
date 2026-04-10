@@ -1,4 +1,6 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { FetchAPI } from "../../services/API/FetchAPI";
+import { ENDPOINTS } from "../../services/url";
 
 interface WishlistItem {
   _id: string;
@@ -20,11 +22,14 @@ const API = import.meta.env.VITE_API_URL;
 
 // get wishlist
 export const fetchWishlist = createAsyncThunk("wishlist/fetch", async () => {
-  const res = await fetch(`${API}/service/wishlist`, {
-    credentials: "include",
-  });
+  // const res = await fetch(`${API}/service/wishlist`, {
+  //   credentials: "include",
+  // });
+  const data = await FetchAPI<{
+    data: { items: WishlistItem[] };
+  }>(ENDPOINTS.WISHLIST.GET);
 
-  const data = await res.json();
+  // const data = await res.json();
   console.log('data: getwishlist ', data);
   return data.data.items;
 });
@@ -34,16 +39,25 @@ export const fetchWishlist = createAsyncThunk("wishlist/fetch", async () => {
 export const toggleWishlist = createAsyncThunk(
   "wishlist/toggle",
   async (productId: string) => {
-    const res = await fetch(`${API}/service/wishlist/toggle`, {
+    // const res = await fetch(`${API}/service/wishlist/toggle`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   credentials: "include",
+    //   body: JSON.stringify({ productId }),
+    // });
+    const data = await FetchAPI<{
+      data: { items: WishlistItem[] };
+    }>(ENDPOINTS.WISHLIST.TOGGLE, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify({ productId }),
     });
 
-    const data = await res.json();
+    // const data = await res.json();
     console.log('data: toggle wishlist', data);
     return data.data.items;
   }

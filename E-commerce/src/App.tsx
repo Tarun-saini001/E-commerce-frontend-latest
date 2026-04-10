@@ -137,6 +137,7 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import VerifyOtp from "./pages/user/VerifyOtp";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
+import NotFound from "./pages/user/NotFound";
 function App() {
   return (
     <>
@@ -148,7 +149,6 @@ function App() {
           <Route index element={<Home />} />
           <Route path={paths.LOGIN} element={<Login />} />
           <Route path={paths.REGISTER} element={<Register />} />
-          <Route path='*' element={<Home />} />
           <Route path={paths.PRODUCTS} element={<AllProducts />} />
           <Route path={paths.PRODUCT_DETAILS} element={<ProductDetails />} />
           <Route path={paths.CART} element={<Cart />} />
@@ -183,7 +183,7 @@ function App() {
           <Route path={paths.ADMIN_ORDERS} element={<OrdersList />} />
           <Route path={paths.ADMIN_PROFILE} element={<AdminProfile />} />
         </Route>
-
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

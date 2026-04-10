@@ -53,12 +53,15 @@ const initialState: ProductState = {
 export const fetchProductById = createAsyncThunk(
   "product/fetchById",
   async (id: string) => {
-    const res = await fetch(`${API}/service/product/${id}`, {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-      credentials: "include"
-    });
-    const data = await res.json();
+    const data = await FetchAPI<{ data: Product }>( ENDPOINTS.PRODUCT.GET_BY_ID(id))
+
+      // return data.data;
+    // const res = await fetch(`${API}/service/product/${id}`, {
+    //   method: "GET",
+    //   headers: { "content-type": "application/json" },
+    //   credentials: "include"
+    // });
+    // const data = await res.json();
     console.log('data: product by id', data);
     return data.data;
   }
@@ -118,7 +121,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch products";
+        state.error = action.payload as string;
       })
 
       //product by id
@@ -131,7 +134,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch product";
+        state.error = action.payload as string;
       })
   },
 });

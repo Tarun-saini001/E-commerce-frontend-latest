@@ -108,7 +108,9 @@ const AllProducts = () => {
 
     const handleLoginRedirect = () => {
         setShowAuthModal(false);
-        navigate(paths.LOGIN);
+        setTimeout(() => {
+            navigate(paths.LOGIN);
+        }, 0);
     };
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;

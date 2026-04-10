@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { ENDPOINTS } from "../../services/url";
+import { FetchAPI } from "../../services/API/FetchAPI";
 
-const API = import.meta.env.VITE_API_URL;
 
 // Category type
 export interface Category {
@@ -31,14 +32,21 @@ const initialState: CategoryState = {
 export const fetchCategories = createAsyncThunk(
   "category/fetch",
   async ({ page = 1, limit = 6, search = "" }: { page?: number; limit?: number; search?: string }) => {
-    let url = `${API}/service/category/?page=${page}&limit=${limit}`;
-
+    // let url = `${API}/service/category/?page=${page}&limit=${limit}`;
+    let url = ENDPOINTS.CATEGORY.GET_ALL({ page, limit });
     if (search?.trim()) {
       url += `&search=${encodeURIComponent(search.trim())}`;
     }
 
-    const res = await fetch(url);
-    const data = await res.json();
+    const data = await FetchAPI<{
+      data: {
+        categories: Category[];
+        currentPage: number;
+        totalPages: number;
+        totalCategories: number;
+      }
+    }>(url);
+    // const data = await res.json();
     console.log('data:get categories ', data);
     return data.data;
   }
@@ -47,8 +55,9 @@ export const fetchCategories = createAsyncThunk(
 export const fetchAllCategories = createAsyncThunk(
   "allCategory/fetch",
   async () => {
-    const res = await fetch(`${API}/service/category/withoutPagination`);
-    const data = await res.json();
+    const data = await FetchAPI<{data:Category[]}>(ENDPOINTS.CATEGORY.ALL_WITHUOT_PAGINATION);
+    // const res = await fetch(`${API}/service/category/withoutPagination`);
+    // const data = await res.json();
     console.log('data:get all categories ', data);
     return data.data;
   }

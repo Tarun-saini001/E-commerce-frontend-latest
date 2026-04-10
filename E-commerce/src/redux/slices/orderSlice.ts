@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import { FetchAPI } from "../../services/API/FetchAPI";
+import { ENDPOINTS } from "../../services/url";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -59,20 +61,21 @@ export const fetchOrderById = createAsyncThunk(
   "orders/fetchOrderById",
   async (orderId: string, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API}/service/order/${orderId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const data = await FetchAPI<{ data: Order }>(ENDPOINTS.ORDER.GET_BY_ID(orderId))
+      // const res = await fetch(`${API}/service/order/${orderId}`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   credentials: "include",
+      // });
 
-      const data = await res.json();
+      // const data = await res.json();
       console.log('data:get order by id ', data);
 
-      if (!res.ok) {
-        return rejectWithValue(data.message);
-      }
+      // if (!res.ok) {
+      //   return rejectWithValue(data.message);
+      // }
 
       return data.data;
     } catch (error) {
@@ -86,20 +89,24 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API}/service/order/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const data = await FetchAPI < {
+        data:
+        { orders: Order[];}
+      } > (ENDPOINTS.ORDER.GET_USER_ORDERS);
+      // const res = await fetch(`${API}/service/order/`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   credentials: "include",
+      // });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Failed to fetch orders");
-      }
+      // if (!res.ok) {
+      //   const data = await res.json();
+      //   throw new Error(data.message || "Failed to fetch orders");
+      // }
 
-      const data = await res.json();
+      // const data = await res.json();
       console.log('order list fetched ', data);
       return data.data.orders; // array of orders
     } catch (err: any) {
@@ -113,20 +120,28 @@ export const fetchAllOrders = createAsyncThunk(
   async ({ page = 1, limit = 6 }: { page?: number; limit?: number }
     , { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API}/service/order/orders?page=${page}&limit=${limit}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const data = await FetchAPI<{
+        data: {
+          orders: Order[];
+          currentPage: number;
+          totalPages: number;
+          totalOrders: number;
+        };
+      }>(ENDPOINTS.ORDER.GET_ALL({ page, limit }))
+      // const res = await fetch(`${API}/service/order/orders?page=${page}&limit=${limit}`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   credentials: "include",
+      // });
 
-      const data = await res.json();
+      // const data = await res.json();
       console.log('data:(all orders) ', data);
 
-      if (!res.ok) {
-        return rejectWithValue(data.message);
-      }
+      // if (!res.ok) {
+      //   return rejectWithValue(data.message);
+      // }
 
       return data.data;
     } catch (err: any) {

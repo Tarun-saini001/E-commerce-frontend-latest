@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import type { PayloadAction } from "@reduxjs/toolkit"
 import type { Product } from "./productSlice";
+import { FetchAPI } from "../../services/API/FetchAPI";
+import { ENDPOINTS } from "../../services/url";
 
 export interface CartItem extends Product {
     quantity: number;
@@ -21,17 +23,17 @@ const initialState: CartState = {
 };
 
 interface CartResponse {
-  items: CartItem[];
-  subtotal: number;
+    items: CartItem[];
+    subtotal: number;
 }
 
 const API = import.meta.env.VITE_API_URL;
 
 //fetch cart data
 export const fetchCart = createAsyncThunk("cart/fetch", async () => {
-    const res = await fetch(`${API}/service/cart/`, { credentials: "include",method:"GET" })
+    const res = await fetch(`${API}/service/cart/`, { credentials: "include", method: "GET" })
     const data = await res.json();
-    console.log(' data: cart data ',  data.data.items);
+    console.log(' data: cart data ', data.data.items);
     return data.data as CartResponse;
 })
 
@@ -40,14 +42,22 @@ export const addToCart = createAsyncThunk(
     "cart/add",
     async (product: Product) => {
         const { _id } = product
-        const quantity=1;
-        const res = await fetch(`${API}/service/cart/add`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({productId: _id,  quantity }),
-        });
-        const data = await res.json();
+        const quantity = 1;
+        const data = await FetchAPI<{ data: CartResponse }>(ENDPOINTS.CART.ADD,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ productId: _id, quantity }),
+            }
+        )
+        // const res = await fetch(`${API}/service/cart/add`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     credentials: "include",
+        //     body: JSON.stringify({ productId: _id, quantity }),
+        // });
+        // const data = await res.json();
         console.log('add to cart res: ', data);
         return data.data as CartResponse;
     }
@@ -56,14 +66,20 @@ export const addToCart = createAsyncThunk(
 // update quantity
 export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async ({ productId, quantity }: { productId: string, quantity: number }) => {
     console.log('productId: ', productId);
-    const res = await fetch(`${API}/service/cart/update/${productId}`, {
+    const data = await FetchAPI<{ data: CartResponse }>(ENDPOINTS.CART.UPDATE_QUANTITY(productId), {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ quantity })
-    });
-    const data = await res.json();
-    console.log('data: update quantity', data);
+    })
+    // const res = await fetch(`${API}/service/cart/update/${productId}`, {
+    //     method: "PATCH",
+    //     headers: { "content-type": "application/json" },
+    //     credentials: "include",
+    //     body: JSON.stringify({ quantity })
+    // });
+    // const data = await res.json();
+    // console.log('data: update quantity', data);
     console.log('update quantity res: ', data);
     return data.data as CartResponse;
 })
@@ -74,11 +90,15 @@ export const updateCartQuantity = createAsyncThunk("cart/updateQuantity", async 
 export const removeItem = createAsyncThunk(
     "cart/remove",
     async (productId: string) => {
-        const res = await fetch(`${API}/service/cart/${productId}`, {
+        const data = await FetchAPI<{ data: CartResponse }>(ENDPOINTS.CART.REMOVE_ITEM(productId), {
             method: "DELETE",
             credentials: "include",
         });
-        const data = await res.json();
+        // const res = await fetch(`${API}/service/cart/${productId}`, {
+        //     method: "DELETE",
+        //     credentials: "include",
+        // });
+        // const data = await res.json();
         console.log('remove cart item res: ', data);
         return data.data as CartResponse;
     }
@@ -86,13 +106,17 @@ export const removeItem = createAsyncThunk(
 
 //clear cart
 export const clearCart = createAsyncThunk("cart/clear", async () => {
-    const res = await fetch(`${API}/service/cart/`, {
+    const data = await FetchAPI<{ data: CartResponse }>(ENDPOINTS.CART.CLEAR, {
         method: "DELETE",
         credentials: "include",
-    });
-    const data = await res.json();
+    })
+    // const res = await fetch(`${API}/service/cart/`, {
+    //     method: "DELETE",
+    //     credentials: "include",
+    // });
+    // const data = await res.json();
     console.log('clear cart res:', data);
-    return data.data as  CartResponse;
+    return data.data as CartResponse;
 });
 
 
