@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import TopMenu from "../components/TopMenu";
+import Navbar from "../components/user/Navbar";
+import Footer from "../components/user/Footer";
+import TopMenu from "../components/user/TopMenu";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import type { AppDispatch } from "../redux/store";
 import { useEffect } from "react";
 import { fetchCart } from "../redux/slices/cartSlice";
 import { fetchWishlist } from "../redux/slices/wishlistSlice";
+import { paths } from "../constants/paths";
 
 
 const UserLayout = () => {
@@ -26,7 +27,7 @@ const UserLayout = () => {
 
     useEffect(() => {
         if (user?.role === 1) {
-            navigate("/admin", { replace: true });
+            navigate(paths.ADMIN, { replace: true });
         }
     }, [user, navigate]);
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading...</div>;

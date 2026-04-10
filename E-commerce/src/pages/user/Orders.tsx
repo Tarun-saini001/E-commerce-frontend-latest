@@ -2,9 +2,10 @@ import  { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBox } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
-import { fetchOrders } from "../redux/slices/orderSlice";
-import { useAuth } from "../context/AuthContext";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { fetchOrders } from "../../redux/slices/orderSlice";
+import { useAuth } from "../../context/AuthContext";
+import { paths } from "../../constants/paths";
 
 const Orders = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Orders = () => {
             <div className="flex flex-col items-center justify-center py-20 space-y-6 min-h-[70vh] text-center">
                 <p className="text-gray-500">Please log in to see your orders.</p>
                 <button
-                    onClick={() => navigate("/login")}
+                    onClick={() => navigate(paths.LOGIN)}
                     className="bg-sky-400 hover:bg-sky-600 text-white px-6 py-3 rounded-lg shadow transition"
                 >
                     Login
@@ -51,7 +52,7 @@ const Orders = () => {
                         You haven’t placed any orders yet. Start shopping to fill your order history!
                     </p>
                     <button
-                        onClick={() => navigate("/products")}
+                        onClick={() => navigate(paths.PRODUCTS)}
                         className="bg-sky-400 hover:bg-sky-600 text-white px-6 py-3 rounded-lg shadow transition"
                     >
                         Browse Products
@@ -69,7 +70,7 @@ const Orders = () => {
                     <div
                         key={order._id}
                         className="border rounded-lg shadow-sm p-6 hover:shadow-md transition cursor-pointer"
-                        onClick={() => navigate(`/orders/${order._id}`)}
+                        onClick={() => navigate(`${paths.ORDERS}/${order._id}`)}
                     >
                         <div className="flex justify-between mb-4">
                             <span className="font-semibold">Order ID: {order._id}</span>

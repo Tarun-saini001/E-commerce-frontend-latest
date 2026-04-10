@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { BsHeart } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
 import { AiFillHeart } from "react-icons/ai";
-import { fetchProducts } from "../redux/slices/productSlice";
-import { addToCart } from "../redux/slices/cartSlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
+import { addToCart } from "../../redux/slices/cartSlice";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
-import { toggleWishlist } from "../redux/slices/wishlistSlice";
+import { useAuth } from "../../context/AuthContext";
+import { toggleWishlist } from "../../redux/slices/wishlistSlice";
+import { paths } from "../../constants/paths";
 
 const Wishlist = () => {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Wishlist = () => {
     const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
             toast.error("Please login to add to cart!");
-            navigate("/login");
+            navigate(paths.LOGIN);
             return;
         }
         const id = product._id;
@@ -73,7 +74,7 @@ const Wishlist = () => {
                     </p>
 
                     <button
-                        onClick={() => navigate("/products")}
+                        onClick={() => navigate(paths.PRODUCTS)}
                         className="bg-sky-400 hover:bg-sky-600 text-white px-6 py-3 rounded-lg shadow transition"
                     >
                         Browse Products

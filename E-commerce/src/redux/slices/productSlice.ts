@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import { ENDPOINTS } from "../../services/url";
+import { FetchAPI } from "../../services/API/FetchAPI";
 const API = import.meta.env.VITE_API_URL;
 // product type
 // interface Product {
@@ -65,8 +67,8 @@ export const fetchProductById = createAsyncThunk(
 // create an async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async ({ category="", page = 1, limit = 9, search = "" }: { category: string | null; page?: number; limit?: number; search?: string | null }) => {
-    let url = `${API}/service/product/?page=${page}&limit=${limit}`;
+  async ({ category = "", page = 1, limit = 9, search = "" }: { category: string | null; page?: number; limit?: number; search?: string | null }) => {
+    let url = `${ENDPOINTS.PRODUCT.GET_ALL}?page=${page}&limit=${limit}`;
 
     if (category?.trim()) {
       url += `&category=${category}`;
@@ -76,8 +78,13 @@ export const fetchProducts = createAsyncThunk(
       url += `&search=${encodeURIComponent(search.trim())}`;
     }
 
-    const res = await fetch(url);
-    const data = await res.json();
+    const data = await FetchAPI<{
+      data: {
+        products: Product[];
+        currentPage: number;
+        totalPages: number;
+      };
+    }>(url);
     console.log('data: get products', data);
 
     return data.data;

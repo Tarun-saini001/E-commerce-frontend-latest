@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState, useRef, useEffect } from "react";
+import { paths } from "../../constants/paths";
 
 const AdminNavbar = () => {
     const { user, logout } = useAuth();
@@ -27,7 +28,7 @@ const AdminNavbar = () => {
 
     const handleLogout = () => {
         logout();
-        navigate("/");
+        navigate(paths.HOME);
     };
 
     return (
@@ -35,7 +36,7 @@ const AdminNavbar = () => {
 
 
             <div
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate(paths.ADMIN)}
                 className="flex items-center gap-2 pl-6 cursor-pointer"
             >
                 <img

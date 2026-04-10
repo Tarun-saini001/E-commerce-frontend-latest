@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import { paths } from "../../constants/paths";
 
 const VerifyOtp = () => {
     const { login } = useAuth();
@@ -21,7 +22,7 @@ const VerifyOtp = () => {
 
     useEffect(() => {
         if (!storedSession) {
-            navigate("/login", { replace: true });
+            navigate(paths.LOGIN, { replace: true });
         }
     }, []);
 
@@ -63,7 +64,7 @@ const VerifyOtp = () => {
             toast.error("OTP expired", {
                 id: "otp-expired"
             });
-            navigate("/register");
+            navigate(paths.REGISTER);
         }
     }, [timeLeft]);
 
@@ -128,7 +129,7 @@ const VerifyOtp = () => {
                     localStorage.removeItem("otpSession");
                     login();
                     toast.success("Account verified successfully!");
-                    navigate("/login");
+                    navigate(paths.LOGIN);
                 }
 
                 else if (otpType === 3) {
@@ -137,7 +138,7 @@ const VerifyOtp = () => {
                     // forgot password
                     localStorage.setItem("tempToken", data?.tempToken)
                     toast.success("OTP verified successfully!");
-                    navigate("/reset-password", {
+                    navigate(paths.RESET_PASSWORD, {
                         state: { email },
                     });
                 }

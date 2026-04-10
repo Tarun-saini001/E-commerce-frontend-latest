@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from './context/AuthContext.tsx'
  import { Provider } from 'react-redux'
 import { store } from './redux/store.ts'
-import CartLoader from './components/CartLoader.tsx'
+import CartLoader from './components/user/CartLoader.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <>

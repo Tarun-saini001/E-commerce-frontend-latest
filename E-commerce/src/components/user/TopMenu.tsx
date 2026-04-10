@@ -1,6 +1,8 @@
 // import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { paths } from '../../constants/paths';
+import Home from '../../pages/user/Home';
 
 const TopMenu = () => {
     const navigate = useNavigate();
@@ -17,21 +19,21 @@ const TopMenu = () => {
             <div className="max-w-7xl mx-auto justify-center items-center flex gap-8 px-6 py-3 font-semibold text-gray-700">
                 {isAuthenticated && user?.role === 1 && (
                     <span
-                        onClick={() => navigate("/admin")}
+                        onClick={() => navigate(paths.ADMIN)}
                         className={`${baseStyle} ${isActive("/admin") ? activeStyle : ""}`}
                     >
                         Dashboard
                     </span>
                 )}
                 <span
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate(paths.HOME)}
                     className={`${baseStyle} ${isActive("/") ? activeStyle : ""}`}
                 >
                     Home
                 </span>
 
                 <span
-                    onClick={() => navigate("/products")}
+                    onClick={() => navigate(paths.PRODUCTS)}
                     className={`${baseStyle} ${isActive("/products") ? activeStyle : ""}`}
                 >
                     All Products
@@ -40,14 +42,14 @@ const TopMenu = () => {
                 {isAuthenticated && (
                     <>
                         <span
-                            onClick={() => navigate("/wishlist")}
+                            onClick={() => navigate(paths.WISHLIST)}
                             className={`${baseStyle} ${isActive("/wishlist") ? activeStyle : ""}`}
                         >
                             Wishlist
                         </span>
 
                         <span
-                            onClick={() => navigate("/orders")}
+                            onClick={() => navigate(paths.ORDERS)}
                             className={`${baseStyle} ${isActive("/orders") ? activeStyle : ""}`}
                         >
                             Orders

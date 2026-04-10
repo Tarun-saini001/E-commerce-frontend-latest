@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/common/Pagination";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/category";
+import { paths } from "../../constants/paths";
 
 interface Category {
   _id: string;
@@ -77,10 +78,12 @@ const Categories = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Category List</h1>
 
+
+
         <div className="flex gap-3">
 
           <button
-            onClick={() => navigate("/admin/add-category")}
+            onClick={() => navigate(paths.ADMIN_ADD_CATEGORY)}
             className="px-4 py-2 bg-blue-600 text-white cursor-pointer rounded"
           >
             Add Category
@@ -124,7 +127,7 @@ const Categories = () => {
                 {/* edit */}
                 <button
                   onClick={() =>
-                    navigate("/admin/add-category", {
+                    navigate(paths.ADMIN_ADD_CATEGORY, {
                       state: cat,
                     })
                   }

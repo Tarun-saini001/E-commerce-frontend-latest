@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
+import { paths } from "../../constants/paths";
 
 const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
@@ -85,7 +86,7 @@ const Profile = () => {
   const handleLogout = async () => {
     setShowModal(false);
     logout();
-    navigate("/");
+    navigate(paths.HOME);
   };
 
   return (
@@ -153,7 +154,7 @@ const Profile = () => {
         <div className="w-full flex flex-col items-center gap-3 mt-4">
 
           <button
-            onClick={() => navigate("/change-password")}
+            onClick={() => navigate(paths.CHANGE_PASSWORD)}
             className="w-[70%] items-center flex justify-center bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition"
           >
             Change Password

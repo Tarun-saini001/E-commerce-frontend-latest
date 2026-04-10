@@ -2,8 +2,9 @@ import { FaChevronRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCategories } from "../redux/slices/category";
-import type { RootState, AppDispatch } from "../redux/store";
+import { fetchAllCategories } from "../../redux/slices/category";
+import type { RootState, AppDispatch } from "../../redux/store";
+import { paths } from "../../constants/paths";
 
 
 // const categories = [
@@ -41,7 +42,7 @@ const CategoriesSidebar = () => {
         {allCategories.map((cat) => (
           <li
             key={cat._id}
-            onClick={() => navigate(`/products?category=${cat.name}`)}
+            onClick={() => navigate(`${paths.PRODUCTS}?category=${cat.name}`)}
             className="flex justify-between items-center px-4 py-4 text-sm text-gray-600 border-b cursor-pointer
                hover:bg-sky-100 hover:text-sky-700 transition"
           >

@@ -105,23 +105,22 @@
 import { Routes, Route } from "react-router-dom";
 import UserLayout from "./layouts/UserLayout";
 import AdminLayout from "./layouts/AdminLayout";
-import AdminRoute from "./components/AdminRoute";
+import AdminRoute from "./components/admin/AdminRoute";
+import { paths } from "./constants/paths";
 
 // user pages
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ContactUs from "./pages/ContactUs";
-import AllProducts from "./pages/AllProducts";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart";
-import Wishlist from "./pages/Wishlist";
-import Orders from "./pages/Orders";
-import OrderDetails from "./pages/OrderDetails";
-import Checkout from "./pages/Checkout";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./pages/profile";
+import Home from "./pages/user/Home";
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
+import AllProducts from "./pages/user/AllProducts";
+import ProductDetails from "./pages/user/ProductDetails";
+import Cart from "./pages/user/Cart";
+import Wishlist from "./pages/user/Wishlist";
+import Orders from "./pages/user/Orders";
+import OrderDetails from "./pages/user/OrderDetails";
+import Checkout from "./pages/user/Checkout";
+import ProtectedRoute from "./components/user/ProtectedRoute";
+import Profile from "./pages/user/profile";
 
 // admin pages
 // import AddProduct from "./pages/admin/AddProduct";
@@ -133,52 +132,60 @@ import Products from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
 import OrdersList from "./pages/admin/OrdersList";
 import AdminProfile from "./pages/admin/AdminProfile";
-import ChangePassword from "./pages/ChangePassword";
+import ChangePassword from "./pages/user/ChangePassword";
+import ScrollToTop from "./components/common/ScrollToTop";
+import VerifyOtp from "./pages/user/VerifyOtp";
+import ForgotPassword from "./pages/user/ForgotPassword";
+import ResetPassword from "./pages/user/ResetPassword";
 function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
 
-      {/* user routes */}
-      <Route path="/" element={<UserLayout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path='/contact-us' element={<ContactUs />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        {/* user routes */}
+        <Route path={paths.HOME} element={<UserLayout />}>
+          <Route index element={<Home />} />
+          <Route path={paths.LOGIN} element={<Login />} />
+          <Route path={paths.REGISTER} element={<Register />} />
+          <Route path='*' element={<Home />} />
+          <Route path={paths.PRODUCTS} element={<AllProducts />} />
+          <Route path={paths.PRODUCT_DETAILS} element={<ProductDetails />} />
+          <Route path={paths.CART} element={<Cart />} />
+          <Route path={paths.WISHLIST} element={<Wishlist />} />
+          <Route path={paths.ORDERS} element={<Orders />} />
+          <Route path={paths.ORDER_DETAILS} element={<OrderDetails />} />
+          <Route path={paths.CHECKOUT} element={<Checkout />} />
+          <Route path={paths.PROFILE} element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path={paths.CHANGE_PASSWORD} element={< ChangePassword />} />
+          <Route path={paths.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={paths.VERIFY_OTP} element={<VerifyOtp />} />
+          <Route path={paths.RESET_PASSWORD} element={<ResetPassword />} />
+        </Route>
 
-        <Route path="/products" element={<AllProducts />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/orders/:orderId" element={<OrderDetails />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path='/change-password' element={< ChangePassword/>} />
-      </Route>
-
-      {/* admin routes */}
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        }
-      >
-        <Route index element={<DashboardHome />} />
-        {/* <Route path="products/add" element={<AddProduct />} />
+        {/* admin routes */}
+        <Route
+          path={paths.ADMIN}
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<DashboardHome />} />
+          {/* <Route path="products/add" element={<AddProduct />} />
         <Route path="products/add" element={<AddProduct />} /> */}
-        <Route path="users" element={<UsersList />} />
-        <Route path="categories" element={<Categories />} />
-        <Route path="add-category" element={<AddCategory />} />
-        <Route path="products" element={<Products />} />
-        <Route path="add-product" element={<AddProduct />} />
-        <Route path="orders" element={<OrdersList />} />
-        <Route path="profile" element={<AdminProfile />} />
-      </Route>
+          <Route path={paths.ADMIN_USERS} element={<UsersList />} />
+          <Route path={paths.ADMIN_CATEGORIES} element={<Categories />} />
+          <Route path={paths.ADMIN_ADD_CATEGORY} element={<AddCategory />} />
+          <Route path={paths.ADMIN_PRODUCTS} element={<Products />} />
+          <Route path={paths.ADMIN_ADD_PRODUCT} element={<AddProduct />} />
+          <Route path={paths.ADMIN_ORDERS} element={<OrdersList />} />
+          <Route path={paths.ADMIN_PROFILE} element={<AdminProfile />} />
+        </Route>
 
-    </Routes>
+      </Routes>
+    </>
   );
 }
 

@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
-import { createOrder } from "../redux/slices/orderSlice";
-import { checkoutSchema } from "../schemas/validators";
-import { useAuth } from "../context/AuthContext";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { createOrder } from "../../redux/slices/orderSlice";
+import { checkoutSchema } from "../../schemas/validators";
+import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
-import { clearCart } from "../redux/slices/cartSlice";
+import { clearCart } from "../../redux/slices/cartSlice";
+import { paths } from "../../constants/paths";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -134,7 +135,7 @@ const Checkout = () => {
             .then(() => {
                 dispatch(clearCart());
                 toast.success("Order placed successfully!")
-                navigate("/");
+                navigate(paths.HOME);
             })
             .catch(() => toast.error("Failed to place order", {
                 id: "place-order-error"

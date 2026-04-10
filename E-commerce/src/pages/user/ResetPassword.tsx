@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { resetPasswordSchema } from "../schemas/validators";
+import { resetPasswordSchema } from "../../schemas/validators";
 import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { paths } from "../../constants/paths";
 const ResetPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -27,7 +28,7 @@ const ResetPassword = () => {
             toast.error("Unauthorized access", {
                 id: "unautherized-error"
             });
-            navigate("/forgot-password");
+            navigate(paths.FORGOT_PASSWORD);
         }
     }, [email, navigate]);
 
@@ -57,7 +58,7 @@ const ResetPassword = () => {
                 toast.error("Autherizstion error", {
                     id: "unautherization-error"
                 });
-                navigate("/forgot-password");
+                navigate(paths.FORGOT_PASSWORD);
                 return;
             }
 
@@ -86,7 +87,7 @@ const ResetPassword = () => {
                 // if (authToken) {
                 //     navigate("/"); // already logged in - navigate home
                 // } else {
-                navigate("/login"); // not logged in - navigate login
+                navigate(paths.LOGIN); // not logged in - navigate login
                 // }
             } else {
                 toast.error(data.message, {

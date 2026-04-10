@@ -1,14 +1,15 @@
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { FaCartShopping } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import { setSearchTerm } from "../redux/slices/productSlice";
+import { setSearchTerm } from "../../redux/slices/productSlice";
 import { CiSearch } from "react-icons/ci";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { paths } from "../../constants/paths";
 
 const Navbar = () => {
     const API = import.meta.env.VITE_API_URL;
@@ -30,7 +31,7 @@ const Navbar = () => {
         <div className="bg-white fixed top-0 left-0 w-full z-50 h-[60px] p-2 flex justify-between items-center border-b border-gray-200">
 
             <div
-                onClick={() => navigate("/")}
+                onClick={() => navigate(paths.HOME)}
                 className="flex items-center gap-2 pl-6 cursor-pointer"
             >
                 <img
@@ -59,7 +60,7 @@ const Navbar = () => {
                             const value = e.target.value;
                             dispatch(setSearchTerm(value));
                             if (window.location.pathname !== "/products") {
-                                navigate("/products");
+                                navigate(paths.PRODUCTS);
                             }
                         }}
                     />
@@ -89,7 +90,7 @@ const Navbar = () => {
             <span className="flex space-x-4 pr-2 relative">
 
                 {isAuthenticated && (
-                    <span className="relative flex justify-center items-center cursor-pointer" onClick={() => navigate("/cart")}>
+                    <span className="relative flex justify-center items-center cursor-pointer" onClick={() => navigate(paths.CART)}>
                         <FaCartShopping size={24} />
                         {items.length > 0 && (
                             <span className="absolute -top-2 -right-2 bg-red-500 text-sky-300 rounded-full w-5 h-5 text-xs flex items-center justify-center">
@@ -104,12 +105,12 @@ const Navbar = () => {
                             src={`${API}${user.profilePic}`}
                             alt="profile"
                             className="w-8 h-8 rounded-full cursor-pointer"
-                            onClick={() => navigate("/profile")}
+                            onClick={() => navigate(paths.PROFILE)}
                         />
                     ) : (
 
                         < div
-                            onClick={() => navigate("/profile")}
+                            onClick={() => navigate(paths.PROFILE)}
                             className="w-10 h-10 rounded-full bg-gray-300 text-black flex items-center justify-center cursor-pointer"
                         >
                             {user?.name?.charAt(0).toUpperCase()}
@@ -124,7 +125,7 @@ const Navbar = () => {
                         </button> */}
                         <button
                             className=" text-white bg-sky-500 p-2 shadow w-20 cursor-pointer font-semibold rounded-md"
-                            onClick={() => navigate("/login")}
+                            onClick={() => navigate(paths.LOGIN)}
                         >
                             Login
                         </button>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { paths } from "../../constants/paths";
 
 interface DashboardData {
   totalUsers: number;
@@ -56,19 +57,19 @@ const DashboardHome = () => {
         <div className="grid grid-cols-4 gap-6">
 
           {/* users */}
-          <div onClick={() => navigate("/admin/users")} className="bg-white p-5 rounded-xl shadow hover:shadow-lg cursor-pointer transition">
+          <div onClick={() => navigate(paths.ADMIN_USERS)} className="bg-white p-5 rounded-xl shadow hover:shadow-lg cursor-pointer transition">
             <h2 className="text-gray-500 text-sm">Total Users</h2>
             <p className="text-2xl font-bold mt-2">{data.totalUsers}</p>
           </div>
 
           {/* products */}
-          <div onClick={() => navigate("/admin/products")}  className="bg-white p-5 rounded-xl shadow hover:shadow-lg cursor-pointer transition">
+          <div onClick={() => navigate(paths.ADMIN_PRODUCTS)}  className="bg-white p-5 rounded-xl shadow hover:shadow-lg cursor-pointer transition">
             <h2 className="text-gray-500 text-sm">Total Products</h2>
             <p className="text-2xl font-bold mt-2">{data.totalProducts}</p>
           </div>
 
           {/* orders */}
-          <div onClick={() => navigate("/admin/orders")}  className="bg-white p-5 rounded-xl shadow cursor-pointer hover:shadow-lg transition">
+          <div onClick={() => navigate(paths.ADMIN_ORDERS)}  className="bg-white p-5 rounded-xl shadow cursor-pointer hover:shadow-lg transition">
             <h2 className="text-gray-500 text-sm">Total Orders</h2>
             <p className="text-2xl font-bold mt-2">{data.totalOrders}</p>
           </div>

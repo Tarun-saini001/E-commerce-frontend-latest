@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import type { RegisterInput } from "../types/authTypes";
-import { registerSchema } from "../schemas/validators";
+import type { RegisterInput } from "../../types/authTypes";
+import { registerSchema } from "../../schemas/validators";
 import toast from "react-hot-toast";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { paths } from "../../constants/paths";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -132,7 +133,7 @@ const Register = () => {
                         expiresAt: Date.now() + 1 * 60 * 1000,
                     })
                 );
-                navigate("/verify-otp");
+                navigate(paths.VERIFY_OTP);
             } else {
                 toast.error(data.message || "Something went wrong", {
                     id: "send-otp-error"

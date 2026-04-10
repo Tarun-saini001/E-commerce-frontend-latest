@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/common/Pagination";
 import { useSearchParams } from "react-router-dom";
 
 interface User {
@@ -113,7 +113,7 @@ const UsersList = () => {
 
   return (
     <div className="p-6">
-      <div className="flex  items-center gap-[20%]">
+      <div className="flex  items-center justify-between">
         <h1 className="text-2xl font-bold mb-6">Users List</h1>
 
         <div className="flex flex-col items-center mb-6">

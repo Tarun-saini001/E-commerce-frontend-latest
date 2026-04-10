@@ -7,6 +7,7 @@ import type { ProductInput } from "../../types/productTypes";
 import { productSchema } from "../../schemas/validators";
 import { FaRegEye } from "react-icons/fa6";
 import { SiEditorconfig } from "react-icons/si";
+import { paths } from "../../constants/paths";
 
 interface Category {
     _id: string;
@@ -247,7 +248,7 @@ const AddProduct = () => {
                         ? "Product updated successfully"
                         : "Product added successfully"
                 );
-                navigate("/admin/products");
+                navigate(paths.ADMIN_PRODUCTS);
             } else {
                 toast.error(data.message || "Error adding product", {
                     id: "add-product-error"
@@ -392,20 +393,20 @@ const AddProduct = () => {
                     {errors.thumbnail && (
                         <p className="text-red-500 text-xs">{errors.thumbnail}</p>
                     )}
-                    {preview && !errors.thumbnail && (<div className="flex justify-center items-center gap-2 w-40 mt-4 text-xl">
+                    {preview && !errors.thumbnail && (<div className="flex justify-center items-center gap-2 w-40 mt-4 text-xs">
                         {/* view product image option */}
                         <button
                             type="button"
                             onClick={() => setShowImageModal(true)}
-                            className=" px-3 py-1 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer">
-                            <FaRegEye />
+                            className=" px-3 flex justify-center items-center gap-1 py-1 rounded bg-sky-200 hover:bg-sky-300 text-sky-400 hover:text-sky-500 cursor-pointer">
+                            <p >View</p> <span><FaRegEye /></span>
                         </button>
                         {/* change product image option */}
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className=" px-3 py-1 rounded bg-gray-300  hover:bg-gray-400 cursor-pointer">
-                            <SiEditorconfig />
+                            className=" px-3 py-1 flex justify-center items-center gap-1 rounded bg-green-200  hover:bg-green-300 text-green-400 hover:text-green-500  cursor-pointer">
+                            <p>Upload</p><span><SiEditorconfig /></span>
                         </button>
 
                     </div>)}

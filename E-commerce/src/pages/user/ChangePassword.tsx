@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { changePasswordSchema } from "../schemas/validators";
-import type { ChangePassword as ChangePasswordType } from "../types/authTypes";
+import { changePasswordSchema } from "../../schemas/validators";
+import type { ChangePassword as ChangePasswordType } from "../../types/authTypes";
 import { useNavigate } from "react-router-dom";
+import { paths } from "../../constants/paths";
 
 const ChangePassword = () => {
     const API = import.meta.env.VITE_API_URL;
@@ -105,7 +106,7 @@ const ChangePassword = () => {
                     confirmPassword: "",
                 });
 
-                navigate("/profile");
+                navigate(paths.PROFILE);
             } else {
                 toast.error(data.message, {
                     id: "change-password-error"

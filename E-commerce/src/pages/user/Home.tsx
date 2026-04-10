@@ -1,18 +1,19 @@
-import type { AppDispatch, RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchProducts, type Product } from "../redux/slices/productSlice";
+import { fetchProducts, type Product } from "../../redux/slices/productSlice";
 import { useEffect, useRef, useState } from "react";
 import { AiFillHeart, AiTwotoneLike } from "react-icons/ai";
-import CategorySidebar from "../components/CategoriesSidebar";
-import { addToCart } from "../redux/slices/cartSlice";
+import CategorySidebar from "../../components/user/CategoriesSidebar";
+import { addToCart } from "../../redux/slices/cartSlice";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { FaRegHeart } from "react-icons/fa6";
-import { toggleWishlist } from "../redux/slices/wishlistSlice";
+import { toggleWishlist } from "../../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
-import Pagination from "../components/Pagination";
-import AuthModal from "../components/AuthModal";
+import Pagination from "../../components/common/Pagination";
+import AuthModal from "../../components/user/AuthModal";
+import { paths } from "../../constants/paths";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -62,7 +63,7 @@ const Home = () => {
   const handleAddToCart = async (product: Product) => {
     if (!isAuthenticated) {
       toast.error("Please login to add to cart!");
-      navigate("/login");
+      navigate(paths.LOGIN);
       return;
     }
     await dispatch(addToCart(product))
@@ -90,7 +91,7 @@ const Home = () => {
   };
   const handleLoginRedirect = () => {
     setShowAuthModal(false);
-    navigate("/login");
+    navigate(paths.LOGIN);
   };
 
   return (
@@ -113,7 +114,7 @@ const Home = () => {
               Find the best products at amazing prices
             </p>
             <button
-              onClick={() => navigate("/products")}
+              onClick={() => navigate(paths.PRODUCTS)}
               className="mt-6 px-6 py-3 bg-gray-300 cursor-pointer font-bold text-white rounded-lg shadow-lg transition hover:shadow-2xl"
             >
               Shop Now
@@ -131,7 +132,7 @@ const Home = () => {
             <p className="text-gray-600 text-sm">Bundle Package</p>
             <h3 className="text-xl font-bold mt-1">Save 30%</h3>
             <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate(paths.PRODUCTS)}
             >
               Shop Now
             </button>
@@ -150,7 +151,7 @@ const Home = () => {
             <p className="text-gray-600 text-sm">Valentine Offer</p>
             <h3 className="text-xl font-bold mt-1">30% Sale</h3>
             <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate(paths.PRODUCTS)}
             >
               Buy Now
             </button>
@@ -169,7 +170,7 @@ const Home = () => {
             <p className="text-gray-600 text-sm">Relax Chair</p>
             <h3 className="text-xl font-bold mt-1">New Arrival</h3>
             <button className="mt-3 text-red-500 font-semibold cursor-pointer text-sm hover:underline"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate(paths.PRODUCTS)}
             >
               Buy Now
             </button>
@@ -226,7 +227,7 @@ const Home = () => {
                       return;
                     }
                     handleAddToCart(product);
-                    navigate("/cart");
+                    navigate(paths.CART);
                   }}
                   className="bg-blue-400 cursor-pointer ml-50 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
                 >

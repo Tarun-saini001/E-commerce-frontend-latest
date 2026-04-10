@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchProductById, type Product } from "../redux/slices/productSlice";
+import { fetchProductById, type Product } from "../../redux/slices/productSlice";
 import { IoStar } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/slices/cartSlice";
-import type { AppDispatch, RootState } from "../redux/store";
+import { addToCart } from "../../redux/slices/cartSlice";
+import type { AppDispatch, RootState } from "../../redux/store";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
-import AuthModal from "../components/AuthModal";
+import { useAuth } from "../../context/AuthContext";
+import AuthModal from "../../components/user/AuthModal";
+import { paths } from "../../constants/paths";
 // const API = import.meta.env.VITE_API_URL;
 
 const ProductDetails = () => {
@@ -26,7 +27,7 @@ const ProductDetails = () => {
   const handleAddToCart = (product: Product) => {
     if (!isAuthenticated) {
       toast.error("Please login to add to cart!");
-      navigate("/login");
+      navigate(paths.LOGIN);
       return;
     }
     dispatch(addToCart(product))

@@ -3,13 +3,12 @@ const API = import.meta.env.VITE_API_URL;
 
 let isRefreshing = false;
 
-export const apiFetch = async<T> (url: string, options: RequestInit = {}):Promise<T> => {
-
-  let response = await fetch(`${API}${url}`, {
+export const FetchAPI = async<T> (url: string, options: RequestInit = {}):Promise<T> => {
+    
+  let response = await fetch(`${url}`, {
     ...options,
     credentials: "include",
   });
-
   // if access token expired
   if (response.status === 401) {
     isRefreshing = true;
@@ -18,7 +17,7 @@ export const apiFetch = async<T> (url: string, options: RequestInit = {}):Promis
       method: "POST",
       credentials: "include",
     });
-    isRefreshing = true;
+    isRefreshing = false;
     if (refresh.ok) {
 
       // retry original request

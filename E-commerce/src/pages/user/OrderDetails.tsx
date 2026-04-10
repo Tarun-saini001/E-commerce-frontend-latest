@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
-import { fetchOrderById } from "../redux/slices/orderSlice";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { fetchOrderById } from "../../redux/slices/orderSlice";
 
 const OrderDetails = () => {
     const { orderId } = useParams();

@@ -2,19 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/slices/productSlice";
-import { addToCart } from "../redux/slices/cartSlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
+import { addToCart } from "../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import type { AppDispatch, RootState } from "../redux/store";
-import { useAuth } from "../context/AuthContext";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { AiTwotoneLike } from "react-icons/ai";
 import { AiFillHeart } from "react-icons/ai";
 import { FaRegHeart } from "react-icons/fa";
-import { toggleWishlist } from "../redux/slices/wishlistSlice";
+import { toggleWishlist } from "../../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
-import Pagination from "../components/Pagination";
-import AuthModal from "../components/AuthModal";
+import Pagination from "../../components/common/Pagination";
+import AuthModal from "../../components/user/AuthModal";
+import { paths } from "../../constants/paths";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -74,7 +75,7 @@ const AllProducts = () => {
     const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
             toast.error("Please login to add to cart!");
-            navigate("/login");
+            navigate(paths.LOGIN);
             return;
         }
         const id = product._id;
@@ -106,7 +107,7 @@ const AllProducts = () => {
 
     const handleLoginRedirect = () => {
         setShowAuthModal(false);
-        navigate("/login");
+        navigate(paths.LOGIN);
     };
 
     if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
@@ -121,7 +122,7 @@ const AllProducts = () => {
                     if (window.history.length > 1) {
                         navigate(-1);
                     } else {
-                        navigate("/products");
+                        navigate(paths.PRODUCTS);
                     }
                 }}
                 className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
@@ -224,7 +225,7 @@ const AllProducts = () => {
                                             return;
                                         }
                                         handleAddToCart(product);
-                                        navigate("/cart");
+                                        navigate(paths.CART);
                                     }}
                                     className="bg-blue-400 cursor-pointer w-[80%]  text-white px-3 py-1 rounded hover:bg-blue-600 transition"
                                 >

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../redux/store";
-import { removeItem, clearCart, updateCartQuantity } from "../redux/slices/cartSlice";
+import type { RootState, AppDispatch } from "../../redux/store";
+import { removeItem, clearCart, updateCartQuantity } from "../../redux/slices/cartSlice";
 import { IoIosRemoveCircle, IoIosAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -8,9 +8,10 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCart4 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import { AiFillHeart } from "react-icons/ai";
-import { toggleWishlist } from "../redux/slices/wishlistSlice";
-import { useAuth } from "../context/AuthContext";
+import { toggleWishlist } from "../../redux/slices/wishlistSlice";
+import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import { paths } from "../../constants/paths";
 
 const Cart = () => {
     const { items, total } = useSelector((state: RootState) => state.cart);
@@ -35,7 +36,7 @@ const Cart = () => {
                 Looks like you haven't added anything to your cart yet.
             </p>
             <button
-                onClick={() => navigate("/products")}
+                onClick={() => navigate(paths.PRODUCTS)}
                 className="bg-sky-400 hover:bg-sky-500 text-white px-6 py-3 rounded-lg shadow transition"
             >
                 Start Shopping
@@ -173,7 +174,7 @@ const Cart = () => {
                                         e.stopPropagation();
                                         if (loadingMap[item._id]) return;
                                         if (!isAuthenticated) {
-                                            navigate("/login");
+                                            navigate(paths.LOGIN);
                                             return;
                                         }
 
@@ -269,7 +270,7 @@ const Cart = () => {
                     </div>
 
                     <button
-                        onClick={() => navigate("/checkout")}
+                        onClick={() => navigate(paths.CHECKOUT)}
                         className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg cursor-pointer hover:bg-blue-700 transition"
                     >
                         Checkout

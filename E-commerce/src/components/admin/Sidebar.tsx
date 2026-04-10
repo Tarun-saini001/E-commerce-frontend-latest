@@ -67,6 +67,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaBox, FaShoppingCart, } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
+import { paths } from "../../constants/paths";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const Sidebar = () => {
 
         {/* dashboard */}
         <li
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate(paths.ADMIN)}
           className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin")}`}
         >
           <FaTachometerAlt />
@@ -95,7 +96,7 @@ const Sidebar = () => {
 
         {/* users */}
         <li
-          onClick={() => navigate("/admin/users")}
+          onClick={() => navigate(paths.ADMIN_USERS)}
           className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin/users")}`}
         >
           <FaUsers />
@@ -104,7 +105,7 @@ const Sidebar = () => {
 
         {/* category */}
         <li
-          onClick={() => navigate("/admin/categories")}
+          onClick={() => navigate(paths.ADMIN_CATEGORIES)}
           className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin/categories")}`}
         >
           <BiSolidCategory />
@@ -113,7 +114,7 @@ const Sidebar = () => {
 
         {/* products */}
         <li
-          onClick={() => navigate("/admin/products")}
+          onClick={() => navigate(paths.ADMIN_PRODUCTS)}
           className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin/products")}`}
         >
           <FaBox />
@@ -122,7 +123,7 @@ const Sidebar = () => {
 
         {/* oders */}
         <li
-          onClick={() => navigate("/admin/orders")}
+          onClick={() => navigate(paths.ADMIN_ORDERS)}
           className={`flex items-center gap-3 px-3 py-2 rounded cursor-pointer ${isActive("/admin/orders")}`}
         >
           <FaShoppingCart />

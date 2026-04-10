@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { forgotPasswordSchema } from "../schemas/validators";
+import { forgotPasswordSchema } from "../../schemas/validators";
 import toast from "react-hot-toast";
+import { paths } from "../../constants/paths";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const ForgotPassword = () => {
 
         localStorage.setItem("otpSession", JSON.stringify(otpSession));
 
-        navigate("/verify-otp");
+        navigate(paths.VERIFY_OTP);
       } else {
         setError(data.message || "Something went wrong");
         toast.error(data.message, {

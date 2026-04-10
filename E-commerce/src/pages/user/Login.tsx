@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginSchema } from "../schemas/validators";
-import type { LoginInput } from "../types/authTypes";
+import { loginSchema } from "../../schemas/validators";
+import type { LoginInput } from "../../types/authTypes";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { paths } from "../../constants/paths";
+import { ENDPOINTS } from "../../services/url";
+import { FetchAPI } from "../../services/API/FetchAPI";
 
 const Login = () => {
     const { login, user } = useAuth();
@@ -25,9 +28,9 @@ const Login = () => {
     useEffect(() => {
         if (user) {
             if (user.role === 1) {
-                navigate("/admin", { replace: true });
+                navigate(paths.ADMIN, { replace: true });
             } else {
-                navigate("/");
+                navigate(paths.HOME);
             }
         }
     }, [user]);
@@ -77,7 +80,20 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API}/service/user/login`, {
+            // const response = await fetch(`${API}/service/user/login`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({
+            //         email: formData.email,
+            //         password: formData.password,
+            //     }),
+            //     credentials: "include"
+            // });
+
+            // const data = await response.json();
+            const data = await FetchAPI<{ data: any }>(ENDPOINTS.USER.LOGIN, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -87,32 +103,28 @@ const Login = () => {
                     password: formData.password,
                 }),
                 credentials: "include"
-            });
-
-            const data = await response.json();
+            })
             console.log("Login response:", data);
 
-            if (response.ok) {
-                login();
-                toast.success("login successfully!", {
-                    id: "login-success"
-                });
-                // console.log('data.data: ', data.data);
-                // if (user?.role === 1) {
-                //     navigate("/admin", { replace: true });
-                // } else {
-                //     navigate("/");
-                // }
-            } else {
-                if (data.message === "User not found") {
-                    setErrors({ email: "User not found" });
-                } else if (data.message === "Invalid password") {
-                    setErrors({ password: "Invalid password" });
-                }
-                toast.error(data.message || "Something went wrong", {
-                    id: "login-error"
-                });
-            }
+            // if (response.ok) {
+            //     login();
+            //     toast.success("login successfully!", {
+            //         id: "login-success"
+            //     });
+            await login();
+            // } else {
+            //     if (data.message === "User not found") {
+            //         setErrors({ email: "User not found" });
+            //     } else if (data.message === "Invalid password") {
+            //         setErrors({ password: "Invalid password" });
+            //     }
+            //     toast.error(data.message || "Something went wrong", {
+            //         id: "login-error"
+            //     });
+            // }
+            toast.success("Login successfully!", {
+                id: "login-success",
+            });
         } catch (err) {
             toast.error("Server error", {
                 id: "server-error"
@@ -189,7 +201,7 @@ const Login = () => {
                 </button>
 
                 <p
-                    onClick={() => navigate("/forgot-password")}
+                    onClick={() => navigate(paths.FORGOT_PASSWORD)}
                     className="text-blue-600 font-medium cursor-pointer text-sm"
                 >
                     Forgot Password?

@@ -4,8 +4,10 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../../redux/store";
-import { fetchProducts } from "../../redux/slices/productSlice";
-import Pagination from "../../components/Pagination";
+import { fetchProducts, setSearchTerm } from "../../redux/slices/productSlice";
+import Pagination from "../../components/common/Pagination";
+import { CiSearch } from "react-icons/ci";
+import { paths } from "../../constants/paths";
 
 interface Product {
   _id: string;
@@ -39,7 +41,7 @@ const Products = () => {
     dispatch(fetchProducts({ category: null, page, limit: 9, search: null }));
   }, [dispatch, page]);
 
-  
+
 
   const deleteProduct = async () => {
     if (!selectedProduct) return;
@@ -71,13 +73,6 @@ const Products = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
-        Loading...
-      </div>
-    );
-  }
 
   return (
     <div className="p-6">
@@ -85,8 +80,27 @@ const Products = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Product List</h1>
 
+        <div className="flex flex ml-[35%] justify-center">
+                <div className="relative w-[400px]">
+
+                    <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2  text-xl" />
+
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        placeholder="Search products..."
+                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            dispatch(setSearchTerm(value));
+                        }}
+                    />
+
+                </div>
+            </div>
+
         <button
-          onClick={() => navigate("/admin/add-product")}
+          onClick={() => navigate(paths.ADMIN_ADD_PRODUCT)}
           className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded"
         >
           Add Product
@@ -104,55 +118,71 @@ const Products = () => {
           <p className="text-center">Action</p>
         </div>
 
-        {products.map((product) => (
+        {loading ? (
           <div
-            key={product._id}
-            className="grid grid-cols-6 items-center p-4 border-b"
-          >
-
-            <img
-              src={product.thumbnail.startsWith("http")
-                ? product.thumbnail
-                : `${API}/${product.thumbnail}`}
-              alt={product.title}
-              className="w-14 h-14 object-cover rounded"
-            />
-
-            <p className="font-medium">{product.title}</p>
-
-            <p>{product.categoryName}</p>
-
-            <p>{product.price} Rs.</p>
-
-            <p>{product.stock}</p>
-
-            {/* actions */}
-            <div className="flex justify-center gap-4 text-lg">
-
-              <button
-                onClick={() =>
-                  navigate("/admin/add-product", {
-                    state: product,
-                  })
-                }
-                className="text-blue-500 cursor-pointer"
-              >
-                <FaEdit />
-              </button>
-
-              {/* delete */}
-              <button
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setShowModal(true);
-                }}
-                className="text-red-500 cursor-pointer"
-              >
-                <MdDelete />
-              </button>
-            </div>
+            className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
+            Loading...
           </div>
-        ))}
+        ) :
+          products.length === 0 ? (
+            <div className="p-6 text-center text-gray-500 font-medium">
+              <div className="p-10 text-center">
+                <p className="text-gray-500 text-lg font-medium">
+                  No products found
+                </p>
+
+              </div>
+            </div>
+          ) : (products.map((product) => (
+            <div
+              key={product._id}
+              className="grid grid-cols-6 items-center p-4 border-b"
+            >
+
+              <img
+                src={product.thumbnail.startsWith("http")
+                  ? product.thumbnail
+                  : `${API}/${product.thumbnail}`}
+                alt={product.title}
+                className="w-14 h-14 object-cover rounded"
+              />
+
+              <p className="font-medium">{product.title}</p>
+
+              <p>{product.categoryName}</p>
+
+              <p>{product.price} Rs.</p>
+
+              <p>{product.stock}</p>
+
+              {/* actions */}
+              <div className="flex justify-center gap-4 text-lg">
+
+                <button
+                  onClick={() =>
+                    navigate(paths.ADMIN_ADD_PRODUCT, {
+                      state: product,
+                    })
+                  }
+                  className="text-blue-500 cursor-pointer"
+                >
+                  <FaEdit />
+                </button>
+
+                {/* delete */}
+                <button
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowModal(true);
+                  }}
+                  className="text-red-500 cursor-pointer"
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* pagination */}
