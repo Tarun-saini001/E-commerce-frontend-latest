@@ -94,7 +94,7 @@ const Categories = () => {
             <input
               type="text"
               value={search}
-              placeholder="Search products..."
+              placeholder="Search categories..."
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl shadow focus:ring-2 focus:ring-blue-400 focus:outline-none"
               onChange={(e) => {
                 const value = e.target.value;

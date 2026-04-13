@@ -66,15 +66,20 @@ const Home = () => {
       navigate(paths.LOGIN);
       return;
     }
-    await dispatch(addToCart(product))
-      .unwrap()
-      .then(() => toast.success("Product added to cart!", {
-        id: "add-to-cart"
-      }))
-      .catch(() => toast.error("Failed to add product to cart", {
-        id: "add-to-cart-error"
-      }));
-
+    if (product.stock === 0) {
+      toast.error("Product is out of stock!");
+      return;
+    }
+    try {
+      await dispatch(addToCart(product)).unwrap();
+      toast.success("Product added to cart!", { id: "add-to-cart" });
+      return true;
+    } catch {
+      toast.error("Failed to add product to cart", {
+        id: "add-to-cart-error",
+      });
+      return false;
+    }
   };
 
   const handleWishlist = async (product: any) => {
@@ -220,14 +225,17 @@ const Home = () => {
               <div className="mt-auto flex items-center justify-between pt-3">
                 <span className="text-blue-400 font-bold">{product.price.toFixed(2)} Rs.</span>
                 <button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation(); // prevent card click
                     if (!isAuthenticated) {
                       setShowAuthModal(true);
                       return;
                     }
-                    handleAddToCart(product);
-                    navigate(paths.CART);
+                    const success = await handleAddToCart(product);
+
+                    if (success) {
+                      navigate(paths.CART);
+                    }
                   }}
                   className="bg-blue-400 cursor-pointer ml-50 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
                 >

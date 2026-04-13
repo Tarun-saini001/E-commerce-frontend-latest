@@ -46,6 +46,18 @@ const Cart = () => {
 
     const handleIncrease = async (productId: string, currentQty: number) => {
         console.log("Increase - productId:", productId, "currentQty:", currentQty);
+
+        const item = items.find((i) => i._id === productId);
+        console.log('item: ', item);
+        if (!item) return;
+        console.log("Qty:", currentQty, "Stock:", item.stock);
+        if (currentQty >= item.stock) {
+            toast.error(`Only ${item.stock} items available in stock`, {
+                id: "stock-limit",
+            });
+            return;
+        }
+
         if (loadingMap[productId]) return;
 
         setLoadingMap((prev) => ({ ...prev, [productId]: true }));
@@ -77,11 +89,11 @@ const Cart = () => {
         try {
             await dispatch(removeItem(productId))
                 .unwrap()
-                .then(() => toast.success("Item removed from cart",{
-                    id:"item-removed"
+                .then(() => toast.success("Item removed from cart", {
+                    id: "item-removed"
                 }))
-                .catch(() => toast.error("Failed to remove item",{
-                    id:"item-remove-error"
+                .catch(() => toast.error("Failed to remove item", {
+                    id: "item-remove-error"
                 }))
         } finally {
             setLoadingMap((prev) => ({ ...prev, [productId]: false }));
@@ -92,8 +104,8 @@ const Cart = () => {
         await dispatch(clearCart())
             .unwrap()
             .then(() => toast.success("Cart cleared"))
-            .catch(() => toast.error("Failed to clear cart",{
-                id:"clear-cart-error"
+            .catch(() => toast.error("Failed to clear cart", {
+                id: "clear-cart-error"
             }))
     };
 
@@ -116,7 +128,7 @@ const Cart = () => {
 
             <div className="grid grid-cols-3 gap-8">
 
-                
+
                 <div className="col-span-2 space-y-4">
 
                     {items.map((item) => (
@@ -166,7 +178,7 @@ const Cart = () => {
 
                             {/* price */}
                             <div className="w-30 ml-8  flex justify-between text-blue-600 font-bold">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                {(item.price * item.quantity).toFixed(2)} Rs.
 
                                 {/* like button */}
                                 <div
@@ -182,12 +194,12 @@ const Cart = () => {
 
                                         handleWishlist(item);
                                         if (alreadyInWishlist) {
-                                            toast.success("Product removed from wishlist",{
-                                                id:"product-removed"
+                                            toast.success("Product removed from wishlist", {
+                                                id: "product-removed"
                                             });
                                         } else {
-                                            toast.success("Product added to wishlist",{
-                                                id:"product-added"
+                                            toast.success("Product added to wishlist", {
+                                                id: "product-added"
                                             });
                                         }
                                     }}

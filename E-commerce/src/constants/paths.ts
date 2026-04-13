@@ -17,9 +17,9 @@ export const paths = {
 
   ADMIN: "/admin",
   ADMIN_USERS: "users",
-  ADMIN_CATEGORIES: "categories",
+  ADMIN_CATEGORIES: "/admin/categories",
   ADMIN_ADD_CATEGORY: "/admin/add-category",
-  ADMIN_PRODUCTS: "products",
+  ADMIN_PRODUCTS: "/admin/products",
   ADMIN_ADD_PRODUCT: "/admin/add-product",
   ADMIN_ORDERS: "orders",
   ADMIN_PROFILE: "profile",

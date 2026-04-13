@@ -39,6 +39,10 @@ const Wishlist = () => {
             navigate(paths.LOGIN);
             return;
         }
+         if (product.stock === 0) {
+            toast.error("Product is out of stock!");
+            return;
+        }
         const id = product._id;
 
         if (loadingMap[id]) return;

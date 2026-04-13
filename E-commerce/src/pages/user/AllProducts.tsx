@@ -22,6 +22,7 @@ const AllProducts = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const { products, loading, error, totalPages } = useSelector((state: RootState) => state.products);
+    const { items: CartItem } = useSelector((state: RootState) => state.cart)
     const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
     const [cartLoadingMap, setCartLoadingMap] = useState<Record<string, boolean>>({});
     const [wishlistLoadingMap, setWishlistLoadingMap] = useState<Record<string, boolean>>({});
@@ -74,6 +75,10 @@ const AllProducts = () => {
 
 
     const handleAddToCart = async (product: any) => {
+        if (product.stock === 0) {
+            toast.error("Product is out of stock!");
+            return;
+        }
         if (!isAuthenticated) {
             toast.error("Please login to add to cart!");
             navigate(paths.LOGIN);
@@ -81,6 +86,16 @@ const AllProducts = () => {
         }
         const id = product._id;
 
+        const existingItem = CartItem.find(item => item._id === id)
+        const currentQty = existingItem?.quantity || 0;
+        if (currentQty >= product.stock) {
+            toast.error(`Only ${product.stock} items available`, {
+                id: "stock-limit"
+            });
+            return;
+        }
+        
+        
         if (cartLoadingMap[id]) return;
         setCartLoadingMap((prev) => ({ ...prev, [id]: true }));
         try {

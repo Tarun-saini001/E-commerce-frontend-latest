@@ -30,6 +30,10 @@ const ProductDetails = () => {
       navigate(paths.LOGIN);
       return;
     }
+    if (product.stock === 0) {
+      toast.error("Product is out of stock!");
+      return;
+    }
     dispatch(addToCart(product))
       .unwrap()
       .then(() => toast.success("Product added to cart!", {
@@ -63,10 +67,10 @@ const ProductDetails = () => {
     >Product not found</div>;
   }
 
-   const handleLoginRedirect = () => {
-        setShowAuthModal(false);
-        navigate("/login");
-    };
+  const handleLoginRedirect = () => {
+    setShowAuthModal(false);
+    navigate("/login");
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
@@ -112,10 +116,11 @@ const ProductDetails = () => {
           <button
             onClick={() => {
               if (!isAuthenticated) {
-                      setShowAuthModal(true);
-                      return;
-                    }
-              handleAddToCart(singleProduct)}}
+                setShowAuthModal(true);
+                return;
+              }
+              handleAddToCart(singleProduct)
+            }}
             className="w-full py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
           >
             Add to Cart
@@ -177,12 +182,12 @@ const ProductDetails = () => {
         </div>
       </div>
       {/* login modal message */}
-            <AuthModal
-                isOpen={showAuthModal}
-                onClose={() => setShowAuthModal(false)}
-                onConfirm={handleLoginRedirect}
-                message="You need to login to perform this action."
-            />
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onConfirm={handleLoginRedirect}
+        message="You need to login to perform this action."
+      />
     </div>
   );
 };
