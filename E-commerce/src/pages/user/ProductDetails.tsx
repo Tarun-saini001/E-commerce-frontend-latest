@@ -16,6 +16,7 @@ const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   // const [product, setProduct] = useState<Product>();
   const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
+  const { items: CartItem } = useSelector((state: RootState) => state.cart)
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { singleProduct, loading, error } = useSelector(
     (state: RootState) => state.products
@@ -34,6 +35,16 @@ const ProductDetails = () => {
       toast.error("Product is out of stock!");
       return;
     }
+
+    const existingItem = CartItem.find(item => item._id === product._id)
+    const currentQty = existingItem?.quantity || 0;
+    if (currentQty >= product.stock) {
+      toast.error(`Only ${product.stock} items available`, {
+        id: "stock-limit"
+      });
+      return;
+    }
+
     dispatch(addToCart(product))
       .unwrap()
       .then(() => toast.success("Product added to cart!", {
