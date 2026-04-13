@@ -10,26 +10,26 @@ export const FetchAPI = async<T> (url: string, options: RequestInit = {}):Promis
     credentials: "include",
   });
   // if access token expired
-  if (response.status === 401 && !isRefreshing) {
-    isRefreshing = true;
+  // if (response.status === 401 && !isRefreshing) {
+  //   isRefreshing = true;
 
-    const refresh = await fetch(`${API}/onboarding/user/refreshToken`, {
-      method: "POST",
-      credentials: "include",
-    });
-    isRefreshing = false;
-    if (refresh.ok) {
+  //   const refresh = await fetch(`${API}/onboarding/user/refreshToken`, {
+  //     method: "POST",
+  //     credentials: "include",
+  //   });
+  //   isRefreshing = false;
+  //   if (refresh.ok) {
 
-      // retry original request
-      response = await fetch(`${API}${url}`, {
-        ...options,
-        credentials: "include",
-      });
+  //     // retry original request
+  //     response = await fetch(`${API}${url}`, {
+  //       ...options,
+  //       credentials: "include",
+  //     });
 
-    } else {
-      throw new Error("Session expired");
-    }
-  }
+  //   } else {
+  //     throw new Error("Session expired");
+  //   }
+  // }
 
   const data = await response.json();
 
