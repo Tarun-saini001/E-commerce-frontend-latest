@@ -10,7 +10,7 @@ export const FetchAPI = async<T> (url: string, options: RequestInit = {}):Promis
     credentials: "include",
   });
   // if access token expired
-  if (response.status === 401) {
+  if (response.status === 401 && !isRefreshing) {
     isRefreshing = true;
 
     const refresh = await fetch(`${API}/onboarding/user/refreshToken`, {
