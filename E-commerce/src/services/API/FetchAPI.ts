@@ -1,7 +1,4 @@
 
-const API = import.meta.env.VITE_API_URL;
-
-let isRefreshing = false;
 
 export const FetchAPI = async<T> (url: string, options: RequestInit = {}):Promise<T> => {
     
