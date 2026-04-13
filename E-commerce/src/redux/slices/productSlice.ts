@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import { ENDPOINTS } from "../../services/url";
 import { FetchAPI } from "../../services/API/FetchAPI";
-const API = import.meta.env.VITE_API_URL;
 // product type
 // interface Product {
 //   id: number;

@@ -18,7 +18,6 @@ const initialState: WishlistState = {
   error: null,
 };
 
-const API = import.meta.env.VITE_API_URL;
 
 // get wishlist
 export const fetchWishlist = createAsyncThunk("wishlist/fetch", async () => {

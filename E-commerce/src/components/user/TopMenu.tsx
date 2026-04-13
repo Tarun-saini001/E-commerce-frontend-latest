@@ -2,7 +2,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext';
 import { paths } from '../../constants/paths';
-import Home from '../../pages/user/Home';
 
 const TopMenu = () => {
     const navigate = useNavigate();

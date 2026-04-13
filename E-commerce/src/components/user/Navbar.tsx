@@ -3,12 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { FaCartShopping } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../redux/store";
-import { useDispatch } from "react-redux";
+import type {  RootState } from "../../redux/store";
 // import { setSearchTerm } from "../../redux/slices/productSlice";
 import { CiSearch } from "react-icons/ci";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { paths } from "../../constants/paths";
 
@@ -16,14 +13,12 @@ const Navbar = () => {
     const API = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth();
-    const dispatch = useDispatch<AppDispatch>();
     // const { searchTerm } = useSelector((state: RootState) => state.products);
 
     const { items } = useSelector((state: RootState) => state.cart);
     const [searchParams, setSearchParams] = useSearchParams();
 
     const search = searchParams.get("search") || "";
-    const location = useLocation();
 
     // useEffect(() => {
     //     if (location.pathname !== "/products") {

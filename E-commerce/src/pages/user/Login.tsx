@@ -13,7 +13,6 @@ import { FetchAPI } from "../../services/API/FetchAPI";
 const Login = () => {
     const { login, user } = useAuth();
     const navigate = useNavigate();
-    const API = import.meta.env.VITE_API_URL;
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<LoginInput>({
         email: "",
