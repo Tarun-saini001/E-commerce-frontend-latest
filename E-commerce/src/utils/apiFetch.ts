@@ -1,43 +1,43 @@
 
-const API = import.meta.env.VITE_API_URL;
+// const API = import.meta.env.VITE_API_URL;
 
-let isRefreshing = false;
+// let isRefreshing = false;
 
-export const apiFetch = async<T> (url: string, options: RequestInit = {}):Promise<T> => {
+// export const apiFetch = async<T> (url: string, options: RequestInit = {}):Promise<T> => {
 
-  let response = await fetch(`${API}${url}`, {
-    ...options,
-    credentials: "include",
-  });
+//   let response = await fetch(`${API}${url}`, {
+//     ...options,
+//     credentials: "include",
+//   });
 
-  // if access token expired
-  if (response.status === 401) {
-    isRefreshing = true;
+//   // if access token expired
+//   if (response.status === 401) {
+//     isRefreshing = true;
 
-    const refresh = await fetch(`${API}/onboarding/user/refreshToken`, {
-      method: "POST",
-      credentials: "include",
-    });
-    isRefreshing = true;
-    if (refresh.ok) {
+//     const refresh = await fetch(`${API}/onboarding/user/refreshToken`, {
+//       method: "POST",
+//       credentials: "include",
+//     });
+//     isRefreshing = true;
+//     if (refresh.ok) {
 
-      // retry original request
-      response = await fetch(`${API}${url}`, {
-        ...options,
-        credentials: "include",
-      });
+//       // retry original request
+//       response = await fetch(`${API}${url}`, {
+//         ...options,
+//         credentials: "include",
+//       });
 
-    } else {
-      throw new Error("Session expired");
-    }
-  }
+//     } else {
+//       throw new Error("Session expired");
+//     }
+//   }
 
-  const data = await response.json();
+//   const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong");
-  }
+//   if (!response.ok) {
+//     throw new Error(data.message || "Something went wrong");
+//   }
 
 
-  return data;
-};
+//   return data;
+// };
