@@ -33,7 +33,14 @@ const PaymentSuccess = () => {
             });
 
     }, [sessionId, dispatch, navigate]);
-    return <h1>Payment Successful </h1>;
+    return (
+        <>
+        <div className="flex justify-center items-center">
+            <img src="./payment success.webp" alt="Payment successful" />
+            <p className="text-2xl font-bold text-green-500">Payment Successful</p>
+        </div>
+        </>
+    )
 };
 
 export default PaymentSuccess;
