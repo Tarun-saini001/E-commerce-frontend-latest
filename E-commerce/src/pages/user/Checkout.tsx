@@ -20,6 +20,7 @@ const districtsByCountry: Record<string, string[]> = {
 };
 
 const Checkout = () => {
+    const API = import.meta.env.VITE_API_URL
     const { user } = useAuth();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -118,28 +119,44 @@ const Checkout = () => {
             });
             return;
         }
+        try {
+            const res = await fetch(`${API}/service/stripe/create-checkout-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
 
-        dispatch(createOrder({
-            billingDetails: {
-                country: selectedCountry,
-                city: selectedState,
-                district: selectedDistrict,
-                postalCode: formData.postalCode,
-                address: formData.streetAddress,
-                phone: phoneCode + formData.phone,
-            },
-            shippingMethod,
-            orderStatus: "completed",
-        }))
-            .unwrap()
-            .then(() => {
-                dispatch(clearCart());
-                toast.success("Order placed successfully!")
-                navigate(paths.HOME);
+                body: JSON.stringify({
+                    billingDetails: {
+                        country: selectedCountry,
+                        city: selectedState,
+                        district: selectedDistrict,
+                        postalCode: formData.postalCode,
+                        address: formData.streetAddress,
+                        phone: phoneCode + formData.phone,
+                    },
+                    shippingMethod,
+                }),
             })
-            .catch(() => toast.error("Failed to place order", {
-                id: "place-order-error"
-            }));
+            const data = await res.json();
+
+
+            if (data.status === "Success") {
+                //redirect to Stripe Checkout
+                window.location.href = data.data.url;
+            } else {
+                toast.error(data.message || "Failed to initiate payment", {
+                    id: "payment-failed"
+                });
+            }
+
+        } catch (error) {
+            console.error("handlePlaceOrder error : ", error);
+            toast.error("Something went wrong", {
+                id: "stripe-error"
+            });
+        }
     };
 
     return (

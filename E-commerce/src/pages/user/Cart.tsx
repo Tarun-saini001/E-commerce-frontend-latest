@@ -51,7 +51,7 @@ const Cart = () => {
         console.log('item: ', item);
         if (!item) return;
         console.log("Qty:", currentQty, "Stock:", item.stock);
-        if (currentQty >= item.stock) {
+        if (item.quantity >= item.stock) {
             toast.error(`Only ${item.stock} items available in stock`, {
                 id: "stock-limit",
             });

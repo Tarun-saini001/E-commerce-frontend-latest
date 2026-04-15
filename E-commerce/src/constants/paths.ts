@@ -23,4 +23,5 @@ export const paths = {
   ADMIN_ADD_PRODUCT: "/admin/add-product",
   ADMIN_ORDERS: "orders",
   ADMIN_PROFILE: "profile",
+  PAYMENT_SUCCESS:"/payment-success"
 };

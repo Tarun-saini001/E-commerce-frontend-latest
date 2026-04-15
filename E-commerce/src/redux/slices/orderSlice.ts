@@ -89,10 +89,10 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await FetchAPI < {
+      const data = await FetchAPI<{
         data:
-        { orders: Order[];}
-      } > (ENDPOINTS.ORDER.GET_USER_ORDERS);
+        { orders: Order[]; }
+      }>(ENDPOINTS.ORDER.GET_USER_ORDERS);
       // const res = await fetch(`${API}/service/order/`, {
       //   method: "GET",
       //   headers: {
@@ -153,18 +153,20 @@ export const fetchAllOrders = createAsyncThunk(
 // Create a new order
 export const createOrder = createAsyncThunk(
   "orders/createOrder",
-  async (payload: any, { rejectWithValue }) => {
+  async ({ sessionId }: { sessionId: string }, { rejectWithValue }) => {
     try {
+      console.log("Sending sessionId:", sessionId);
       const res = await fetch(`${API}/service/order/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ sessionId }),
       });
-
+     
       const data = await res.json();
+      console.log('createOrder response : ', data);
 
       if (!res.ok) {
         return rejectWithValue(data.message);

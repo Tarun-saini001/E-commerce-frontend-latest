@@ -138,6 +138,7 @@ import VerifyOtp from "./pages/user/VerifyOtp";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import NotFound from "./pages/user/NotFound";
+import PaymentSuccess from "./pages/user/PaymentSuccess";
 function App() {
   return (
     <>
@@ -161,6 +162,7 @@ function App() {
           <Route path={paths.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={paths.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={paths.RESET_PASSWORD} element={<ResetPassword />} />
+          <Route path={paths.PAYMENT_SUCCESS} element={<PaymentSuccess/>}></Route>
         </Route>
 
         {/* admin routes */}
