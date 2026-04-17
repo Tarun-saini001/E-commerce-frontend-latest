@@ -1,15 +1,11 @@
 // src/pages/Checkout.tsx
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../redux/store";
-import { createOrder } from "../../redux/slices/orderSlice";
+import {  useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 import { checkoutSchema } from "../../schemas/validators";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
-import { clearCart } from "../../redux/slices/cartSlice";
-import { paths } from "../../constants/paths";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -22,8 +18,6 @@ const districtsByCountry: Record<string, string[]> = {
 const Checkout = () => {
     const API = import.meta.env.VITE_API_URL
     const { user } = useAuth();
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
     const { items, total } = useSelector((state: RootState) => state.cart);
     const { loading } = useSelector((state: RootState) => state.order);
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -314,6 +308,7 @@ const Checkout = () => {
                                 type="tel"
                                 name="phone"
                                 value={formData.phone}
+                                maxLength={10}
                                 onChange={(e) => {
                                     const value = e.target.value;
 
