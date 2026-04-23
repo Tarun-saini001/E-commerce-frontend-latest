@@ -35,7 +35,7 @@ const PaymentSuccess = () => {
     }, [sessionId, dispatch, navigate]);
     return (
         <>
-        <div className="flex justify-center items-center">
+        <div className="flex flex-col gap-2 justify-center items-center">
             <img src="./payment success.webp" alt="Payment successful" />
             <p className="text-2xl font-bold text-green-500">Payment Successful</p>
         </div>
