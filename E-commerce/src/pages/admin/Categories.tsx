@@ -118,7 +118,7 @@ const Categories = () => {
 
           <button
             onClick={() => navigate(paths.ADMIN_ADD_CATEGORY)}
-            className="px-4 py-2 bg-blue-600 text-white cursor-pointer rounded"
+            className="bg-blue-600 cursor-pointer text-white text-sm px-4 py-2 rounded whitespace-nowrap"
           >
             Add Category
           </button>
@@ -149,16 +149,16 @@ const Categories = () => {
             className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
             Loading...
           </div>
-        ):  categories.length === 0 ? (
-            <div className="p-6 text-center text-gray-500 font-medium">
-              <div className="p-10 text-center">
-                <p className="text-gray-500 text-lg font-medium">
-                  No categories found
-                </p>
+        ) : categories.length === 0 ? (
+          <div className="p-6 text-center text-gray-500 font-medium">
+            <div className="p-10 text-center">
+              <p className="text-gray-500 text-lg font-medium">
+                No categories found
+              </p>
 
-              </div>
             </div>
-          ) :
+          </div>
+        ) :
           categories.map((cat) => (
             <div
               key={cat._id}
