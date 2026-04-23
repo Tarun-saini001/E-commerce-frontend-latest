@@ -116,7 +116,7 @@ const Products = () => {
 
         <button
           onClick={() => navigate(paths.ADMIN_ADD_PRODUCT)}
-          className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded"
+          className="bg-blue-600 cursor-pointer text-white text-sm w-full px-4 py-2 rounded"
         >
           Add Product
         </button>
