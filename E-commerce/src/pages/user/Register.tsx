@@ -149,8 +149,8 @@ const Register = () => {
     }
 
     return (
-        <div className=" flex justify-center items-center px-4 mt-15">
-            <div className="w-full max-w-md text-black bg-white shadow-2xl rounded-3xl py-8 flex flex-col items-center gap-5">
+        <div className="min-h-[calc(100vh-110px)] w-[80%] flex items-center justify-center px-4 py-6 overflow-y-auto">
+            <div className="w-full  max-w-md text-black bg-white shadow-2xl rounded-3xl py-8 flex flex-col items-center gap-5">
                 <p className="text-4xl">Register</p>
 
                 {/* name */}
