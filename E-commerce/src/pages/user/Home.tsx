@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import { FaRegHeart } from "react-icons/fa6";
 import { toggleWishlist } from "../../redux/slices/wishlistSlice";
 import { useSearchParams } from "react-router-dom";
-import Pagination from "../../components/common/Pagination";
+// import Pagination from "../../components/common/Pagination";
 import AuthModal from "../../components/user/AuthModal";
 import { paths } from "../../constants/paths";
 
@@ -20,7 +20,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const isFirstRender = useRef(true);
-  const { products = [], loading, error, totalPages } = useSelector((state: RootState) => state.products)
+  const { products = [], loading, error, } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -57,7 +57,7 @@ const Home = () => {
 
 
 
-  if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
+  // if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
   if (error) return <div className="flex justify-center items-center h-screen text-red-500 text-2xl font-bold">{error}</div>;
 
   const handleAddToCart = async (product: Product) => {
@@ -281,11 +281,11 @@ const Home = () => {
           ))}
         </div>
         {/* pages */}
-        <Pagination
+        {/* <Pagination
           page={page}
           totalPages={totalPages}
           onPageChange={updatePage}
-        />
+        /> */}
 
         {/* login modal message */}
         <AuthModal

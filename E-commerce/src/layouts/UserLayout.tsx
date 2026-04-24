@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { fetchCart } from "../redux/slices/cartSlice";
 import { fetchWishlist } from "../redux/slices/wishlistSlice";
 import { paths } from "../constants/paths";
+import UserLayoutSkeleton from "../components/user/UserLayoutSkeleton";
 
 
 const UserLayout = () => {
@@ -30,8 +31,7 @@ const UserLayout = () => {
             navigate(paths.ADMIN, { replace: true });
         }
     }, [user, navigate]);
-    if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading...</div>;
-
+    
     const hideFooterRoutes = [
         paths.LOGIN,
         paths.REGISTER,
@@ -40,6 +40,7 @@ const UserLayout = () => {
         paths.RESET_PASSWORD,
     ];
     const isAuthPage = hideFooterRoutes.includes(location.pathname);
+    if (loading) return <UserLayoutSkeleton isAuthPage={isAuthPage}/>
     return (
         <>
             <Navbar />
