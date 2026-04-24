@@ -99,7 +99,7 @@ const ChangePassword = () => {
 
             if (res.ok) {
                 toast.success("Password changed successfully");
-
+                navigate(paths.PROFILE);
                 setForm({
                     currentPassword: "",
                     newPassword: "",
