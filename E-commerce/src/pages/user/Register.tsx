@@ -211,7 +211,7 @@ const Register = () => {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                            className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
                         >
                             {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                         </button>
@@ -247,7 +247,7 @@ const Register = () => {
                         <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                            className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
                         >
                             {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                         </button>

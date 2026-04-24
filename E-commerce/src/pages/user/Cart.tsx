@@ -161,7 +161,7 @@ const Cart = () => {
                             <div className="flex items-center space-x-2">
                                 <button
                                     onClick={() => handleDecrease(item._id, item.quantity)}
-                                    className="text-gray-500 hover:text-black"
+                                    className="text-gray-500 cursor-pointer hover:text-black"
                                 >
                                     <IoIosRemoveCircle size={22} />
                                 </button>
@@ -170,7 +170,7 @@ const Cart = () => {
 
                                 <button
                                     onClick={() => handleIncrease(item._id, item.quantity)}
-                                    className="text-gray-500 hover:text-black"
+                                    className="text-gray-500 cursor-pointer hover:text-black"
                                 >
                                     <IoIosAddCircle size={22} />
                                 </button>
@@ -215,7 +215,7 @@ const Cart = () => {
                                 {/* remove */}
                                 <button
                                     onClick={() => handleRemove(item._id)}
-                                    className="text-black hover:text-red-500 text-xl"
+                                    className="text-black cursor-pointer hover:text-red-500 text-xl"
                                 >
                                     <RxCross1 />
                                 </button>
@@ -225,7 +225,7 @@ const Cart = () => {
 
                     <button
                         onClick={handleClearCart}
-                        className="text-sm bg-red-500 p-2 rounded hover:bg-red-600 text-white "
+                        className="text-sm bg-red-500 cursor-pointer p-2 rounded hover:bg-red-600 text-white "
                     >
                         Remove all from cart
                     </button>

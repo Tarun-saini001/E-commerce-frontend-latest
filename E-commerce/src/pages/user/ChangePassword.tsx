@@ -20,6 +20,7 @@ const ChangePassword = () => {
     >({});
 
     const [show, setShow] = useState({
+        curr:false,
         new: false,
         confirm: false,
     });
@@ -129,29 +130,29 @@ const ChangePassword = () => {
                 </h2>
 
                 {/* current pass */}
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 relative">
                     <label>
                         Current Password <span className="text-red-500">*</span>
                     </label>
 
                     <input
-                        type="password"
+                       type={show.curr ? "text" : "password"}
                         name="currentPassword"
                         value={form.currentPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder="Enter current password"
-                        className={`px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.newPassword
+                        className={`px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.currentPassword
                             ? "border-red-500 focus:ring-red-200"
                             : "border-gray-400 focus:ring-blue-500"
                             }`}
                     />
                     <button
                         type="button"
-                        onClick={() => setShow({ ...show, new: !show.new })}
-                        className="absolute right-3 top-9 text-gray-600"
+                        onClick={() => setShow({ ...show, curr: !show.curr })}
+                        className="absolute cursor-pointer right-3 top-1/2 text-gray-600"
                     >
-                        {show.new ? <FaEyeSlash /> : <FaEye />}
+                        {show.curr ? <FaEyeSlash /> : <FaEye />}
                     </button>
                     {errors.currentPassword && (<span className="text-red-500 text-xs"> {errors.currentPassword}
                     </span>
@@ -180,7 +181,7 @@ const ChangePassword = () => {
                     <button
                         type="button"
                         onClick={() => setShow({ ...show, new: !show.new })}
-                        className="absolute right-3 top-9 text-gray-600"
+                        className="absolute cursor-pointer right-3 top-1/2 text-gray-600"
                     >
                         {show.new ? <FaEyeSlash /> : <FaEye />}
                     </button>
@@ -216,9 +217,9 @@ const ChangePassword = () => {
                         onClick={() =>
                             setShow({ ...show, confirm: !show.confirm })
                         }
-                        className="absolute right-3 top-9 text-gray-600"
+                        className="absolute cursor-pointer right-3 top-1/2 text-gray-600"
                     >
-                        {show.confirm ? <FaEyeSlash /> : <FaEye />}
+                        {show.confirm ? <FaEyeSlash  size={18}/> : <FaEye  size={18}/>}
                     </button>
 
                     {errors.confirmPassword && (<span className="text-red-500 text-xs"> {errors.confirmPassword} </span>)}
@@ -228,7 +229,7 @@ const ChangePassword = () => {
                 <button
                     onClick={handleChangePassword}
                     disabled={loading}
-                    className="w-full bg-black text-white py-2 rounded-md disabled:opacity-50"
+                    className="w-[60%] ml-[20%] cursor-pointer bg-black text-white py-2 rounded-md disabled:opacity-50"
                 >
                     {loading ? "Changing..." : "Change"}
                 </button>

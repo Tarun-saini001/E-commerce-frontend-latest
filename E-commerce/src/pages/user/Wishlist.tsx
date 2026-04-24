@@ -128,7 +128,7 @@ const Wishlist = () => {
 
                         <div className="flex flex-col mt-2 items-center gap-2">
                             <button
-                                className="bg-red-400 text-white w-[80%] px-3 py-1 rounded hover:bg-red-600 transition"
+                                className="bg-red-400 cursor-pointer text-white w-[80%] px-3 py-1 rounded hover:bg-red-600 transition"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     dispatch(toggleWishlist(product._id))
@@ -149,7 +149,7 @@ const Wishlist = () => {
                                     handleAddToCart(product);
                                 }}
                                 disabled={loadingMap[product._id]}
-                                className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
+                                className="bg-blue-400 cursor-pointer text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
                             >
                                 {loadingMap[product._id] ? "Adding..." : "Add to Cart"}
                             </button>

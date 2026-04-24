@@ -158,14 +158,14 @@ const Profile = () => {
 
           <button
             onClick={() => navigate(paths.CHANGE_PASSWORD)}
-            className="w-[70%] items-center flex justify-center bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition"
+            className="w-[70%] cursor-pointer items-center flex justify-center bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition"
           >
             Change Password
           </button>
 
           <button
             onClick={() => setShowModal(true)}
-            className="text-red-500 hover:underline"
+            className="text-red-500 cursor-pointer hover:underline"
           >
             Logout
           </button>
@@ -191,7 +191,7 @@ const Profile = () => {
 
               <button
                 onClick={handleLogout}
-                className="flex-1 bg-red-500 text-white py-2 rounded"
+                className="flex-1 bg-red-500 cursor-pointer text-white py-2 rounded"
               >
                 Logout
               </button>

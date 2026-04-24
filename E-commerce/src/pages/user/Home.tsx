@@ -198,7 +198,7 @@ const Home = () => {
             <div
               onClick={() => navigate(`/product/${product._id}`)}
               key={product._id}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+              className="bg-white cursor-pointer rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
             >
               <div className="relative bg-gray-100 p-4 rounded-lg">
                 <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">

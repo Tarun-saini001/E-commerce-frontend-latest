@@ -132,7 +132,7 @@ const ProductDetails = () => {
               }
               handleAddToCart(singleProduct)
             }}
-            className="w-full py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+            className="w-full py-3 cursor-pointer bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
           >
             Add to Cart
           </button>

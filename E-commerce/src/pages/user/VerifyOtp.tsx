@@ -194,7 +194,7 @@ const VerifyOtp = () => {
                 <button
                     onClick={handleVerify}
                     disabled={loading || otp.length !== 4 || timeLeft === 0}
-                    className="bg-black text-white px-4 w-[60%] py-2 rounded disabled:opacity-50"
+                    className="bg-black cursor-pointer text-white px-4 w-[60%] py-2 rounded disabled:opacity-50"
                 >
                     {loading ? "Verifying..." : "Verify OTP"}
                 </button>

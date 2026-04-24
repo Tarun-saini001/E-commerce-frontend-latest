@@ -168,7 +168,7 @@ const AllProducts = () => {
                         <div
                             onClick={() => navigate(`/product/${product._id}`)}
                             key={product._id}
-                            className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+                            className="bg-white cursor-pointer rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
                         >
                             <div className="relative bg-gray-100 p-4 rounded-lg mb-4">
                                 <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
@@ -259,7 +259,7 @@ const AllProducts = () => {
                                         handleAddToCart(product);
                                     }}
                                     disabled={cartLoadingMap[product._id]}
-                                    className="bg-blue-400 text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
+                                    className="bg-blue-400 cursor-pointer text-white w-[80%] px-3 py-1 rounded hover:bg-blue-600 transition"
                                 >
                                     {cartLoadingMap[product._id] ? "Adding..." : "Add to Cart"}
                                 </button>
