@@ -36,11 +36,13 @@ const Profile = () => {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Name updated",{id:"name-updated"});
+        toast.success("Name updated", { id: "name-updated" });
         await refreshUser();
         setIsEditing(false);
       } else {
-        toast.error(data.message, {
+        const errorMessage =
+          data.message?.[0]?.message || "Failed to update profile";
+        toast.error(errorMessage, {
           id: "update-profile-error"
         });
       }
