@@ -121,6 +121,7 @@ const Profile = () => {
           <div className="flex gap-2">
             <input
               value={name}
+              maxLength={15}
               onChange={(e) => setName(e.target.value)}
               className="border px-3 py-1 rounded-md"
             />

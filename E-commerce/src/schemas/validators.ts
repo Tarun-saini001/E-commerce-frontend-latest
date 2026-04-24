@@ -77,8 +77,8 @@ export const loginSchema = z.object({
         .string()
         .trim()
         .nonempty("Email is required")
-        .email("Invalid email format"), // only validate format
-    password: z.string().nonempty("Password is required"), // only required
+        .email("Invalid email format"), 
+    password: z.string().nonempty("Password is required"),
 });
 
 // forgot password schema

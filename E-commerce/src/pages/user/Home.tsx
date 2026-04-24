@@ -20,7 +20,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const isFirstRender = useRef(true);
-  const { products = [], loading, error, } = useSelector((state: RootState) => state.products)
+  const { products = [], error, } = useSelector((state: RootState) => state.products)
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [showAuthModal, setShowAuthModal] = useState(false);

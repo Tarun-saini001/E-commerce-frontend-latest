@@ -177,7 +177,7 @@ const Cart = () => {
                             </div>
 
                             {/* price */}
-                            <div className="w-30 ml-8  flex justify-between text-blue-600 font-bold">
+                            <div className="w-auto ml-8  flex justify-between text-blue-600 gap-2 font-bold">
                                 {(item.price * item.quantity).toFixed(2)} Rs.
 
                                 {/* like button */}
