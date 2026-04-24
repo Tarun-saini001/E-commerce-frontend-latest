@@ -141,12 +141,18 @@ const ChangePassword = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder="Enter current password"
-                        className={`px-3 py-2 border rounded focus:outline-none focus:ring-2 ${errors.currentPassword
+                        className={`px-3 py-2 pr-10 border rounded w-full focus:outline-none focus:ring-2 ${errors.newPassword
                             ? "border-red-500 focus:ring-red-200"
                             : "border-gray-400 focus:ring-blue-500"
                             }`}
                     />
-
+                    <button
+                        type="button"
+                        onClick={() => setShow({ ...show, new: !show.new })}
+                        className="absolute right-3 top-9 text-gray-600"
+                    >
+                        {show.new ? <FaEyeSlash /> : <FaEye />}
+                    </button>
                     {errors.currentPassword && (<span className="text-red-500 text-xs"> {errors.currentPassword}
                     </span>
                     )}
