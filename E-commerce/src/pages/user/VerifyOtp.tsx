@@ -80,11 +80,11 @@ const VerifyOtp = () => {
         setOtp(value);
 
         // validation
-        if (value.length < 4) {
-            setError("OTP must be exactly 4 digits");
-        } else {
-            setError("");
-        }
+        // if (value.length < 4) {
+        //     setError("OTP must be exactly 4 digits");
+        // } else {
+        //     setError("");
+        // }
     };
 
     // verify otp
@@ -105,6 +105,8 @@ const VerifyOtp = () => {
             setLoading(true);
 
             console.log('otpType: ', otpType);
+            console.log('otp: ', otp);
+            const otpNumber = Number(otp)
             const response = await fetch(`${API}/service/user/verifyOtp`, {
                 method: "POST",
                 headers: {
@@ -112,7 +114,7 @@ const VerifyOtp = () => {
                 },
                 body: JSON.stringify({
                     email,
-                    otp,
+                    otp:otpNumber,
                     otpType,
                     name: otpType == 1 ? name : undefined,
                     password: otpType == 1 ? password : undefined,
@@ -134,9 +136,9 @@ const VerifyOtp = () => {
 
                 else if (otpType === 3) {
                     localStorage.removeItem("otpSession");
-                    console.log('data?.tempToken: ', data?.tempToken);
+                    console.log('data?.tempToken: ', data?.data);
                     // forgot password
-                    localStorage.setItem("tempToken", data?.tempToken)
+                    localStorage.setItem("tempToken", data?.data)
                     toast.success("OTP verified successfully!");
                     navigate(paths.RESET_PASSWORD, {
                         state: { email },

@@ -46,30 +46,51 @@ const Login = () => {
         }));
     };
 
-    // handle input change
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
 
-        // validate field on typing
-        validateField(name as keyof LoginInput, value);
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+
+        setErrors((prev) => ({
+            ...prev,
+            [name]: "",
+        }));
     };
 
     // Handle blur
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        validateField(name as keyof LoginInput, value);
+        const { name } = e.target;
+
+        const result = loginSchema.safeParse(formData);
+
+        if (!result.success) {
+            const fieldError = result.error.issues.find(
+                (err) => err.path[0] === name
+            );
+
+            setErrors((prev) => ({
+                ...prev,
+                [name]: fieldError?.message || "",
+            }));
+        }
     };
 
     // Handle login click
     const handleLogin = async () => {
         const result = loginSchema.safeParse(formData);
         if (!result.success) {
-            // Show all validation errors
+
             const fieldErrors: Partial<Record<keyof LoginInput, string>> = {};
             result.error.issues.forEach((err) => {
                 const field = err.path[0] as keyof LoginInput;
-                fieldErrors[field] = err.message;
+                if (!fieldErrors[field]) {
+                    fieldErrors[field] = err.message;
+                }
             });
             setErrors(fieldErrors);
             return;
@@ -134,7 +155,7 @@ const Login = () => {
     };
 
     return (
-      <div className="min-h-[calc(100vh-110px)] w-[80%] flex items-center justify-center px-4 py-6 overflow-y-auto">
+        <div className="min-h-[calc(100vh-110px)] w-[80%] flex items-center justify-center px-4 py-6 overflow-y-auto">
             <div className="w-full max-w-md text-black bg-white shadow-2xl rounded-3xl  py-8 flex flex-col items-center gap-5">
                 <p className="text-4xl">Login</p>
 

@@ -85,7 +85,7 @@ const ForgotPassword = () => {
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              validateEmail(e.target.value);
+              // validateEmail(e.target.value);
             }}
             onBlur={(e) => validateEmail(e.target.value)}
             className="px-3 py-2 border rounded"

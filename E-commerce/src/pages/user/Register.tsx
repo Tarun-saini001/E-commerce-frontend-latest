@@ -49,7 +49,7 @@ const Register = () => {
         }));
 
         // validate ONLY this field
-        validateField(name as keyof RegisterInput, value);
+        // validateField(name as keyof RegisterInput, value);
 
 
         if (name === "confirmPassword") {
@@ -79,6 +79,10 @@ const Register = () => {
                 }));
             }
         }
+        setErrors((prev) => ({
+            ...prev,
+            [name]: "",
+        }));
     };
 
 
@@ -90,13 +94,17 @@ const Register = () => {
 
     const handleRegister = async () => {
         const result = registerSchema.safeParse(formData);
+        console.log('result: ', result);
         if (!result.success) {
             console.log("result.success");
             const fieldErrors: Partial<Record<keyof RegisterInput, string>> = {};
             result.error.issues.forEach((err) => {
                 const field = err.path[0] as keyof RegisterInput;
-                fieldErrors[field] = err.message;
+                if (!fieldErrors[field]) {
+                    fieldErrors[field] = err.message;
+                }
             });
+            console.log('fieldErrors: ', fieldErrors);
             setErrors(fieldErrors);
             return;
         }
