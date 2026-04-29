@@ -16,6 +16,7 @@ import { useSearchParams } from "react-router-dom";
 import Pagination from "../../components/common/Pagination";
 import AuthModal from "../../components/user/AuthModal";
 import { paths } from "../../constants/paths";
+import ProductSkeleton from "../../components/user/skeletons/ProductsSkeleton";
 
 const AllProducts = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -94,8 +95,8 @@ const AllProducts = () => {
             });
             return;
         }
-        
-        
+
+
         if (cartLoadingMap[id]) return;
         setCartLoadingMap((prev) => ({ ...prev, [id]: true }));
         try {
@@ -127,9 +128,9 @@ const AllProducts = () => {
             navigate(paths.LOGIN);
         }, 0);
     };
-
-    if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
-    if (error) return <div className="flex justify-center items-center min-h-[70vh] text-red-500 text-xl mt-10">{error}</div>;
+    if (loading) return <ProductSkeleton />
+    // if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
+    // if (error) return <div className="flex justify-center items-center min-h-[70vh] text-red-500 text-xl mt-10">{error}</div>;
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">

@@ -33,6 +33,18 @@ const OrdersList = () => {
     dispatch(fetchAllOrders({ page, limit: 6 }))
   }, [dispatch, page]);
 
+  const getStatusStyles = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-700";
+      case "processing":
+        return "bg-blue-100 text-blue-700";
+      case "pending":
+      default:
+        return "bg-yellow-100 text-yellow-700";
+    }
+  };
+
   return (
     <div className="p-6">
 
@@ -80,7 +92,11 @@ const OrdersList = () => {
               </p>
 
               <p>
-                <span className="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
+                <span
+                  className={`px-3 py-1 text-xs rounded-full ${getStatusStyles(
+                    order.orderStatus
+                  )}`}
+                >
                   {order.orderStatus}
                 </span>
               </p>
@@ -92,9 +108,9 @@ const OrdersList = () => {
       {/* pagination */}
 
       <Pagination
-      page={page}
-      totalPages={totalPages}
-      onPageChange={updatePage}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={updatePage}
       />
       {/* <div className="flex justify-center gap-2 mt-6">
         <button

@@ -12,14 +12,16 @@ interface CartState {
     items: CartItem[];
     total: number;
     loading: boolean;
-    error: string | null
+    error: string | null;
+    shippingMethod: "upi" | "cod" | "";
 }
 
 const initialState: CartState = {
     items: [],
     total: 0,
     loading: false,
-    error: null
+    error: null,
+    shippingMethod: "upi",
 };
 
 interface CartResponse {
@@ -124,6 +126,9 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
+        setShippingMethod: (state, action) => {
+            state.shippingMethod = action.payload;
+        }
         // addToCart: (state, action: PayloadAction<Product>) => {
         //     const existingItem = state.items.find(item => item.id === action.payload.id);
         //     if (existingItem) {
@@ -206,4 +211,5 @@ const cartSlice = createSlice({
 });
 
 // export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart } = cartSlice.actions;
+export const { setShippingMethod } = cartSlice.actions;
 export default cartSlice.reducer;

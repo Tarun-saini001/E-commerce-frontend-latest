@@ -28,12 +28,12 @@ const UserLayoutSkeleton = ({
         <div className="min-h-screen bg-gray-100 animate-pulse">
             {/* navbar */}
             <div className="bg-white p-4 rounded-xl shadow">
-                <div className="h-20 bg-gray-300 border-b"></div>
+                <div className="h-20 bg-gray-300 "></div>
             </div>
 
             {/* top menu */}
             <div className="bg-white p-4 rounded-xl shadow">
-                <div className="h-12 bg-gray-300 border-b"></div>
+                <div className="h-12 bg-gray-300 "></div>
             </div>
 
             {/* main content */}

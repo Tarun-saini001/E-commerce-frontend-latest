@@ -170,13 +170,13 @@ const AddCategory = () => {
                     {/* view category image option */}
                     <button
                         onClick={() => setShowImageModal(true)}
-                        className=" px-3 flex justify-center items-center gap-1 py-1 rounded bg-sky-200 hover:bg-sky-300 text-sky-400 hover:text-sky-500 cursor-pointer">
+                        className=" px-3 flex justify-center items-center gap-1 py-1 rounded bg-gray-200 text-blue-500 hover:bg-gray-300  hover:text-blue-500 cursor-pointer">
                        <p >View</p> <span><FaRegEye /></span>
                     </button>
                     {/* change category image option */}
                     <button
                         onClick={() => fileInputRef.current?.click()}
-                        className=" px-3 py-1 flex justify-center items-center gap-1 rounded bg-green-200  hover:bg-green-300 text-green-400 hover:text-green-500  cursor-pointer">
+                        className=" px-3 py-1 flex justify-center items-center gap-1 rounded bg-gray-200 text-green-500 hover:bg-gray-300  hover:text-green-500  cursor-pointer">
                         <p>Upload</p><span><SiEditorconfig /></span>
                     </button>
 

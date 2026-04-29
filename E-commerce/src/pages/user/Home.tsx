@@ -190,7 +190,7 @@ const Home = () => {
 
       </div>
       {/* products */}
-      <div className="max-w-7xl mx-auto px-6 mt-14">
+      <div className="max-w-7xl mx-auto px-6 mt-14  mb-10">
         <h2 className="text-3xl font-extrabold mb-6 text-gray-900">Featured Items</h2>
 
         <div className="grid  grid-cols-3  gap-6">

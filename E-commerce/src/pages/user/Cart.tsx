@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
-import { removeItem, clearCart, updateCartQuantity } from "../../redux/slices/cartSlice";
+import { removeItem, clearCart, updateCartQuantity, setShippingMethod } from "../../redux/slices/cartSlice";
 import { IoIosRemoveCircle, IoIosAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -14,7 +14,7 @@ import { useState } from "react";
 import { paths } from "../../constants/paths";
 
 const Cart = () => {
-    const { items, total } = useSelector((state: RootState) => state.cart);
+    const { items, total, shippingMethod } = useSelector((state: RootState) => state.cart);
     console.log('items: ', items);
     const { isAuthenticated } = useAuth();
     const dispatch = useDispatch<AppDispatch>();
@@ -177,7 +177,7 @@ const Cart = () => {
                             </div>
 
                             {/* price */}
-                            <div className="w-auto ml-8  flex justify-between text-blue-600 gap-2 font-bold">
+                            <div className="w-auto ml-8  flex justify-between text-sky-500 gap-2 font-bold">
                                 {(item.price * item.quantity).toFixed(2)} Rs.
 
                                 {/* like button */}
@@ -271,19 +271,28 @@ const Cart = () => {
                         <h4 className="font-semibold mb-2">Shipping Method</h4>
 
                         <label className="inline-flex items-center mb-2 mr-3 cursor-pointer">
-                            <input type="radio" name="shippingMethod" value="upi" defaultChecked className="mr-2" />
+                            <input type="radio"
+                                name="shippingMethod"
+                                value="upi"
+                                checked={shippingMethod === "upi"}
+                                onChange={(e) => dispatch(setShippingMethod(e.target.value))}
+                                className="mr-2" />
                             UPI Payment
                         </label>
 
                         <label className="inline-flex items-center mb-2 cursor-pointer">
-                            <input type="radio" name="shippingMethod" value="cod" className="mr-2" />
+                            <input type="radio"
+                                name="shippingMethod"
+                                checked={shippingMethod === "cod"}
+                                onChange={(e) => dispatch(setShippingMethod(e.target.value))}
+                                value="cod" className="mr-2" />
                             Cash on Delivery
                         </label>
                     </div>
 
                     <button
                         onClick={() => navigate(paths.CHECKOUT)}
-                        className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg cursor-pointer hover:bg-blue-700 transition"
+                        className="mt-6 w-full bg-sky-500 text-white py-3 rounded-lg cursor-pointer hover:bg-blue-500 transition"
                     >
                         Checkout
                     </button>

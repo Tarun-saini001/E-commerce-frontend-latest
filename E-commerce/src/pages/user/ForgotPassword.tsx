@@ -88,7 +88,10 @@ const ForgotPassword = () => {
               // validateEmail(e.target.value);
             }}
             onBlur={(e) => validateEmail(e.target.value)}
-            className="px-3 py-2 border rounded"
+            className={`bg-white px-3 py-2 border rounded focus:outline-none focus:ring-2 ${error
+              ? "border-red-500 focus:ring-red-200"
+              : "border-gray-500 focus:ring-blue-500"
+              }`}
             placeholder="Enter your email"
           />
           {error && <span className="text-red-500 text-xs">{error}</span>}

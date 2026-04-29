@@ -1,11 +1,14 @@
 // src/pages/Checkout.tsx
 
 import { useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../redux/store";
 import { checkoutSchema } from "../../schemas/validators";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
+import { setShippingMethod } from "../../redux/slices/cartSlice";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../constants/paths";
 
 const countries = ["Bangladesh", "India", "USA", "UK"];
 const districtsByCountry: Record<string, string[]> = {
@@ -16,15 +19,17 @@ const districtsByCountry: Record<string, string[]> = {
 };
 
 const Checkout = () => {
+      const navigate = useNavigate();
     const API = import.meta.env.VITE_API_URL
     const { user } = useAuth();
-    const { items, total } = useSelector((state: RootState) => state.cart);
+    const { items, total, shippingMethod } = useSelector((state: RootState) => state.cart);
     const { loading } = useSelector((state: RootState) => state.order);
     const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedDistrict, setSelectedDistrict] = useState("");
-    const [shippingMethod, setShippingMethod] = useState("");
+    // const [shippingMethod, setShippingMethod] = useState("");
     const [selectedState, setSelectedState] = useState("");
     const [phoneCode, setPhoneCode] = useState("");
+    const dispatch = useDispatch<AppDispatch>();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -114,31 +119,70 @@ const Checkout = () => {
             return;
         }
         try {
-            const res = await fetch(`${API}/service/stripe/create-checkout-session`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-
-                body: JSON.stringify({
-                    billingDetails: {
-                        country: selectedCountry,
-                        city: selectedState,
-                        district: selectedDistrict,
-                        postalCode: formData.postalCode,
-                        address: formData.streetAddress,
-                        phone: phoneCode + formData.phone,
+            let res;
+            if (shippingMethod === "cod") {
+                res = await fetch(`${API}/service/order/addCOD`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
                     },
-                    shippingMethod,
-                }),
-            })
+                    credentials: "include",
+                    body: JSON.stringify({
+                        billingDetails: {
+                            country: selectedCountry,
+                            city: selectedState,
+                            district: selectedDistrict,
+                            postalCode: formData.postalCode,
+                            address: formData.streetAddress,
+                            phone: phoneCode + formData.phone,
+                        },
+                        shippingMethod,
+                        orderStatus: "pending"
+                    }),
+                })
+            } else {
+                res = await fetch(`${API}/service/stripe/create-checkout-session`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        billingDetails: {
+                            country: selectedCountry,
+                            city: selectedState,
+                            district: selectedDistrict,
+                            postalCode: formData.postalCode,
+                            address: formData.streetAddress,
+                            phone: phoneCode + formData.phone,
+                        },
+                        shippingMethod,
+                    }),
+                })
+            }
             const data = await res.json();
+            console.log('data: ', data);
 
 
-            if (data.status === "Success") {
-                //redirect to Stripe Checkout
-                window.location.href = data.data.url;
+            if (res.ok && data.status === "Success") {
+                if (shippingMethod === "cod") {
+
+                    toast.success(data.message || "Order placed successfully", {
+                        id: "order-success"
+                    });
+
+                   navigate(paths.ORDERS);
+
+                } else {
+                    if (data.data?.url) {
+                        window.location.href = data.data.url;
+                    } else {
+                        toast.error("Stripe session URL missing", {
+                            id: "stripe-url-error"
+                        });
+                    }
+                }
             } else {
                 toast.error(data.message || "Failed to initiate payment", {
                     id: "payment-failed"
@@ -395,7 +439,7 @@ const Checkout = () => {
                                 name="shippingMethod"
                                 value="upi"
                                 checked={shippingMethod === "upi"}
-                                onChange={(e) => setShippingMethod(e.target.value)}
+                                onChange={(e) => dispatch(setShippingMethod(e.target.value))}
                                 className="mr-2"
                             />
                             UPI Payment
@@ -407,7 +451,7 @@ const Checkout = () => {
                                 name="shippingMethod"
                                 value="cod"
                                 checked={shippingMethod === "cod"}
-                                onChange={(e) => setShippingMethod(e.target.value)}
+                                onChange={(e) => dispatch(setShippingMethod(e.target.value))}
                                 className="mr-2"
                             />
                             Cash on Delivery

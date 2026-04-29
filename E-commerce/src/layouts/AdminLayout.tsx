@@ -2,17 +2,14 @@ import { Outlet } from "react-router-dom";
 import AdminNavbar from "../components/admin/AdminNavbar";
 import Sidebar from "../components/admin/Sidebar";
 import { useAuth } from "../context/AuthContext";
+import AdminLayoutSkeleton from "../components/admin/AdminLayoutSkeleton";
 
 const AdminLayout = () => {
     const { loading } = useAuth();
 
-    if (loading)
-        return (
-            <div className="flex justify-center items-center h-screen text-blue-500 text-xl font-bold">
-                Loading...
-            </div>
-        );
+    if(loading)return<AdminLayoutSkeleton/>
 
+    
     return (
         <div className="flex">
 

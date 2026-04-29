@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { toggleWishlist } from "../../redux/slices/wishlistSlice";
 import { paths } from "../../constants/paths";
+import WishlistSkeleton from "../../components/user/skeletons/WislistSkeleton";
 
 const Wishlist = () => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Wishlist = () => {
 
     useEffect(() => {
         if (products.length === 0) {
-            dispatch(fetchProducts({category:null}));
+            dispatch(fetchProducts({ category: null }));
         }
     }, [dispatch, products.length]);
 
@@ -30,8 +31,8 @@ const Wishlist = () => {
     const wishlistProducts = products.filter((product) =>
         items.some((item) => item._id === product._id)
     );
-
-    if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
+    if ( loading) return <WishlistSkeleton />
+    // if (loading) return <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">Loading products...</div>;
 
     const handleAddToCart = async (product: any) => {
         if (!isAuthenticated) {
@@ -39,7 +40,7 @@ const Wishlist = () => {
             navigate(paths.LOGIN);
             return;
         }
-         if (product.stock === 0) {
+        if (product.stock === 0) {
             toast.error("Product is out of stock!");
             return;
         }
@@ -123,7 +124,7 @@ const Wishlist = () => {
 
 
                         <span className="text-sky-500 font-bold mt-2">
-                            ${product.price}
+                            {product.price} Rs.
                         </span>
 
                         <div className="flex flex-col mt-2 items-center gap-2">

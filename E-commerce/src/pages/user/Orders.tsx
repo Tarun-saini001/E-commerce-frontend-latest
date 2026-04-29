@@ -1,4 +1,4 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBox } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import type { AppDispatch, RootState } from "../../redux/store";
 import { fetchOrders } from "../../redux/slices/orderSlice";
 import { useAuth } from "../../context/AuthContext";
 import { paths } from "../../constants/paths";
+import OrdersSkeleton from "../../components/user/skeletons/OrderSkeleton";
 
 const Orders = () => {
     const navigate = useNavigate();
@@ -33,14 +34,14 @@ const Orders = () => {
             </div>
         );
     }
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
-                Loading your orders...
-            </div>
-        );
-    }
+    if (loading) return <OrdersSkeleton />
+    // if (loading) {
+    //     return (
+    //         <div className="flex justify-center items-center min-h-[70vh] text-blue-500 text-xl font-bold">
+    //             Loading your orders...
+    //         </div>
+    //     );
+    // }
 
     if (orders.length === 0) {
         return (

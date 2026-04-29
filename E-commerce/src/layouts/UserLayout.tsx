@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { fetchCart } from "../redux/slices/cartSlice";
 import { fetchWishlist } from "../redux/slices/wishlistSlice";
 import { paths } from "../constants/paths";
-import UserLayoutSkeleton from "../components/user/UserLayoutSkeleton";
+import UserLayoutSkeleton from "../components/user/skeletons/UserLayoutSkeleton";
 
 
 const UserLayout = () => {
@@ -62,7 +62,7 @@ const UserLayout = () => {
                 <Outlet />
             </main>
 
-            {!isAuthPage && <Footer />}
+            {!isAuthPage && <Footer/>}
         </>
     );
 };
